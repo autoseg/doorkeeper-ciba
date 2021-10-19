@@ -19,13 +19,66 @@ This library ains to implements the [OpenID Connect Client-Initiated Backchannel
 ## Status
 
 The following parts of [OpenID Connect Client-Initiated Backchannel Authentication Flow - Core 1.0](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html) are planned to be supported for v1.0:
-- [Inside CIBA: BackChannel Endpoint and APIs for POLL mode](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.5)
+- [Inside CIBA: BackChannel Endpoint and APIs for POLL mode, parameters in request](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.5)
 - [Inside CIBA: Authentication using "urn:openid:params:grant-type:ciba" grant_type for POLL mode](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#registration)
 - [Outside CIBA: Sample Web consent channel]: CIBA specification doesn't define how the consent channel must be implemented. The initial idea is create an sample channel to delivery the consent notification via e-mail, this e-mail will contains a link to a web application protected by Open Id/Oauth2, where the user must fill your credentials and confirm the consent, changing the status of the pending CIBA flow (eg. accepted/denied). The notes found in spec follow bellow:
   - [Consent flow CIBA description](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.8)
   - [OpenID Consent Guide](https://openid.net/specs/openid-connect-core-1_0.html#Consent)
 
-PUSH and PING mode will be planned in near future.
+Affected endpoints:
+
+- New endpoints:
+  - POST /backchannel/authorize --> authentication requests w/ possible [parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request), returning [parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#successful_authentication_request_acknowdlegment) auth_req_id, expires_in and interval, or [error response](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response)
+  - POST /backchannel/complete --> completes the process after end-user authentication and consent confirmation, receive the authorized user (via oauth2/OID) and the auth_req_id. 
+
+- Changed endpoints:
+  - POST /oauth/token --> [token requests](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_request) w/ grant_type urn:openid:params:grant-type:ciba and auth_req_id, [returning](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_response) access_token, token_type, refresh_token, expires_in and id_token, or [error response](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_error_response)
+
+ps. auth_req_id --> "authentication request ID" (transaction identifier) issued from the backchannel authentication endpoint.
+
+FLOW:
+
+<pre>
++-------------+                +-------------------------------------------------------------------------+
+| Consumption |                | doorkeeper-ciba                                                         |
+| Device      |                |  +---------------------+                  +---------------------------+ |
+|             |                |  | Inside CIBA spec    |       (3)        | Outside CIBA spec         | |
+|             |  (1) POST      |  |  +---------------+  |  Notify pending  |  +----------------------+ | |
+|             | -------------------> | BackChannel   |  | consent approval |  | Authorization Device | | |
+|             | <-[auth_req_id]-(2)- | Authorize     | ---[Auth Result ID]--> |- OID Auth            | | |
+|             |                |  |  |               |                     |  |- Consent Approval    | | |
+|             |                |  |  +---------------+  |                  |  +----------------------+ | |
+|             |                |  |                     |                  |            |              | |
+|             |                |  |                     |                  +------------|--------------+ |
+|             |                |  |                     |                           (4) |                |
+|             |                |  |                     |                        [Auth Result ID]        |
+|             |                |  |                     |                               |                |
+|             |                |  |                     --------------------------------V------------+   |
+|             |  (5) POST      |  |  +---------------+    (6)                 +--------------------+ |   |
+|             | -[auth_req_id]-----> | CIBA Token    | --[Auth Result ID]-->  | Update BackChannel | |   |
+|             | <-Error or token--|  | Request/Reply | <--------------------  | Request Id Status  | |   |
+|             |                |  |  +---------------+                        +--------------------+ |   |
+|             |                |  +------------------------------------------------------------------+   |
++------------+                +-----------------------------------------------------------------------+
+
+--> BackChannel Authorize - /backchannel/authorize
+--> OID Auth - /oauth/authorize 
+--> Consent Aproval (or disaproval) - /backchannel/complete
+--> CIBA Token Request/Reply - /oauth/token w/ grant_type = urn:openid:params:grant-type:ciba
+--> Notify pending consent approval - Via e-mail to v 1.0, plugable in the future
+--> 5 and 6 repeat until expires between minimum interval returned by BackChannel Authorize
+--> Authorization Device will use a sample web application for v1.0
+
+</pre>
+
+
+- Features that will be planned in near future:
+  - PUSH and PING mode:
+    - [Notification Endpoint](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#backchannel_client_notification_endpoint)
+    - Support for client_notification_token parameter in backchannel and token endpoint
+  - Suport for [signed request parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#signed_auth_request)
+  - Support for [user codes](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#user_code).
+  - "Mutual TLS" support validation / adaptations (client_id)
 
 ### Known Issues
 
@@ -77,12 +130,9 @@ end
 This will mount the following routes:
 
 ```
-GET   /oauth/userinfo
-POST  /oauth/userinfo
-GET   /oauth/discovery/keys
-GET   /.well-known/openid-configuration
-GET   /.well-known/webfinger
+POST  /backchannel/authorize
 ```
+
 
 ### Internationalization (I18n)
 
