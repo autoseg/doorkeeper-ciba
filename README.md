@@ -131,6 +131,7 @@ This will mount the following routes:
 
 ```
 POST  /backchannel/authorize
+POST  /backchannel/complete
 ```
 
 
