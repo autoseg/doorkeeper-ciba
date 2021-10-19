@@ -91,7 +91,7 @@ FLOW:
 
 ## Installation
 
-Make sure your application is already set up with [Doorkeeper](https://github.com/doorkeeper-gem/doorkeeper#installation) and [Doorkeeper::OpenidConnect] (https://github.com/doorkeeper-gem/doorkeeper-openid_connect#installation).
+Make sure your application is already set up with [Doorkeeper](https://github.com/doorkeeper-gem/doorkeeper#installation) and [Doorkeeper::OpenidConnect](https://github.com/doorkeeper-gem/doorkeeper-openid_connect#installation).
 
 Add this line to your application's `Gemfile` and run `bundle install`:
 
