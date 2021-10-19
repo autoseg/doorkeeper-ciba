@@ -58,9 +58,6 @@ Generate a migration for Active Record (other ORMs are currently not supported):
 rails generate doorkeeper:openid_connect:ciba:migration
 rake db:migrate
 ```
-
-If you're upgrading from an earlier version, check [CHANGELOG.md](CHANGELOG.md) for upgrade instructions.
-
 ## Configuration
 
 TODO
