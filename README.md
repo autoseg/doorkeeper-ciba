@@ -36,7 +36,7 @@ Affected endpoints:
 
 ps. auth_req_id --> "authentication request ID" (transaction identifier) issued from the backchannel authentication endpoint.
 
-FLOW:
+POLL FLOW:
 
 <pre>
 +-------------+                +-------------------------------------------------------------------------+
@@ -66,7 +66,7 @@ FLOW:
 --> Consent Aproval (or disaproval) - /backchannel/complete
 --> CIBA Token Request/Reply - /oauth/token w/ grant_type = urn:openid:params:grant-type:ciba
 --> Notify pending consent approval - Via e-mail to v 1.0, plugable in the future
---> 5 and 6 repeat until expires between minimum interval returned by BackChannel Authorize
+--> 5 and 6 repeat until it expires or receive the consent response, limited by a minimum trial interval (parameters returned by backchannel-authorize).
 --> Authorization Device will use a sample web application for v1.0
 
 </pre>
