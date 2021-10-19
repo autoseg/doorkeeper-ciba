@@ -20,7 +20,7 @@ This library ains to implements the [OpenID Connect Client-Initiated Backchannel
 
 The following parts of [OpenID Connect Client-Initiated Backchannel Authentication Flow - Core 1.0](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html) are planned to be supported for v1.0:
 - [Inside CIBA: BackChannel Endpoint and APIs for POOL mode](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.5)
-- [Inside CIBA: Authentication using "urn:openid:params:grant-type:ciba" grant_type](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#registration)
+- [Inside CIBA: Authentication using "urn:openid:params:grant-type:ciba" grant_type for POOL mode](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#registration)
 - [Outside CIBA: Sample Web consent channel]: CIBA specification doesn't define how the consent channel must be implemented. The initial idea is create an sample channel to delivery the consent notification via e-mail, this e-mail will contains a link to a web application protected by Open Id/Oauth2, where the user must fill your credentials and confirm the consent, changing the status of the pending CIBA flow (eg. accepted/denied). The notes found in spec follow bellow:
   - [Consent flow CIBA description](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.8)
   - [OpenID Consent Guide](https://openid.net/specs/openid-connect-core-1_0.html#Consent)
