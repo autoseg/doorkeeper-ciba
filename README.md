@@ -79,7 +79,7 @@ POLL FLOW:
     - Support for client_notification_token parameter in backchannel and token endpoint
   - Suport for [signed request parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#signed_auth_request)
   - Support for [user codes](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#user_code).
-  - "Mutual TLS" support validation / adaptations (client_id)
+  - "Mutual TLS" support - ref. [mtls](https://tools.ietf.org/html/draft-ietf-oauth-mtls#section-2.2),[ciba auth req](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request) and [ciba signed auth req](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#signed_auth_request) - validation / adaptations (client_id)
 
 ### Known Issues
 
