@@ -138,7 +138,7 @@ POST  /backchannel/complete
 
 ### Internationalization (I18n)
 
-We use Rails locale files for error messages and scope descriptions, see [config/locales/en.yml](config/locales/en.yml). You can override these by adding them to your own translations in `config/locale`.
+We use Rails locale files for error messages and scope descriptions, see [config/locales/en.yml](config/locales/en.yml). You can override these by adding them to your own translations in `config/locales`.
 
 ## Development
 
