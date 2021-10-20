@@ -98,7 +98,7 @@ Add this line to your application's `Gemfile` and run `bundle install`:
 ```ruby
 gem 'doorkeeper-ciba', git: https://github.com/autoseg/doorkeeper-ciba, branch: 'main'
 ```
-ps. you can exec "bundle add doorkeeper-openid_connect --git https://github.com/autoseg/doorkeeper-ciba --branch 'main'" also.
+ps. you can exec "bundle add doorkeeper-ciba --git https://github.com/autoseg/doorkeeper-ciba --branch 'main'" also.
 
 Run the installation generator to update routes and create the initializer:
 
