@@ -1,4 +1,4 @@
-# Doorkeeper::OpenidConnect::Ciba
+# Doorkeeper::Ciba
 Doorkeeper support for OpenID Connect Client Initiated Backchannel Authentication Flow
 
 This library, in early development status, aims to implements the [OpenID Connect Client-Initiated Backchannel Authentication Flow - Core 1.0](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html) for Rails applications on top of the [Doorkeeper](https://github.com/doorkeeper-gem/doorkeeper) OAuth 2.0 framework and [Doorkeeper::OpenidConnect](https://github.com/doorkeeper-gem/doorkeeper-openid_connect) extention.
@@ -103,13 +103,13 @@ ps. you can exec "bundle add doorkeeper-ciba --git https://github.com/autoseg/do
 Run the installation generator to update routes and create the initializer:
 
 ```sh
-rails generate doorkeeper:openid_connect:ciba:install
+rails generate doorkeeper:ciba:install
 ```
 
 Generate a migration for Active Record (other ORMs are currently not supported):
 
 ```sh
-rails generate doorkeeper:openid_connect:ciba:migration
+rails generate doorkeeper:ciba:migration
 rake db:migrate
 ```
 ## Configuration
