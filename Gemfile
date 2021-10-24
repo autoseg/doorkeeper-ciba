@@ -13,4 +13,4 @@ gem 'rubocop-performance', require: false
 gem 'rubocop-rails', require: false
 gem 'rubocop-rspec', require: false
 
-#gem 'doorkeeper-openid_connect'
+gem 'doorkeeper-openid_connect'

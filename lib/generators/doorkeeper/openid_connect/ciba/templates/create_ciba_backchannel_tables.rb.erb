@@ -1,0 +1,41 @@
+class CreateCibaBackchannelTables < ActiveRecord::Migration<%= migration_version %>
+  def change
+    enable_extension 'uuid-ossp'
+    enable_extension 'pgcrypto'
+
+    create_table :backchannel_auth_requests do |t|
+      t.uuid :auth_req_id, null: false
+      t.string :status, null: false, default: 'P'
+      t.string :binding_message, null: true
+      t.string :scope, null: false
+	  t.string :client_notification_token, null: true
+	  t.string :acr_values, null: true
+	  t.string :login_hint_token, null: true
+      t.string :id_token_hint, null: true
+      t.string :login_hint, null: true
+	  t.string :user_code, null: true
+      t.integer :requested_expiry, null: true
+
+      t.timestamps             null: false
+    end
+
+    add_index :backchannel_auth_requests, :auth_req_id, unique: true
+
+    create_table :backchannel_auth_consent_history do |t|
+      t.uuid :auth_req_id, null: false, :primary => true
+      t.string :consent_user_id, null: true
+      t.string :consent_type,  null: false
+
+      t.timestamps             null: false
+	end
+
+    add_index :backchannel_auth_consent_history, :auth_req_id, unique: false
+    add_index :backchannel_auth_consent_history, :consent_user_id, unique: false
+
+    add_foreign_key(
+      :backchannel_auth_consent_history,
+      :backchannel_auth_requests,
+      column: :auth_req_id, primary_key: :auth_req_id
+    )
+  end
+end

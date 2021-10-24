@@ -28,17 +28,19 @@ Gem::Specification.new do |spec|
     "README.md",
   ]
   spec.bindir        = "exe"
-  spec.executables   = spec.files.grep(%r{\Aexe/}) { |f| File.basename(f) }
-  spec.require_paths = ["lib"]
+  spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
+  spec.require_paths = ['lib']
 
-  spec.required_ruby_version = '>= 3.0.1'
+  spec.required_ruby_version = '>= 2.5'
 
-  spec.add_runtime_dependency 'doorkeeper', '>= 5.5'
+  spec.add_runtime_dependency 'doorkeeper', '>= 5.5', '< 5.6'
+  spec.add_runtime_dependency 'json-jwt', '>= 1.11.0'
   spec.add_runtime_dependency 'doorkeeper-openid_connect', '>= 1.8.0'
 
   spec.add_development_dependency 'conventional-changelog', '~> 1.2'
   spec.add_development_dependency 'factory_bot'
   spec.add_development_dependency 'pry-byebug'
   spec.add_development_dependency 'rspec-rails'
+  spec.add_development_dependency 'sqlite3', '>= 1.3.6'
 
 end

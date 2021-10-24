@@ -1,0 +1,18 @@
+en:
+  doorkeeper:
+    openid_connect:
+      ciba:
+        errors:
+          messages:
+            # Configuration error messages
+            resource_owner_from_access_token_not_configured: 'Failure due to Doorkeeper::OpenidConnect.configure.resource_owner_from_access_token missing configuration.'
+
+            # authorization error messages
+            missing_user_identification: 'Missing parameter with end-user identification'
+
+            # Token Error messages
+            invalid_grant: 'test' 
+            authorization_pending: 'test'
+            slow_down: 'test'
+            expired_token: 'test'
+            access_denied: 'test'
