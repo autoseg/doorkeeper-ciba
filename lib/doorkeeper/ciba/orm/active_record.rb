@@ -9,8 +9,8 @@ module Doorkeeper
         def initialize_models!
           super
           ActiveSupport.on_load(:active_record) do
-            require 'doorkeeper/openid_connect/orm/active_record/backchannel_auth_request'
-            require 'doorkeeper/openid_connect/orm/active_record/backchannel_auth_consent_history'
+            require 'doorkeeper/ciba/orm/active_record/backchannel_auth_requests'
+            require 'doorkeeper/ciba/orm/active_record/backchannel_auth_consent_history'
           end
         end
       end

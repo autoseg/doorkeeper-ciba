@@ -5,6 +5,26 @@ module Doorkeeper
   	module Ciba
 		# controller for /backchannel/authorize
 	    class AuthorizeController < Doorkeeper::ApplicationMetalController
+		#	before_action -> { doorkeeper_authorize! :openid }, only: %i[auth]
+
+	    def authorize_response
+	      @authorize_response ||= begin
+	      	@strategy ||= server.token_request('client_credentials')
+	
+			::Rails.logger.info("#### after strategy:" + @strategy.to_s)
+	
+	        @auth = @strategy.authorize
+	
+			::Rails.logger.info("#### after authorize:" + @auth.to_s)
+	
+	        @auth
+	      end
+	    end
+
+#< ActionController::API
+
+#< Doorkeeper::ApplicationMetalController
+ 			#before_action :validate_presence_of_client, only: [:revoke]
 		  # scope must include openid
 	      #before_action -> { doorkeeper_authorize! :openid }, only: %i[auth] 
 ## TODO grant_flows: 'client_credentials'
@@ -26,7 +46,7 @@ module Doorkeeper
 #      end
 #    end
 # Doorkeeper::Server Doorkeeper::Request
-# server.rb token_request --> request.rb token_request
+# server.rb token_request --> request.rb token_request -> client_credentials.rb
 
 
 		# Authentication must accept the methods described in https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication
@@ -40,19 +60,19 @@ module Doorkeeper
 		# self_signed_tls_client_auth - mutual tls - request params client_id and clientCertificate - https://datatracker.ietf.org/doc/html/rfc8705
 		
 	      def auth
-			@strategy = server.token_request("client_credentials")
-
-			::Rails.logger.info("after strategy" + @strategy.to_s)
-
-        	#auth = @strategy.authorize
-
-			#::Rails.logger.info("after auth")
-
-			#render json: @auth
-
-	        render json: Doorkeeper::OpenidConnect::Ciba::Authorize.new(params), status: :ok
-	      end
+			authorize_response
+			
+			::Rails.logger.info("#### authorize_response ===>:" + @authorize_response.status.to_s)
+			
+			if(authorize_response.status == :ok)
+	        	render Doorkeeper::OpenidConnect::Ciba::Authorize.new(params).authorize
+			else
+				# show authorize response error
+				render json: authorize_response.body,
+	        	     status: authorize_response.status	      
+			end
 	    end
+	  end
 	end
   end
 end

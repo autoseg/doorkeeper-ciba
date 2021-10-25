@@ -96,12 +96,19 @@ module Doorkeeper
 		#backchannel_authentication_request_signing_alg_values_supported: OPTIONAL. JSON array containing a list of the JWS signing algorithms (alg values) supported by the OP for signed authentication requests, which are described in Section 7.1.1. If omitted, signed authentication requests are not supported by the OP.
 		#backchannel_user_code_parameter_supported: OPTIONAL. Boolean value specifying whether the OP supports the use of the user_code parameter, with true indicating support. If omitted, the default value is false.
 	
-		# XXX: GORGES ERROR SAMPLE
-	      option :resource_owner_from_access_token, default: lambda { |*_|
-	        raise Doorkeeper::OpenidConnect::Ciba::Errors::InvalidConfiguration, I18n.translate('doorkeeper.openid_connect.ciba.errors.messages.resource_owner_from_access_token_not_configured')
+	  	  # Expiration time for the req_id_token (default 600 seconds).
+	      option :default_req_id_expiration, default: 600
+		  # Default minimum wait interval for token execution in poll mode
+	      option :default_poll_interval, default: 5
+		  # Max bind message size
+		  option :max_bind_message_size, default: 128
+
+		  # mandatory configuration with the logic to validate the login_hint filled in both backchannel authentication and backchannel complete  
+		  # must return the id of the user as uuid
+	      option :resolve_user_identity, default: lambda { |*_|
+	        raise Errors::InvalidConfiguration, 'mandatory parameter "resolve_user_identity" is not configured'
 	      }
-	
-	      option :default_expiration, default: 600
+
 	    end
 	end
   end

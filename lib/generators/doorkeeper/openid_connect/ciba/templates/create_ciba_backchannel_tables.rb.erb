@@ -10,27 +10,39 @@ class CreateCibaBackchannelTables < ActiveRecord::Migration<%= migration_version
       t.string :scope, null: false
 	  t.string :client_notification_token, null: true
 	  t.string :acr_values, null: true
+	  # the three possible modes for identify the user
 	  t.string :login_hint_token, null: true
       t.string :id_token_hint, null: true
       t.string :login_hint, null: true
+	  # identified user
+	  t.uuid :identified_user_id, null: false
 	  t.string :user_code, null: true
-      t.integer :requested_expiry, null: true
+	  t.integer :expires_in, null: false
+	  t.integer :interval, null: false
+	  t.timestamp :last_try, null: false
 
       t.timestamps             null: false
     end
 
     add_index :backchannel_auth_requests, :auth_req_id, unique: true
+    add_index :backchannel_auth_requests, :identified_user_id, unique: false
 
     create_table :backchannel_auth_consent_history do |t|
-      t.uuid :auth_req_id, null: false, :primary => true
-      t.string :consent_user_id, null: true
+      t.uuid :auth_req_id, null: false
+	  # the three possible modes for identify the user
+	  t.string :login_hint_token, null: true
+      t.string :id_token_hint, null: true
+      t.string :login_hint, null: true
+	  # identified user
+	  t.uuid :identified_user_id, null: false
+	  #
       t.string :consent_type,  null: false
 
       t.timestamps             null: false
 	end
 
     add_index :backchannel_auth_consent_history, :auth_req_id, unique: false
-    add_index :backchannel_auth_consent_history, :consent_user_id, unique: false
+    add_index :backchannel_auth_consent_history, :identified_user_id, unique: false
 
     add_foreign_key(
       :backchannel_auth_consent_history,
