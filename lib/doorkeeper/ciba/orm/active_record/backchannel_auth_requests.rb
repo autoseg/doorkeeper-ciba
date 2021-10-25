@@ -4,12 +4,21 @@ module Doorkeeper
   module OpenidConnect
     module Ciba
 		class BackchannelAuthRequests < ::ActiveRecord::Base
+			# constants
+			STATUS_PENDING = 'P'
+			STATUS_APPROVED = 'A'
+			STATUS_DISAPPROVED = 'D'
+			STATUS_EXPIRED = 'X'
+			STATUS_ERROR = 'E'
+		
+			# active record data
 			self.table_name = "backchannel_auth_requests".to_sym
 			validates :auth_req_id, presence: true
 			validates :identified_user_id, presence: true
 			validates :expires_in, presence: true
 			validates :interval, presence: true
 			validates :last_try, presence: true
+			validates :status, presence: true, acceptance: { accept: ['P', 'A', 'D', 'X', 'E'] }
 		
 			 #     t.uuid :auth_req_id, null: false
 			 #     t.string :status, null: false, default: 'P'

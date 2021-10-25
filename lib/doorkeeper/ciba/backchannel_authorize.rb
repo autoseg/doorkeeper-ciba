@@ -3,7 +3,7 @@
 module Doorkeeper
   module OpenidConnect
   	module Ciba
-	    class Authorize
+	    class Authorize < CommonBusinessRules
 		      def initialize(params)
 		        @params = params
 		      end
@@ -29,8 +29,10 @@ module Doorkeeper
 				#
 				# UNSUPPORTED for v1.0 # mutual required (user identity group)- some identification of the user (implementation specific)
 				#@login_hint_token = @params[:login_hint_token].to_s
+				#
 				# UNSUPPORTED for v1.0 # mutual required (user identity group)- id of the user
 				#@id_token_hint = @params[:id_token_hint].to_s
+				#
 				# mutual required (user identity group) - the value may contain an email address, phone number, account number, subject identifier, username, etc.
 				@login_hint = @params[:login_hint].to_s
 				#
@@ -45,7 +47,8 @@ module Doorkeeper
 				@requested_expiry = Integer(@params[:requested_expiry].to_s) rescue nil;
 				#
 				# create auth request id
-				create_auth_request_id
+				createResult = create_auth_request_id
+				return createResult unless createResult.blank?
 				
 				# SUCCESS https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#successful_authentication_request_acknowdlegment
 		        return { 
@@ -80,21 +83,6 @@ module Doorkeeper
 							}
 				end
 				
-				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request_validation
-				# The OpenID Provider MUST process the hint provided to determine if the hint is valid and if it corresponds to a valid user. 
-				# The type, issuer (where applicable) and maximum age (where applicable) of a hint that an OP accepts should be communicated to Clients. 
-				# How the OP validates hints and informs Clients of its hint requirements is out-of-scope of this specification.
-				# check the end-user hint identity
-				resolve_user_identity(@params[:login_hint].to_s)
-				if(!@identified_user_id.present?)
-					 	# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
-						return { json: { 
-									error: "unknown_user_id",
-		                        	error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.unknown_user_id')
-		                    		}, status: 400
-							    }
-				end
-				
 				# validate requested expiry
 				if(@params[:requested_expiry].present?) 
 					requested_expiry_validation = Integer(@params[:requested_expiry].to_s) rescue nil;
@@ -116,6 +104,23 @@ module Doorkeeper
 		                    	}, status: 400 
 							} if binding_message_validation.length > Doorkeeper::OpenidConnect::Ciba.configuration.max_bind_message_size
 				end
+				
+				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request_validation
+				# The OpenID Provider MUST process the hint provided to determine if the hint is valid and if it corresponds to a valid user. 
+				# The type, issuer (where applicable) and maximum age (where applicable) of a hint that an OP accepts should be communicated to Clients. 
+				# How the OP validates hints and informs Clients of its hint requirements is out-of-scope of this specification.
+				# check the end-user hint identity
+				resolve_user_identity(@params[:login_hint].to_s)
+				if(!@identified_user_id.present?)
+					 	# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
+						return { json: { 
+									error: "unknown_user_id",
+		                        	error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.unknown_user_id')
+		                    		}, status: 400
+							    }
+				end
+				
+				return
 			 end
 	
 			# create the auth request record
@@ -124,29 +129,14 @@ module Doorkeeper
 				 @expires_in= @requested_expiry.nil? ? Doorkeeper::OpenidConnect::Ciba.configuration.default_req_id_expiration : @requested_expiry
 				 @interval=Doorkeeper::OpenidConnect::Ciba.configuration.default_poll_interval
 
-				 ::Rails.logger.info("create_auth_request_id: auth_req_id ===> " + @auth_req_id.to_s)
+			 	 ::Rails.logger.info("## create_auth_request_id: auth_req_id => " + @auth_req_id.to_s + ", identified_user_id => " +  @identified_user_id.to_s)
 			
 				# Save backchannel request
-				#     t.uuid :auth_req_id, null: false
-				#     t.string :status, null: false, default: 'P'
-				#     t.string :binding_message, null: true
-				#     t.string :scope, null: false
-				#	  t.string :client_notification_token, null: true
-				#	  t.string :acr_values, null: true
-				#	  t.string :login_hint_token, null: true
-				#     t.string :id_token_hint, null: true
-				#     t.string :login_hint, null: true
-				#     t.uuid :identified_user_id, null: false
-				#     t.string :user_code, null: true
-				#     t.integer :expires_in, null: false
-				#	  t.integer :interval, null: false
-				#	  t.timestamp :last_try, null: false
-				#
-				#     t.timestamps             null: false
 				BackchannelAuthRequests.create(
 											auth_req_id: @auth_req_id, 
 											binding_message: @binding_message, 
 											scope: @scope, 
+											status: BackchannelAuthRequests::STATUS_PENDING,
 											client_notification_token: @client_notification_token,
 											acr_values: @acr_values,
 											login_hint_token: @login_hint_token,
@@ -158,16 +148,8 @@ module Doorkeeper
 											interval: @interval,
 											last_try: DateTime.now
 											)
+				return
 			end 
-			
-			# find the id of end-user based in login_hint parameter as e-mail
-   		    def resolve_user_identity(login_hint)
-
-   				@identified_user_id ||= Doorkeeper::OpenidConnect::Ciba.configuration.resolve_user_identity.call(login_hint)
-	
-				#::Rails.logger.info("resolve_user_identity => " + @identified_user_id.to_s)
-      		end
-			
 	   end
     end
   end
