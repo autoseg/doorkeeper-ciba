@@ -117,17 +117,27 @@ rake db:migrate
 After the installation process, an initialization file with configurable options will be created in config/initializers/doorkeeper_openid_connect_ciba.rb, edit as recommended in the comments.
 
 <pre>
-  # Expiration time for the req_id_token (default 600 seconds).
+
+Doorkeeper::OpenidConnect::Ciba.configure do
+
+  # Expiration time for the req_id_token.
   # default_req_id_expiration 600
 
   # Default minimum wait interval for token execution in poll mode
   #default_poll_interval 5
 
+  # Max bind message size
+  # option :max_bind_message_size, default: 128
+
   # mandatory configuration with the logic to validate the login_hint filled in both backchannel authentication and backchannel complete  
+  # must return the id of the user as uuid
   #resolve_user_identity do |login_hint|
-    # Example implementation:
-    #User.find_by(email: login_hint)
+  #  user = User.find_by(email: login_hint)
+  #	user.id unless user.nil?
   #end
+
+end
+
 </pre>
 
 doorkeeper_openid_connect_ciba.rb
