@@ -48,12 +48,7 @@ module Doorkeeper
 				#
 				# update auth request id
 				updateResult = update_auth_request_id_with_history
-				
-				::Rails.logger.info("#### STP1 updateResult:" + updateResult.to_s)
-				
 				return updateResult unless updateResult.blank?
-				
-				::Rails.logger.info("#### STP2 ")
 				
 				# SUCCESS 
 		        return { 
