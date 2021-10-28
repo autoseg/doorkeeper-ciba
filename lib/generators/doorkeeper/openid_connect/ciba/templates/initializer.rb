@@ -18,4 +18,7 @@ Doorkeeper::OpenidConnect::Ciba.configure do
   #	user.id unless user.nil?
   #end
 
+  # mandatory config : add new permission to new grant type 
+  Doorkeeper.configuration.grant_flows.append("urn:openid:params:grant-type:ciba")
+
 end

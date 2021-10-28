@@ -8,13 +8,103 @@ module Doorkeeper
 					return
 			end
 			
+			# validate if the user was provided and search for the user identity
+			def validate_and_resolve_user_identity(login_hint, id_token_hint, login_hint_token)
+				# Parameters that identify the end-user for whom auth is being requested. At least one must be defined.
+				#	
+				# As in the CIBA flow the OP does not have an interaction with the end-user through the consumption device, 
+				# it is REQUIRED that the Client provides one (and only one) of the hints specified above in the authentication
+				# request, that is "login_hint_token", "id_token_hint" or "login_hint".
+				#
+				# for v.1.0 just login_hint is supported
+				#
+				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request_validation
+				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request
+				#
+				# The OpenID Provider MUST process the hint provided to determine if the hint is valid and if it corresponds to a valid user. 
+				# The type, issuer (where applicable) and maximum age (where applicable) of a hint that an OP accepts should be communicated to Clients. 
+				# How the OP validates hints and informs Clients of its hint requirements is out-of-scope of this specification.
+				# check the end-user hint identity
+				#				
+				# validate if some user ident option was filled
+				if(!(@params[:login_hint].present? || @params[:id_token_hint].present? || @params[:login_hint_token].present? )) 
+					 return { json: { 
+								error: "invalid_request",
+		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_user_identification')
+		                    	}, status: 400 
+							}
+				end
+				
+				# validate if more than one was filled
+				arr = [ @params[:login_hint], @params[:id_token_hint], @params[:login_hint_token] ]
+				
+				if(arr.count(nil) < arr.length-1) 
+					 return { json: { 
+								error: "invalid_request",
+		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.more_than_one_user_identification')
+		                    	}, status: 400 
+							}
+				end
+
+				# UNSUPPORTED for v.1.0				
+				if(id_token_hint.present? || login_hint_token.present?)
+					    # https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
+						return { json: { 
+									error: "invalid_request",
+		                        	error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.just_login_hint_is_supported')
+		                    		}, status: 400
+							    }
+				end
+				
+				# some user-specific data, eg. e-mail address
+				resolve_user_identity_by_login_hint(@params[:login_hint].to_s) if(@params[:login_hint].present?)
+				
+				# validate if the user was found
+				if(!@identified_user_id.present?)
+					 	# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
+						return { json: { 
+									error: "unknown_user_id",
+		                        	error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.unknown_user_id')
+		                    		}, status: 400
+							    }
+				end
+				return
+			end
+
+
 			# find the id of end-user based in login_hint parameter as e-mail
-   		    def resolve_user_identity(login_hint)
+   		    def resolve_user_identity_by_login_hint(login_hint)
 
    				@identified_user_id ||= Doorkeeper::OpenidConnect::Ciba.configuration.resolve_user_identity.call(login_hint)
 	
-				#::Rails.logger.info("resolve_user_identity => " + @identified_user_id.to_s)
       		end
+
+
+			# TODO: talvez seja melhor validar o scope pelo @client - ver validation.rb do projeto do doorkeeper
+			def validate_scope(scope) 
+			
+				#def validate_auth_scope(*scopes)
+				# Doorkeeper::OAuth::Scopes.from_array(scopes)
+				
+		        #	@_doorkeeper_scopes = scopes.presence || Doorkeeper.config.default_scopes
+				#
+		        #	doorkeeper_render_error unless valid_doorkeeper_token?
+				#end
+				# TODO scope must include openid, check other validations
+				#
+				if(!scope.present?) # || @scope.)
+					 	# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
+					return { json: { 
+								error: "invalid_scope",
+	                        	error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_scope')
+	                    		}, status: 400
+						    }
+				end
+			 return
+			end
+
+
+
 	   end
     end
   end

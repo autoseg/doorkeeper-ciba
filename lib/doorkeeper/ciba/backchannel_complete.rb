@@ -12,10 +12,6 @@ module Doorkeeper
 			  def complete
 				# All the parameters are described in https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request
 				
-				# validate parameters
-				validationResult = complete_validate_parameters
-				return validationResult unless validationResult.blank?
-
 				# auth_req_id				
 				@auth_req_id = @params[:auth_req_id].to_s;
 				
@@ -34,10 +30,10 @@ module Doorkeeper
 	 			#@acr_values = @params[:acr_values].to_s
 				#
 				# UNSUPPORTED for v1.0 # mutual required (user identity group)- some identification of the user (implementation specific)
-				#@login_hint_token = @params[:login_hint_token].to_s
+				@login_hint_token = @params[:login_hint_token].to_s
 				#
-				# UNSUPPORTED for v1.0 # mutual required (user identity group)- id of the user
-				#@id_token_hint = @params[:id_token_hint].to_s
+				# mutual required (user identity group)- id of the user
+				@id_token_hint = @params[:id_token_hint].to_s
 				#
 				# mutual required (user identity group) - the value may contain an email address, phone number, account number, subject identifier, username, etc.
 				@login_hint = @params[:login_hint].to_s
@@ -45,6 +41,10 @@ module Doorkeeper
 				# UNSUPPORTED for v1.0 #
 				# optional - secret client code known only by the user - used to prevent unsolicited authentication requests - 
 				#@user_code = @params[:user_code].to_s
+				#
+				# validate parameters
+				validationResult = complete_validate_parameters
+				return validationResult unless validationResult.blank?
 				#
 				# update auth request id
 				updateResult = update_auth_request_id_with_history
@@ -61,23 +61,22 @@ module Doorkeeper
 
 			  private
 
-			  # All the error rules are descrined in https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#auth_error_response
+			  # All the error rules are described in https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#auth_error_response
 			  def complete_validate_parameters
 	
 				::Rails.logger.info("complete_validate_parameters call")
 	
-				# Parameters that identify the end-user for whom auth is being requested. At least one must be defined.
-				#	
-				# As in the CIBA flow the OP does not have an interaction with the end-user through the consumption device, 
-				# it is REQUIRED that the Client provides one (and only one) of the hints specified above in the authentication
-				# request, that is "login_hint_token", "id_token_hint" or "login_hint".
-				#
-				# for v.1.0 just login_hint is supported
-				# future implementation: if(!(@params[:login_hint_token].present? || @params[:id_token_hint].present? || @params[:login_hint].present?)) 
-				if(!(@params[:login_hint].present?)) 
+				validationResult = validate_and_resolve_user_identity(@login_hint, @id_token_hint, @login_hint_token)
+				return validationResult unless validationResult.blank?
+				
+				validationResult = validate_scope(@scope)
+				return validationResult unless validationResult.blank?
+				
+				# validate if request_id is filled
+				if(!@params[:auth_req_id].present?) 
 					 return { json: { 
 								error: "invalid_request",
-		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_user_identification')
+		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_req_id')
 		                    	}, status: 400 
 							}
 				end
@@ -90,30 +89,6 @@ module Doorkeeper
 			                    error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_status')
 			        	       	}, status: 400 
 							}
-				end
-				
-				# validate if request_id is filled
-				if(!@params[:auth_req_id].present?) 
-					 return { json: { 
-								error: "invalid_request",
-		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_req_id')
-		                    	}, status: 400 
-							}
-				end
-				
-				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request_validation
-				# The OpenID Provider MUST process the hint provided to determine if the hint is valid and if it corresponds to a valid user. 
-				# The type, issuer (where applicable) and maximum age (where applicable) of a hint that an OP accepts should be communicated to Clients. 
-				# How the OP validates hints and informs Clients of its hint requirements is out-of-scope of this specification.
-				# check the end-user hint identity
-				resolve_user_identity(@params[:login_hint].to_s)
-				if(!@identified_user_id.present?)
-					 	# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
-						return { json: { 
-									error: "unknown_user_id",
-		                        	error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.unknown_user_id')
-		                    		}, status: 400
-							    }
 				end
 				
 				return
@@ -130,6 +105,7 @@ module Doorkeeper
 				
 				# check if the auth_req_id is found for the user and in the pending status
 				if(! current_auth_req.present?) 
+				# If the auth_req_id is invalid or was issued to another Client, an invalid_grant error MUST be returned as described in Section 5.2 of [RFC6749].
 						 return { json: { 
 									error: "invalid_grant",
 			                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_grant')

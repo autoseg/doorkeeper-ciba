@@ -42,5 +42,4 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'pry-byebug'
   spec.add_development_dependency 'rspec-rails'
   spec.add_development_dependency 'sqlite3', '>= 1.3.6'
-
 end
