@@ -18,11 +18,7 @@ module Doorkeeper
 		# self_signed_tls_client_auth - mutual tls - request params client_id and clientCertificate - https://datatracker.ietf.org/doc/html/rfc8705
 		
 	    def complete
-			# TODO: VALIDATE SCOPES
-			@scopes  = server.client.scopes
-		    ::Rails.logger.info("#### after client scopes:" + @scopes.class.to_s)
-
-			render Doorkeeper::OpenidConnect::Ciba::Complete.new(params).complete
+			render Doorkeeper::OpenidConnect::Ciba::Complete.new(params, server.client.scopes).complete
 	    end
 	  end
 	end

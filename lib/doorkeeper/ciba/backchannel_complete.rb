@@ -4,8 +4,9 @@ module Doorkeeper
   module OpenidConnect
   	module Ciba
 	    class Complete < CommonBusinessRules
-		      def initialize(params)
+		      def initialize(params, scope)
 		        @params = params
+				@scope = scope
 		      end
 		
 			  # complete public method
@@ -42,6 +43,10 @@ module Doorkeeper
 				# optional - secret client code known only by the user - used to prevent unsolicited authentication requests - 
 				#@user_code = @params[:user_code].to_s
 				#
+				# validate scope
+				validationResult = validate_scope(@scope)
+				return validationResult unless validationResult.blank?
+				#
 				# validate parameters
 				validationResult = complete_validate_parameters
 				return validationResult unless validationResult.blank?
@@ -67,9 +72,6 @@ module Doorkeeper
 				::Rails.logger.info("complete_validate_parameters call")
 	
 				validationResult = validate_and_resolve_user_identity(@login_hint, @id_token_hint, @login_hint_token)
-				return validationResult unless validationResult.blank?
-				
-				validationResult = validate_scope(@scope)
 				return validationResult unless validationResult.blank?
 				
 				# validate if request_id is filled

@@ -12,14 +12,24 @@ require 'doorkeeper/ciba/backchannel_common_business_rules'
 require 'doorkeeper/ciba/backchannel_authorize'
 require 'doorkeeper/ciba/backchannel_complete'
 require 'doorkeeper/ciba/backchannel_token'
+require 'doorkeeper/ciba/backchannel_token/creator.rb'
+require 'doorkeeper/ciba/backchannel_token/issuer.rb'
+require 'doorkeeper/ciba/backchannel_token/validator.rb'
 require 'doorkeeper/ciba/orm/active_record'
 require 'doorkeeper/request/ciba'
 require 'doorkeeper/ciba/rails/routes'
+
+# overwrite
+require 'doorkeeper/ciba/token_response'
+require 'doorkeeper/ciba/id_token'
 
 # gem main constructor
 module Doorkeeper
 	module OpenidConnect
 	  module Ciba
+
+	    GRANT_TYPE_CIBA = "urn:openid:params:grant-type:ciba"
+
 		# register type grant_type urn:openid:params:grant-type:ciba for oauth/token
 		#puts("#### Doorkeeper::GrantFlow.register urn:openid:params:grant-type:ciba #################")
 	    Doorkeeper::GrantFlow.register(

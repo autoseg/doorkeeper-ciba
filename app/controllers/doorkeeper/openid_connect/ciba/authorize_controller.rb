@@ -6,12 +6,6 @@ module Doorkeeper
 		# controller for /backchannel/authorize
 	    class AuthorizeController < CommonController
 			before_action :validate_auth_client, only: [:auth]
-			#before_action -> { doorkeeper_authorize! :openid }
-			
-	#		  include Doorkeeper::Rails::Helpers
-# Doorkeeper::OAuth::Client
-
-  #before_action :doorkeeper_authorize!
 			#
 			# Authentication must accept the methods described in https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication
 			# from https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request
@@ -24,13 +18,7 @@ module Doorkeeper
 			# self_signed_tls_client_auth - mutual tls - request params client_id and clientCertificate - https://datatracker.ietf.org/doc/html/rfc8705
 			
 		    def auth
-				# TODO: VALIDATE SCOPES
-  				@scopes  = server.client.scopes
-			    ::Rails.logger.info("#### after client scopes:" + @scopes.class.to_s)
-
-				#byebug
-
-		        render Doorkeeper::OpenidConnect::Ciba::Authorize.new(params).authorize
+		        render Doorkeeper::OpenidConnect::Ciba::Authorize.new(params, server.client.scopes).authorize
 		    end
 	  end
 	end

@@ -10,7 +10,8 @@ module Doorkeeper
 	
 	      def install
 	        template 'initializer.rb', 'config/initializers/doorkeeper_openid_connect_ciba.rb'
-	        copy_file File.expand_path('../../../../../config/locales/en.yml', __dir__), 'config/locales/doorkeeper_openid_connect_ciba.en.yml'
+			puts("ALERT: Please edit config/initializers/doorkeeper_openid_connect_ciba.rb and configure mandatory entries")
+	        #copy_file File.expand_path('../../../../../config/locales/en.yml', __dir__), 'config/locales/doorkeeper_openid_connect_ciba.en.yml'
 	        route 'use_doorkeeper_openid_connect_ciba'
 	      end
 	    end

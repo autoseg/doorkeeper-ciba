@@ -4,6 +4,7 @@ module Doorkeeper
   module OpenidConnect
   	module Ciba
 	    class CommonBusinessRules
+			# TODO : expire requests
 			def check_req_expiry(request_record)
 					return
 			end
@@ -79,21 +80,13 @@ module Doorkeeper
 	
       		end
 
-
-			# TODO: talvez seja melhor validar o scope pelo @client - ver validation.rb do projeto do doorkeeper
+			#scope must be not empty and has openid 
 			def validate_scope(scope) 
-			
-				#def validate_auth_scope(*scopes)
-				# Doorkeeper::OAuth::Scopes.from_array(scopes)
+				 ::Rails.logger.info("###### SCOPE:" + scope.class.to_s + " - " + scope.to_s)
+			     scopes = scope.split(' ')
 				
-		        #	@_doorkeeper_scopes = scopes.presence || Doorkeeper.config.default_scopes
-				#
-		        #	doorkeeper_render_error unless valid_doorkeeper_token?
-				#end
-				# TODO scope must include openid, check other validations
-				#
-				if(!scope.present?) # || @scope.)
-					 	# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
+				if(!scope.present? || !scopes.include?("openid")) 
+					# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
 					return { json: { 
 								error: "invalid_scope",
 	                        	error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_scope')

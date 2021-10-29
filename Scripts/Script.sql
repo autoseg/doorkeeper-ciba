@@ -16,7 +16,7 @@ AND "backchannel_auth_requests"."status" = 'P';
 
 update backchannel_auth_requests set STATUS = 'P' where auth_req_id = 'e942caed-e60a-4f7d-a603-094e484f17dc';
 
-
+select * from users u ;
 select * from oauth_applications oa;
 select * from oauth_access_grants;
 

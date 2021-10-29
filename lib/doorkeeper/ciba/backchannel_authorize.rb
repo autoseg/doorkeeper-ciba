@@ -4,8 +4,9 @@ module Doorkeeper
   module OpenidConnect
   	module Ciba
 	    class Authorize < CommonBusinessRules
-		      def initialize(params)
+		      def initialize(params, scope)
 		        @params = params
+				@scope = scope
 		      end
 		
 			  # authorize public method
@@ -42,6 +43,10 @@ module Doorkeeper
 				# optional - A positive integer allowing the client to request the expires_in value for the auth_req_id the server will return.
 				@requested_expiry = Integer(@params[:requested_expiry].to_s) rescue nil;
 				#
+				# validate scope
+				validationResult = validate_scope(@scope)
+				return validationResult unless validationResult.blank?
+				#
 				# validate parameters
 				validationResult = authorization_validate_parameters
 				return validationResult unless validationResult.blank?
@@ -68,9 +73,6 @@ module Doorkeeper
 				 ::Rails.logger.info("authorization_validate_parameters call")
 	
 				validationResult = validate_and_resolve_user_identity(@login_hint, @id_token_hint, @login_hint_token)
-				return validationResult unless validationResult.blank?
-				
-				validationResult = validate_scope(@scope)
 				return validationResult unless validationResult.blank?
 				
 				# validate requested expiry
