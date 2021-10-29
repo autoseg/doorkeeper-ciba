@@ -148,8 +148,6 @@ end
 
 </pre>
 
-doorkeeper_openid_connect_ciba.rb
-
 ### Routes
 
 The installation generator will update your `config/routes.rb` to define all required routes:
