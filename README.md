@@ -30,6 +30,7 @@ Affected endpoints:
 - New endpoints:
   - POST /backchannel/authorize --> authentication requests w/ possible [parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request), returning [parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#successful_authentication_request_acknowdlegment) auth_req_id, expires_in and interval, or [error response](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response)
   - POST /backchannel/complete --> completes the flow updating the consent status of request id. 
+  - GET /backchannel/getauthinfo --> get auth info to show in authorization device (eg. binding message) 
 
 - Changed endpoints:
   - POST /oauth/token --> [token requests](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_request) w/ grant_type urn:openid:params:grant-type:ciba and auth_req_id, [returning](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_response) access_token, token_type, refresh_token, expires_in and id_token, or [error response](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_error_response)
@@ -50,15 +51,15 @@ POLL FLOW:
 |             |  (1) POST      |  |  +---------------+  |  Notify pending  |  +----------------------+ | |
 |             | -------------------> | BackChannel   |  | consent approval |  | Authorization Device | | |
 |             | <-[auth_req_id]-(2)- | Authorize     | ---[Auth Result ID]--> |- OID Auth            | | |
-|             |                |  |  |               |                     |  |- Consent Approval    | | |
-|             |                |  |  +---------------+  |                  |  +----------------------+ | |
-|             |                |  |                     |                  |            |              | |
+|             |                |  |  |               |          (4)        |  |- Consent Approval    | | |
+|             |                |  |  +---------------+ <-- [Get Auth Info] -- +----------------------+ | |
+|             |                |  |                     ------ auth info --->                         | |
 |             |                |  |                     |                  +------------|--------------+ |
-|             |                |  |                     |                           (4) |                |
+|             |                |  |                     |                           (5) |                |
 |             |                |  |                     |                        [Auth Result ID]        |
 |             |                |  |                     |                               |                |
 |             |                |  |                     --------------------------------V------------+   |
-|             |  (5) POST      |  |  +---------------+    (6)                 +--------------------+ |   |
+|             |  (6) POST      |  |  +---------------+    (7)                 +--------------------+ |   |
 |             | -[auth_req_id]-----> | CIBA Token    | --[Auth Result ID]-->  | Update BackChannel | |   |
 |             | <-Error or token--|  | Request/Reply | <--------------------  | Request Id Status  | |   |
 |             |                |  |  +---------------+                        +--------------------+ |   |
@@ -67,10 +68,11 @@ POLL FLOW:
 
 --> BackChannel Authorize - /backchannel/authorize
 --> OID Auth - /oauth/authorize 
+--> Get Auth Info /backchannel/getauthinfo
 --> Consent Aproval (or disaproval) - /backchannel/complete
 --> CIBA Token Request/Reply - /oauth/token w/ grant_type = urn:openid:params:grant-type:ciba
 --> Notify pending consent approval - Via e-mail to v 1.0, plugable in the future
---> 5 and 6 repeat until it expires or receive the consent response, limited by a minimum trial interval (parameters returned by backchannel-authorize).
+--> 6 and 7 repeat until it expires or receive the consent response, limited by a minimum trial interval (parameters returned by backchannel-authorize).
 --> Authorization Device will use a sample web application for v1.0
 
 </pre>
