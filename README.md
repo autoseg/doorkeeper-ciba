@@ -29,8 +29,8 @@ Affected endpoints:
 
 - New endpoints:
   - POST /backchannel/authorize --> authentication requests w/ possible [parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request), returning [parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#successful_authentication_request_acknowdlegment) auth_req_id, expires_in and interval, or [error response](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response)
-  - POST /backchannel/complete --> completes the flow updating the consent status of request id. 
   - GET /backchannel/getauthinfo --> get auth info to show in authorization device (eg. binding message) 
+  - POST /backchannel/complete --> completes the flow updating the consent status of request id. 
 
 - Changed endpoints:
   - POST /oauth/token --> [token requests](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_request) w/ grant_type urn:openid:params:grant-type:ciba and auth_req_id, [returning](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_response) access_token, token_type, refresh_token, expires_in and id_token, or [error response](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_error_response)
