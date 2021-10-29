@@ -164,6 +164,7 @@ This will mount the following routes:
 
 ```
 POST  /backchannel/authorize
+GET /backchannel/getauthinfo
 POST  /backchannel/complete
 ```
 
