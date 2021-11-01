@@ -21,7 +21,7 @@ This library, in early development status, aims to implements the [OpenID Connec
 The following parts of [OpenID Connect Client-Initiated Backchannel Authentication Flow - Core 1.0](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html) are planned to be supported for v1.0:
 - [Inside CIBA: BackChannel Endpoint and APIs for POLL mode, parameters in request](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.5)
 - [Inside CIBA: Authentication using "urn:openid:params:grant-type:ciba" grant_type for POLL mode](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#registration)
-- [Outside CIBA: Sample Web consent channel]: The CIBA specification doesn´t define how the consent channel should be implemented. The idea is to develop a sample web application, protected by Open Id/Oauth2, for the user give the consent. The application will be accessed through a link found in a e-mail notification, an email that will be sent by the backchannel endpoint flow (asking for consent).  After the user fills in their credentials and confirms/refute consent, the approval status of the pending CIBA flow will be changed to approved/disapproved. The notes found in spec follow bellow:
+- [Outside CIBA: Sample Web consent channel]: The CIBA specification doesn´t define how the consent channel should be implemented. The idea is to develop a sample web application, protected by Open Id/Oauth2, for the user give the consent. The application will be accessed through a link found in a e-mail notification, an email that will be sent by the backchannel authorization endpoint (asking for consent).  After the user fills in their credentials and confirms/refute consent, the approval status of the pending CIBA flow will be changed to approved/disapproved. The notes found in spec follow bellow:
   - [Consent flow CIBA description](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.8)
   - [OpenID Consent Guide](https://openid.net/specs/openid-connect-core-1_0.html#Consent)
 
@@ -29,6 +29,7 @@ Affected endpoints:
 
 - New endpoints:
   - POST /backchannel/authorize --> authentication requests w/ possible [parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request), returning [parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#successful_authentication_request_acknowdlegment) auth_req_id, expires_in and interval, or [error response](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response)
+  - GET /backchannel/getauthinfo --> get auth info to show in authorization device (eg. binding message) 
   - POST /backchannel/complete --> completes the flow updating the consent status of request id. 
 
 - Changed endpoints:
@@ -50,15 +51,15 @@ POLL FLOW:
 |             |  (1) POST      |  |  +---------------+  |  Notify pending  |  +----------------------+ | |
 |             | -------------------> | BackChannel   |  | consent approval |  | Authorization Device | | |
 |             | <-[auth_req_id]-(2)- | Authorize     | ---[Auth Result ID]--> |- OID Auth            | | |
-|             |                |  |  |               |                     |  |- Consent Approval    | | |
-|             |                |  |  +---------------+  |                  |  +----------------------+ | |
-|             |                |  |                     |                  |            |              | |
+|             |                |  |  |               |          (4)        |  |- Consent Approval    | | |
+|             |                |  |  +---------------+ <-- [Get Auth Info] -- +----------------------+ | |
+|             |                |  |                     ------ auth info --->                         | |
 |             |                |  |                     |                  +------------|--------------+ |
-|             |                |  |                     |                           (4) |                |
+|             |                |  |                     |                           (5) |                |
 |             |                |  |                     |                        [Auth Result ID]        |
 |             |                |  |                     |                               |                |
 |             |                |  |                     --------------------------------V------------+   |
-|             |  (5) POST      |  |  +---------------+    (6)                 +--------------------+ |   |
+|             |  (6) POST      |  |  +---------------+    (7)                 +--------------------+ |   |
 |             | -[auth_req_id]-----> | CIBA Token    | --[Auth Result ID]-->  | Update BackChannel | |   |
 |             | <-Error or token--|  | Request/Reply | <--------------------  | Request Id Status  | |   |
 |             |                |  |  +---------------+                        +--------------------+ |   |
@@ -67,10 +68,11 @@ POLL FLOW:
 
 --> BackChannel Authorize - /backchannel/authorize
 --> OID Auth - /oauth/authorize 
+--> Get Auth Info /backchannel/getauthinfo
 --> Consent Aproval (or disaproval) - /backchannel/complete
 --> CIBA Token Request/Reply - /oauth/token w/ grant_type = urn:openid:params:grant-type:ciba
 --> Notify pending consent approval - Via e-mail to v 1.0, plugable in the future
---> 5 and 6 repeat until it expires or receive the consent response, limited by a minimum trial interval (parameters returned by backchannel-authorize).
+--> 6 and 7 repeat until it expires or receive the consent response, limited by a minimum trial interval (parameters returned by backchannel-authorize).
 --> Authorization Device will use a sample web application for v1.0
 
 </pre>
@@ -139,12 +141,12 @@ Doorkeeper::OpenidConnect::Ciba.configure do
   #  user = User.find_by(email: login_hint)
   #	user.id unless user.nil?
   #end
-
+  
+  # mandatory config : add new permission to grant type ciba 
+  Doorkeeper.configuration.grant_flows.append("urn:openid:params:grant-type:ciba")
 end
 
 </pre>
-
-doorkeeper_openid_connect_ciba.rb
 
 ### Routes
 
@@ -162,6 +164,7 @@ This will mount the following routes:
 
 ```
 POST  /backchannel/authorize
+GET /backchannel/getauthinfo
 POST  /backchannel/complete
 ```
 
