@@ -7,7 +7,7 @@ module Doorkeeper
       delegate :client, :parameters, to: :server
 
       def request
-		::Rails.logger.info("#### INSIDE Ciba strategy #################")
+		::Rails.logger.info("#### INSIDE Ciba oauth-token strategy #################")
 
 		@request ||= Doorkeeper::OpenidConnect::Ciba::Token.new(
 		  Doorkeeper.config,
