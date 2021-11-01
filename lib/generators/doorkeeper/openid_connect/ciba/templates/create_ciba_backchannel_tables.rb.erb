@@ -4,6 +4,7 @@ class CreateCibaBackchannelTables < ActiveRecord::Migration<%= migration_version
     enable_extension 'pgcrypto'
 
     create_table :backchannel_auth_requests do |t|
+	  t.uuid :application_id, null: false
       t.uuid :auth_req_id, null: false
       t.string :status, null: false, default: 'P'
       t.string :binding_message, null: true
@@ -19,15 +20,16 @@ class CreateCibaBackchannelTables < ActiveRecord::Migration<%= migration_version
 	  t.string :user_code, null: true
 	  t.integer :expires_in, null: false
 	  t.integer :interval, null: false
-	  t.timestamp :last_try, null: false
 
       t.timestamps             null: false
     end
 
     add_index :backchannel_auth_requests, :auth_req_id, unique: true
     add_index :backchannel_auth_requests, :identified_user_id, unique: false
+	add_index :backchannel_auth_requests, [:created_at, :expires_in], unique: false
 
     create_table :backchannel_auth_consent_history do |t|
+	  t.uuid :application_id, null: false
       t.uuid :auth_req_id, null: false
 	  # the three possible modes for identify the user
 	  t.string :login_hint_token, null: true
@@ -37,6 +39,7 @@ class CreateCibaBackchannelTables < ActiveRecord::Migration<%= migration_version
 	  t.uuid :identified_user_id, null: false
 	  #
       t.string :consent_type,  null: false
+	  t.string :consent_desc,  null: true
 
       t.timestamps             null: false
 	end
@@ -48,6 +51,12 @@ class CreateCibaBackchannelTables < ActiveRecord::Migration<%= migration_version
       :backchannel_auth_consent_history,
       :backchannel_auth_requests,
       column: :auth_req_id, primary_key: :auth_req_id
+    )
+
+    add_foreign_key(
+	  :backchannel_auth_requests,
+      :oauth_applications,
+      column: :application_id, primary_key: :id
     )
   end
 end

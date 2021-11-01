@@ -30,6 +30,7 @@ module Doorkeeper
 	          routes.scope options[:scope] || 'backchannel', as: 'backchannel' do
 	            map_route(:authorize, :authorize_routes)
 	            map_route(:complete, :complete_routes)
+				map_route(:getauthinfo, :getauthinfo_routes)
 	          end
 	        end
 	
@@ -51,6 +52,10 @@ module Doorkeeper
 	
 	        def complete_routes
 		      routes.post :complete, path: 'complete', as: nil
+	        end
+
+	        def getauthinfo_routes
+		      routes.get :getauthinfo, path: 'getauthinfo', as: nil
 	        end
 	      end
 	    end

@@ -18,7 +18,7 @@ module Doorkeeper
 			# self_signed_tls_client_auth - mutual tls - request params client_id and clientCertificate - https://datatracker.ietf.org/doc/html/rfc8705
 			
 		    def auth
-		        render Doorkeeper::OpenidConnect::Ciba::Authorize.new(params, server.client.scopes).authorize
+		        render Doorkeeper::OpenidConnect::Ciba::Authorize.new(params, server).authorize
 		    end
 	  end
 	end

@@ -10,7 +10,12 @@ module Doorkeeper
 			end
 			
 			# validate if the user was provided and search for the user identity
-			def validate_and_resolve_user_identity(login_hint, id_token_hint, login_hint_token)
+			def validate_and_resolve_user_identity(application_id, login_hint, id_token_hint, login_hint_token)
+				# TODO: validate application_id (oauth_access_grants) ?
+				
+				::Rails.logger.info("validate_and_resolve_user_identity: " + application_id + "," + login_hint + "," + id_token_hint + "," + login_hint_token)
+				
+				#
 				# Parameters that identify the end-user for whom auth is being requested. At least one must be defined.
 				#	
 				# As in the CIBA flow the OP does not have an interaction with the end-user through the consumption device, 
@@ -47,7 +52,7 @@ module Doorkeeper
 							}
 				end
 
-				# UNSUPPORTED for v.1.0				
+				# TODO: UNSUPPORTED for v.1.0				
 				if(id_token_hint.present? || login_hint_token.present?)
 					    # https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
 						return { json: { 

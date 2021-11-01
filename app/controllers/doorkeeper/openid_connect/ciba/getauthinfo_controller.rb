@@ -4,8 +4,8 @@ module Doorkeeper
   module OpenidConnect
   	module Ciba
 		# controller for /backchannel/authorize
-	    class CompleteController < CommonController
-			before_action :validate_auth_client, only: [:auth]
+	    class GetauthinfoController < CommonController
+			before_action :validate_auth_client, only: [:getauthinfo]
 	    #
 		# Authentication must accept the methods described in https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication
 		# from https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request
@@ -17,8 +17,8 @@ module Doorkeeper
 		# tls_client_auth - mutual tls - request params client_id and clientCertificate - https://tools.ietf.org/id/draft-ietf-oauth-mtls-03.html
 		# self_signed_tls_client_auth - mutual tls - request params client_id and clientCertificate - https://datatracker.ietf.org/doc/html/rfc8705
 		
-	    def complete
-			render Doorkeeper::OpenidConnect::Ciba::Complete.new(params, server).complete
+	    def getauthinfo
+			render Doorkeeper::OpenidConnect::Ciba::GetAuthInfo.new(params, server).getauthinfo
 	    end
 	  end
 	end

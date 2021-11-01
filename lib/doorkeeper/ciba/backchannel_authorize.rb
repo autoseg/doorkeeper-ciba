@@ -4,9 +4,11 @@ module Doorkeeper
   module OpenidConnect
   	module Ciba
 	    class Authorize < CommonBusinessRules
-		      def initialize(params, scope)
+		      def initialize(params, server)
 		        @params = params
-				@scope = scope
+				@scope = server.client.scopes
+				@client= server.client
+				@application_id = server.client.id
 		      end
 		
 			  # authorize public method
@@ -16,15 +18,15 @@ module Doorkeeper
 				# scope must include openid
 				@scope = @params[:scope].to_s
 				#
-				# UNSUPPORTED for v1.0 #
+				# TODO: UNSUPPORTED for v1.0 #
 				# required for ping and push mode (used to notify the callback in these modes) 
 				#@client_notification_token = @params[:client_notification_token].to_s
 				#
-				# UNSUPPORTED for v1.0 #
+				# TODO: UNSUPPORTED for v1.0 #
 				# optional parameter - authentication context classes 
 	 			#@acr_values = @params[:acr_values].to_s
 				#
-				# UNSUPPORTED for v1.0 # mutual required (user identity group)- some identification of the user (implementation specific)
+				# mutual required (user identity group)- some identification of the user (implementation specific)
 				@login_hint_token = @params[:login_hint_token].to_s
 				#
 				# mutual required (user identity group)- id of a valid token of an user
@@ -36,7 +38,7 @@ module Doorkeeper
 				# optional - human readable message to be displayed to the users on both consumption and authorization device
 				@binding_message = @params[:binding_message].to_s
 				#
-				# UNSUPPORTED for v1.0 #
+				# TODO: UNSUPPORTED for v1.0 #
 				# optional - secret client code known only by the user - used to prevent unsolicited authentication requests - 
 				#@user_code = @params[:user_code].to_s
 				#
@@ -71,8 +73,8 @@ module Doorkeeper
 			  def authorization_validate_parameters
 	
 				 ::Rails.logger.info("authorization_validate_parameters call")
-	
-				validationResult = validate_and_resolve_user_identity(@login_hint, @id_token_hint, @login_hint_token)
+			
+				validationResult = validate_and_resolve_user_identity(@application_id, @login_hint, @id_token_hint, @login_hint_token)
 				return validationResult unless validationResult.blank?
 				
 				# validate requested expiry
@@ -107,11 +109,12 @@ module Doorkeeper
 				 @expires_in= @requested_expiry.nil? ? Doorkeeper::OpenidConnect::Ciba.configuration.default_req_id_expiration : @requested_expiry
 				 @interval=Doorkeeper::OpenidConnect::Ciba.configuration.default_poll_interval
 
-			 	 ::Rails.logger.info("## create_auth_request_id: auth_req_id => " + @auth_req_id.to_s + ", identified_user_id => " +  @identified_user_id.to_s)
+			 	 ::Rails.logger.info("## create_auth_request_id: auth_req_id => " + @auth_req_id.to_s + ", identified_user_id => " +  @identified_user_id.to_s + ", application id:" + @application_id)
 			
 				# Save backchannel request
 				BackchannelAuthRequests.create(
 											auth_req_id: @auth_req_id, 
+											application_id: @application_id,
 											binding_message: @binding_message, 
 											scope: @scope, 
 											status: BackchannelAuthRequests::STATUS_PENDING,
@@ -123,9 +126,9 @@ module Doorkeeper
 				 							identified_user_id: @identified_user_id,
 											user_code: @user_code,
 											expires_in: @expires_in,
-											interval: @interval,
-											last_try: DateTime.now
+											interval: @interval
 											)
+											
 				return
 			end 
 	   end

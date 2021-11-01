@@ -11,12 +11,14 @@ module Doorkeeper
 	          def initialize
 	            @controllers = {
 	              authorize: 'doorkeeper/openid_connect/ciba/authorize',
-	              complete: 'doorkeeper/openid_connect/ciba/complete'
+	              complete: 'doorkeeper/openid_connect/ciba/complete',
+				  getauthinfo: 'doorkeeper/openid_connect/ciba/getauthinfo' 
 	            }
 	
 	            @as = {
 	              authorize: :authorize,
-	              complete: :complete
+	              complete: :complete,
+				  getauthinfo: :getauthinfo
 	            }
 	
 	            @skips = []

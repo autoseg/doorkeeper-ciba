@@ -13,21 +13,16 @@ module Doorkeeper
         attr_accessor :id_ciba_token
 
         def body
-		  byebug
-
 		  ::Rails.logger.info("#### CIBA TokenResponse - body extention #################");
 
-
-          if token.includes_scope? 'openid'
-          #  id_token = self.id_token || Doorkeeper::OpenidConnect::IdToken.new(token)
-
+			# XXX Add here CIBA specific oauth-token response params - grant_type urn:openid:params:grant-type:ciba
+#          if token.includes_scope? 'openid'
+#            super
+#			  .merge(ciba_param_test: 'xxxxxx')
+#              .reject { |_, value| value.blank? }
+#          else
             super
-              #.merge(id_token: id_token.as_jws_token)
-			  .merge(ciba_param_test: 'xxxxxx')
-              .reject { |_, value| value.blank? }
-          else
-            super
-          end
+#          end
         end
       end
     end

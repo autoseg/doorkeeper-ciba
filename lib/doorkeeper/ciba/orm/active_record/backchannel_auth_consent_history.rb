@@ -16,6 +16,7 @@ module Doorkeeper
 			validates :consent_type, presence: true, acceptance: { accept: ['A', 'D', 'E'] }
 							
 		 	  #t.uuid :auth_req_id, null: false
+			  #t.uuid :application_id, null: false
 			  # the three possible modes for identify the user
 			  #t.string :login_hint_token, null: true
 		      #t.string :id_token_hint, null: true

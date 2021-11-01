@@ -13,6 +13,7 @@ SELECT "backchannel_auth_requests".* FROM
 "backchannel_auth_requests"."auth_req_id" = 'e942caed-e60a-4f7d-a603-094e484f17dc' AND 
 "backchannel_auth_requests"."identified_user_id" = 'f831fdc8-1089-4151-b758-3dd084185892' 
 AND "backchannel_auth_requests"."status" = 'P';
+commit;
 
 update backchannel_auth_requests set STATUS = 'P' where auth_req_id = 'e942caed-e60a-4f7d-a603-094e484f17dc';
 

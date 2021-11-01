@@ -147,7 +147,7 @@ module Doorkeeper
 			  def token_validate_parameters
 				::Rails.logger.info("complete_validate_parameters call")
 	
-				validationResult = @busRules.validate_and_resolve_user_identity(@login_hint, @id_token_hint, @login_hint_token)
+				validationResult = @busRules.validate_and_resolve_user_identity(@application_id, @login_hint, @id_token_hint, @login_hint_token)
 				return validationResult unless validationResult.blank?
 				
 				# validate if request_id is filled
@@ -170,6 +170,10 @@ module Doorkeeper
 				# Search the backchannel request with status different than PENDING
 				@current_auth_req = BackchannelAuthRequests.find_by(auth_req_id: @auth_req_id, identified_user_id: @identified_user_id, :status.not => BackchannelAuthRequests::STATUS_PENDING);
 
+				# check expires 
+				validationResult = check_req_expiry(@current_auth_req)
+				return validationResult unless validationResult.blank?
+
 				if(! current_auth_req.present?) 
 					# If the auth_req_id is invalid or was issued to another Client, an invalid_grant error MUST be returned as described in Section 5.2 of [RFC6749].
 						 return { json: { 
@@ -179,7 +183,7 @@ module Doorkeeper
 								}
 				else
 					::Rails.logger.info("## RETURNING BackchannelAuthRequests WITH auth_req_id:" +  @auth_req_id + " status: " + current_auth_req[:status])
-					# TODO: VALIDATE the possibles status
+					# TODO: VALIDATE the possible status
 				end
 				return
 			end 
