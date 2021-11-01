@@ -10,12 +10,12 @@ module Doorkeeper
     module Ciba
 	    module IdToken
 	      def claims
+			id_token_clain = super
+
 			# XXX Add here CIBA specific open_id connect JWT (id_token) params - grant_type urn:openid:params:grant-type:ciba
 	        ciba_token_clain = {
 	          ciba_test: '123',
 	        }.merge ClaimsBuilder.generate(@access_token, :ciba_token)
-
-			id_token_clain = super
 			
 			byebug
 			
@@ -43,6 +43,21 @@ module Doorkeeper
 				#       EFWtjGPPMj6kDVrikec47yK86HArGvsIIwk1uExynJIv_tgZGE0eZI7MtVb2UlCw
 				#       DQrVlg"
 				#    }
+			
+#			JWT decode:
+#    {
+#      "iss": "https://server.example.com",
+#      "sub": "248289761001",
+#      "aud": "s6BhdRkqt3",
+#      "email": "janedoe@example.com",
+#      "exp": 1537819803,
+#      "iat": 1537819503,
+#      "at_hash": "Wt0kVFXMacqvnHeyU0001w",
+#      "urn:openid:params:jwt:claim:rt_hash": "sHahCuSpXCRg5mkDDvvr4w",
+#      "urn:openid:params:jwt:claim:auth_req_id":
+#        "1c266114-a1be-4252-8ad1-04986c5b9ac1"
+#    }
+			
 			
 			
 			id_token_clain.merge(ciba_token_clain)
