@@ -53,7 +53,7 @@ POLL FLOW:
 |             | <-[auth_req_id]-(2)- | Authorize     | ---[Auth Result ID]--> |- OID Auth            | | |
 |             |                |  |  |               |          (4)        |  |- Consent Approval    | | |
 |             |                |  |  +---------------+ <-- [Get Auth Info] -- +----------------------+ | |
-|             |                |  |                     ------ auth info --->                         | |
+|             |                |  |                     ------ auth info --->                          | |
 |             |                |  |                     |                  +------------|--------------+ |
 |             |                |  |                     |                           (5) |                |
 |             |                |  |                     |                        [Auth Result ID]        |
