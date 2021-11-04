@@ -32,6 +32,7 @@ module Doorkeeper
 			if((@access_token.includes_scope? 'ciba') && (@access_token.ciba_auth_req_id.present?))
 				ciba_token_clain = {
 		          "urn:openid:params:jwt:claim:auth_req_id": @access_token.ciba_auth_req_id
+					# TODO: validate another mandatory parameters for ciba
 		        }.merge ClaimsBuilder.generate(@access_token, :id_token)
 				# merge CIBA JWT
 				@id_token_result = @id_token_result.merge(ciba_token_clain)

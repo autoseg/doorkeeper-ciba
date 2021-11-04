@@ -4,7 +4,7 @@ en:
        messages:
              authorization_pending: 'The authorization request is still pending as the end-user hasnt yet been authenticated'
              slow_down: 'The interval MUST be increased by at least 5 seconds for this and all subsequent requests'
-             expired_token: 'The auth_req_id has expired'
+             expired_token: 'The request id has expired'
              invalid_ciba_request_status: 'This CIBA request token is in an invalid state'
     openid_connect:
       ciba:

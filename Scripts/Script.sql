@@ -10,9 +10,11 @@ select * from backchannel_auth_consent_history ;
 
 SELECT "backchannel_auth_requests".* FROM 
 "backchannel_auth_requests" WHERE 
-"backchannel_auth_requests"."auth_req_id" = 'e942caed-e60a-4f7d-a603-094e484f17dc' AND 
-"backchannel_auth_requests"."identified_user_id" = 'f831fdc8-1089-4151-b758-3dd084185892' 
+"backchannel_auth_requests"."auth_req_id" = 'd751da1b-262c-49eb-a853-7fd8bdadead2' 
 AND "backchannel_auth_requests"."status" = 'P';
+
+update backchannel_auth_requests set status = 'X'
+where "backchannel_auth_requests"."auth_req_id" = 'd751da1b-262c-49eb-a853-7fd8bdadead2' ;
 commit;
 
 update backchannel_auth_requests set STATUS = 'P' where auth_req_id = 'e942caed-e60a-4f7d-a603-094e484f17dc';
@@ -26,5 +28,5 @@ select * from oauth_openid_requests;
 
 SELECT "users".* FROM "users" WHERE "users"."soft_deleted" = false AND "users"."email" = 'email1@email.com';
 
-
+sele
 
