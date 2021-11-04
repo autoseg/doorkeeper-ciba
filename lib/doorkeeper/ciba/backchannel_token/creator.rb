@@ -6,7 +6,7 @@ module Doorkeeper
 	    module ClientCredentials
 	      class Creator
 	        def call(client, scopes, attributes = {})
-			 byebug
+			 #byebug
 	          existing_token = nil
 	
 	          if lookup_existing_token?

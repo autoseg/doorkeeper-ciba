@@ -21,7 +21,7 @@ module Doorkeeper
 	            @error = validator.error
 	          end
 	
-			  byebug
+			  #byebug
 	
 	          @token
 	        end
@@ -30,7 +30,7 @@ module Doorkeeper
 	
 			# create token in database
 	        def create_token(client, scopes, params)
-			  byebug
+			  #byebug
 	          context = Doorkeeper::OAuth::Authorization::Token.build_context(
 	            client,
 	            Doorkeeper::OpenidConnect::Ciba::GRANT_TYPE_CIBA,

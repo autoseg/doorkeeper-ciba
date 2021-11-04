@@ -16,7 +16,7 @@ module Doorkeeper
 		  ::Rails.logger.info("#### CIBA TokenResponse - body extention #################");
 		  
 			# XXX Add here CIBA specific oauth-token response params - grant_type urn:openid:params:grant-type:ciba
-			byebug
+			#byebug
 	         # if token.includes_scope? 'openid'
 	         #   id_token = self.id_token || Doorkeeper::OpenidConnect::IdToken.new(token)
 	

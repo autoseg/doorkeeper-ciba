@@ -28,7 +28,7 @@ module Doorkeeper
 			#      "urn:openid:params:jwt:claim:auth_req_id":
 			#        "1c266114-a1be-4252-8ad1-04986c5b9ac1"
 			#    }
-			byebug
+			#byebug
 			if((@access_token.includes_scope? 'ciba') && (@access_token.ciba_auth_req_id.present?))
 				ciba_token_clain = {
 		          "urn:openid:params:jwt:claim:auth_req_id": @access_token.ciba_auth_req_id
