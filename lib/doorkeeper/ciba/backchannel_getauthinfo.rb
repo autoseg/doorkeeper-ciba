@@ -94,7 +94,7 @@ module Doorkeeper
 				# SUCCESS 
 		        return { 
 					     json: { 
-							auth_req_id: @auth_req_id,
+							#auth_req_id: @auth_req_id,
 	                        status: current_auth_req['status'],
 							binding_message: current_auth_req['binding_message']
 		                 }, status: 200

@@ -129,6 +129,7 @@ module Doorkeeper
 											interval: @interval
 											)
 											
+				# TODO: notify the user - redis						
 				return
 			end 
 	   end

@@ -9,6 +9,7 @@ module Doorkeeper
       def request
 		::Rails.logger.info("#### INSIDE Ciba oauth-token strategy #################")
 
+		# excute Token inside backchannel_token.rb and return to controller
 		@request ||= Doorkeeper::OpenidConnect::Ciba::Token.new(
 		  Doorkeeper.config,
           server.client,

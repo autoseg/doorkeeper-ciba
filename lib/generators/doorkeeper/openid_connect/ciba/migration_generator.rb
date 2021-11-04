@@ -16,6 +16,11 @@ module Doorkeeper
 	          'db/migrate/create_ciba_backchannel_tables.rb',
 	          migration_version: migration_version
 	        )
+	        migration_template(
+	          'add_ciba_reqauthid_to_oauth_token.rb.erb',
+	          'db/migrate/add_ciba_reqauthid_to_oauth_token.rb',
+	          migration_version: migration_version
+	        )
 	      end
 	
 	      def self.next_migration_number(dirname)

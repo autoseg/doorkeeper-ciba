@@ -12,34 +12,43 @@ module Doorkeeper
 	          @validator = validator
 	        end
 		
-	        def create(client, scopes, creator = Creator.new)
+	        def create(client, scopes, params)
 	          if validator.valid?
-	            @token = create_token(client, scopes, creator)
+	            @token = create_token(client, scopes, params)
 	            @error = :server_error unless @token
 	          else
 	            @token = false
 	            @error = validator.error
 	          end
 	
+			  byebug
+	
 	          @token
 	        end
 	
 	        private
 	
-	        def create_token(client, scopes, creator)
+			# create token in database
+	        def create_token(client, scopes, params)
+			  byebug
 	          context = Doorkeeper::OAuth::Authorization::Token.build_context(
 	            client,
 	            Doorkeeper::OpenidConnect::Ciba::GRANT_TYPE_CIBA,
 	            scopes,
 	            nil,
 	          )
+			  # TODO: pegar do backstate request id 
 	          ttl = Doorkeeper::OAuth::Authorization::Token.access_token_expires_in(@server, context)
 	
+			  creator = Doorkeeper::OpenidConnect::Ciba::ClientCredentials::Creator.new
+	
+		      #create the token in database
 	          creator.call(
 	            client,
 	            scopes,
 	            use_refresh_token: false,
 	            expires_in: ttl,
+				ciba_auth_req_id: params['auth_req_id']
 	          )
 	        end
 	      end

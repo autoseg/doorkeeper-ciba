@@ -4,6 +4,8 @@ module Doorkeeper
   module OpenidConnect
   	module Ciba
 	    class CommonBusinessRules
+			attr_writer :param
+
 			# TODO : expire requests
 			def check_req_expiry(request_record)
 					return
@@ -85,12 +87,12 @@ module Doorkeeper
 	
       		end
 
-			#scope must be not empty and has openid 
+			#scope must be not empty and contains openid and ciba
 			def validate_scope(scope) 
 				 ::Rails.logger.info("###### SCOPE:" + scope.class.to_s + " - " + scope.to_s)
 			     scopes = scope.split(' ')
 				
-				if(!scope.present? || !scopes.include?("openid")) 
+				if(!scope.present? || !scopes.include?("openid") || !scopes.include?("ciba")) 
 					# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
 					return { json: { 
 								error: "invalid_scope",

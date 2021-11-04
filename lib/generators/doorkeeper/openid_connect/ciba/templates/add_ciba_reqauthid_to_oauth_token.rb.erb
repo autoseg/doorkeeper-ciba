@@ -1,0 +1,11 @@
+class AddCibaReqauthidToOauthToken < ActiveRecord::Migration<%= migration_version %>
+  def change
+		add_column :oauth_access_tokens, :ciba_auth_req_id, :uuid, null: true
+		
+		 add_foreign_key(
+	      :oauth_access_tokens,
+	      :backchannel_auth_requests,
+	      column: :ciba_auth_req_id, primary_key: :auth_req_id
+	    )
+  end
+end
