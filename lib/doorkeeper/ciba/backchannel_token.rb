@@ -100,13 +100,14 @@ module Doorkeeper
 		        issuer.create(@client, @scopes, @params)
 		      end
 			
+				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#token_error_response
 			  def cibaValidations
 				@busRules = Doorkeeper::OpenidConnect::Ciba::CommonBusinessRules.new
 				@busRules.param = @params;
 	
 				::Rails.logger.info("#### INSIDE CIBA TOKEN #################:" + @params.to_s);
 
-				# validate scope
+				# validate scope TODO - test
 				validationResult = @busRules.validate_scope(@original_scopes)
 				raise Doorkeeper::Errors::DoorkeeperError, :invalid_request unless validationResult.blank?
 				#
@@ -115,6 +116,9 @@ module Doorkeeper
 				#
 				# validate auth request id
 				validate_auth_request_id
+				
+				# TODO: slow_down
+				
 		      end
 
 			  private
@@ -142,13 +146,28 @@ module Doorkeeper
 				# check expires 
 				validationResult = @busRules.check_req_expiry(current_auth_req)
 				return validationResult unless validationResult.blank?
+				
+				status = current_auth_req[:status];
 
-				if(! current_auth_req.present?) 
+				if((! current_auth_req.present?) || (! status.present?)) 
 					# If the auth_req_id is invalid or was issued to another Client, an invalid_grant error MUST be returned as described in Section 5.2 of [RFC6749].
 					 raise Doorkeeper::Errors::DoorkeeperError, :invalid_grant 	 
 				else
 					::Rails.logger.info("##validate_auth_request_id RETURNING auth_req_id:" +  @auth_req_id + " status: " + current_auth_req[:status])
-					# TODO: VALIDATE the possible status
+					# VALIDATE the request id status
+					
+					case status
+						when BackchannelAuthRequests::STATUS_APPROVED
+							return
+						when BackchannelAuthRequests::STATUS_PENDING
+							raise Doorkeeper::Errors::DoorkeeperError.new('authorization_pending')
+						when BackchannelAuthRequests::STATUS_DISAPPROVED
+							raise Doorkeeper::Errors::DoorkeeperError.new('access_denied')
+						when BackchannelAuthRequests::STATUS_EXPIRED
+							raise Doorkeeper::Errors::DoorkeeperError.new('expired_token')
+						else
+							raise Doorkeeper::Errors::DoorkeeperError.new('invalid_ciba_request_status') 
+					end					
 				end
 				return
 			end 
