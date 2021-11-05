@@ -31,13 +31,7 @@
           <con:default/>
           <con:description xsi:nil="true"/>
         </con:parameter>
-        <con:parameter>
-          <con:name>redirect_uri</con:name>
-          <con:value/>
-          <con:style>QUERY</con:style>
-          <con:default/>
-          <con:description xsi:nil="true"/>
-        </con:parameter>
+        
         <con:parameter>
           <con:name>client_id</con:name>
           <con:value/>
@@ -107,7 +101,7 @@
           <con:params/>
           <con:element>data</con:element>
         </con:representation>
-        <con:request name="token" id="9932eb00-098f-480b-9c63-6ec916774acd" mediaType="application/json" postQueryString="false">
+        <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="token" id="9932eb00-098f-480b-9c63-6ec916774acd" mediaType="application/json" postQueryString="false">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
           </con:settings>
@@ -120,19 +114,12 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-            <con:entry key="grant_type" value="client_credentials"/>
-            <con:entry key="scope" value="openid"/>
-            <con:entry key="client_secret" value="CIBASECRET"/>
-            <con:entry key="redirect_uri" value=""/>
-            <con:entry key="client_id" value="CIBAUID"/>
-          </con:parameters>
-          <con:parameterOrder>
-            <con:entry>grant_type</con:entry>
-            <con:entry>client_id</con:entry>
-            <con:entry>client_secret</con:entry>
-            <con:entry>scope</con:entry>
-            <con:entry>redirect_uri</con:entry>
-          </con:parameterOrder>
+  <con:entry key="grant_type" value="client_credentials"/>
+  <con:entry key="scope" value="openid"/>
+  <con:entry key="client_secret" value="CIBASECRET"/>
+  <con:entry key="client_id" value="CIBAUID"/>
+</con:parameters>
+          <con:parameterOrder><con:entry>grant_type</con:entry><con:entry>client_id</con:entry><con:entry>client_secret</con:entry><con:entry>scope</con:entry></con:parameterOrder>
         </con:request>
       </con:method>
     </con:resource>
@@ -174,7 +161,7 @@
           <con:default/>
           <con:description xsi:nil="true"/>
         </con:parameter>
-      </con:parameters>
+      <con:parameter><con:name>client_secret</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter></con:parameters>
       <con:method name="Token" id="cdc5d4bb-faff-45a0-b02b-1949175e341f" method="POST">
         <con:settings/>
         <con:parameters/>
@@ -237,19 +224,14 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-            <con:entry key="password" value="123123"/>
-            <con:entry key="grant_type" value="password"/>
-            <con:entry key="scope" value="openid"/>
-            <con:entry key="client_id" value="CIBAUID"/>
-            <con:entry key="username" value="email2@email.com"/>
-          </con:parameters>
-          <con:parameterOrder>
-            <con:entry>grant_type</con:entry>
-            <con:entry>scope</con:entry>
-            <con:entry>username</con:entry>
-            <con:entry>password</con:entry>
-            <con:entry>client_id</con:entry>
-          </con:parameterOrder>
+  <con:entry key="password" value="123123"/>
+  <con:entry key="grant_type" value="password"/>
+  <con:entry key="scope" value="openid email"/>
+  <con:entry key="client_secret" value="CIBASECRET"/>
+  <con:entry key="client_id" value="CIBAUID"/>
+  <con:entry key="username" value="email2@email.com"/>
+</con:parameters>
+          <con:parameterOrder><con:entry>grant_type</con:entry><con:entry>scope</con:entry><con:entry>password</con:entry><con:entry>client_id</con:entry><con:entry>username</con:entry><con:entry>client_secret</con:entry></con:parameterOrder>
         </con:request>
       </con:method>
     </con:resource>
@@ -278,7 +260,7 @@
           <con:description xsi:nil="true"/>
         </con:parameter>
         <con:parameter>
-          <con:name>redirect_uri </con:name>
+          <con:name>redirect_uri</con:name>
           <con:value/>
           <con:style>QUERY</con:style>
           <con:default/>
@@ -291,38 +273,20 @@
           <con:default/>
           <con:description xsi:nil="true"/>
         </con:parameter>
-        <con:parameter>
-          <con:name>statex</con:name>
-          <con:value/>
-          <con:style>QUERY</con:style>
-          <con:default/>
-          <con:description xsi:nil="true"/>
-        </con:parameter>
-        <con:parameter>
-          <con:name>username</con:name>
-          <con:value/>
-          <con:style>QUERY</con:style>
-          <con:default/>
-          <con:description xsi:nil="true"/>
-        </con:parameter>
-        <con:parameter>
-          <con:name>password</con:name>
-          <con:value/>
-          <con:style>QUERY</con:style>
-          <con:default/>
-          <con:description xsi:nil="true"/>
-        </con:parameter>
+        
+        
+        
       </con:parameters>
-      <con:method name="Authorize 1" id="42043eef-759d-41e8-b29b-2addf1cefedf" method="GET">
+      <con:method name="POST" id="42043eef-759d-41e8-b29b-2addf1cefedf" method="POST">
         <con:settings/>
         <con:parameters/>
         <con:representation type="FAULT">
           <con:mediaType>text/html; charset=UTF-8</con:mediaType>
-          <con:status>500</con:status>
+          <con:status>500 422</con:status>
           <con:params/>
           <con:element>html</con:element>
         </con:representation>
-        <con:request name="Request 1" id="b5e33024-0f8b-4e0a-8148-ca1aad68d818" mediaType="application/json">
+        <con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:request name="Request 1" id="b5e33024-0f8b-4e0a-8148-ca1aad68d818" mediaType="application/json" postQueryString="false">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
           </con:settings>
@@ -335,26 +299,69 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-            <con:entry key="password" value="123123"/>
-            <con:entry key="redirect_uri " value="http://localhost:3000/callback"/>
-            <con:entry key="scope " value="openid"/>
-            <con:entry key="response_type" value="code"/>
-            <con:entry key="statex" value="1234"/>
-            <con:entry key="client_id " value="Sp7Qy2yepPIQ4U69mfe5xJhFA6y8Hsi_idsf_pmca_4"/>
-            <con:entry key="username" value="email2@email.com"/>
-          </con:parameters>
-          <con:parameterOrder>
-            <con:entry>response_type</con:entry>
-            <con:entry>client_id </con:entry>
-            <con:entry>redirect_uri </con:entry>
-            <con:entry>scope </con:entry>
-            <con:entry>statex</con:entry>
-            <con:entry>username</con:entry>
-            <con:entry>password</con:entry>
-          </con:parameterOrder>
+  <con:entry key="scope " value="openid"/>
+  <con:entry key="response_type" value="code"/>
+  <con:entry key="client_id " value="CIBAUID"/>
+  <con:entry key="redirect_uri" value="http://localhost:3000/callback"/>
+</con:parameters>
+          <con:parameterOrder><con:entry>response_type</con:entry><con:entry>client_id </con:entry><con:entry>scope </con:entry><con:entry>redirect_uri</con:entry></con:parameterOrder>
         </con:request>
       </con:method>
     </con:resource>
+      <con:resource name="Callback Auth Code" path="/callback" id="9de09cc4-97aa-4b53-b22a-87b7df4cd4a9">
+      <con:settings/>
+      <con:parameters>
+        <con:parameter>
+          <con:name>code</con:name>
+          <con:value/>
+          <con:style>QUERY</con:style>
+          <con:default/>
+          <con:description xsi:nil="true"/>
+        </con:parameter>
+        
+        
+        <con:parameter>
+          <con:name>session_state</con:name>
+          <con:value/>
+          <con:style>QUERY</con:style>
+          <con:default/>
+          <con:description xsi:nil="true"/>
+        </con:parameter>
+        
+        
+        
+      </con:parameters>
+      <con:method name="POST" id="42043eef-759d-41e8-b29b-2addf1cefedf" method="POST">
+        <con:settings/>
+        <con:parameters/>
+        <con:representation type="FAULT">
+          <con:mediaType>text/html; charset=UTF-8</con:mediaType>
+          <con:status>500 422</con:status>
+          <con:params/>
+          <con:element>html</con:element>
+        </con:representation>
+        <con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:request name="Request 1" id="b5e33024-0f8b-4e0a-8148-ca1aad68d818" mediaType="application/json" postQueryString="false">
+          <con:settings>
+            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          </con:settings>
+          <con:endpoint>http://localhost:3000</con:endpoint>
+          <con:request/>
+          <con:originalUri>http://localhost/sessions/new</con:originalUri>
+          <con:credentials>
+            <con:authType>No Authorization</con:authType>
+          </con:credentials>
+          <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+          <con:jmsPropertyConfig/>
+          <con:parameters>
+  <con:entry key="code" value="AUTH_CODE_HERE"/>
+  <con:entry key="session_state" value="SESSION_STATE_HERE"/>
+</con:parameters>
+          <con:parameterOrder><con:entry>code</con:entry><con:entry>session_state</con:entry></con:parameterOrder>
+        </con:request>
+      </con:method>
+    </con:resource>
+    
+    
     <con:resource name="token Code" path="/oauth/token" id="9cf22a47-6f43-4b82-85d8-85ca7d0b32de">
       <con:settings/>
       <con:parameters>
@@ -394,7 +401,7 @@
           <con:description xsi:nil="true"/>
         </con:parameter>
       </con:parameters>
-      <con:method name="Method 1" id="a8d7ac8f-fbd3-48ea-841b-1cf90ee5a092" method="GET">
+      <con:method name="Method 1" id="a8d7ac8f-fbd3-48ea-841b-1cf90ee5a092" method="POST">
         <con:settings/>
         <con:parameters/>
         <con:representation type="FAULT">
@@ -403,7 +410,7 @@
           <con:params/>
           <con:element>html</con:element>
         </con:representation>
-        <con:request name="Request 1" id="dec01920-2b95-4e85-9441-9662d2bb4c20" mediaType="application/json">
+        <con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="FAULT"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>401</con:status><con:params/><con:element xmlns:tok="http://localhost/oauth/token">tok:Fault</con:element></con:representation><con:request name="POST" id="dec01920-2b95-4e85-9441-9662d2bb4c20" mediaType="application/json" postQueryString="false">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
           </con:settings>
@@ -416,23 +423,17 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-            <con:entry key="code" value="AUTH_CODE_HERE"/>
-            <con:entry key="grant_type" value="authorization_code"/>
-            <con:entry key="redirect_uri" value="http://localhost:3000/callback"/>
-            <con:entry key="client_secret" value="MYSECRET"/>
-            <con:entry key="client_id" value="Sp7Qy2yepPIQ4U69mfe5xJhFA6y8Hsi_idsf_pmca_4"/>
-          </con:parameters>
-          <con:parameterOrder>
-            <con:entry>grant_type</con:entry>
-            <con:entry>code</con:entry>
-            <con:entry>redirect_uri</con:entry>
-            <con:entry>client_id</con:entry>
-            <con:entry>client_secret</con:entry>
-          </con:parameterOrder>
+  <con:entry key="code" value="AUTH_CODE_HERE"/>
+  <con:entry key="grant_type" value="authorization_code"/>
+  <con:entry key="redirect_uri" value="http://localhost:3000/callback"/>
+  <con:entry key="client_secret" value="CIBASECRET"/>
+  <con:entry key="client_id" value="CIBAUID"/>
+</con:parameters>
+          <con:parameterOrder><con:entry>grant_type</con:entry><con:entry>code</con:entry><con:entry>redirect_uri</con:entry><con:entry>client_id</con:entry><con:entry>client_secret</con:entry></con:parameterOrder>
         </con:request>
       </con:method>
     </con:resource>
-  </con:interface>  
+</con:interface>  
   <con:interface xsi:type="con:RestService" id="906675ac-f0f8-490e-a466-1ec58bc6b24e" wadlVersion="http://wadl.dev.java.net/2009/02" name="CIBA FLOW" type="rest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings/>
     
@@ -1102,7 +1103,7 @@
           <con:params/>
           <con:element>data</con:element>
         </con:representation>
-        <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="0d126494-10e5-48e3-8d7d-5848a6fe1b9d" mediaType="application/json" postQueryString="false">
+        <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="0d126494-10e5-48e3-8d7d-5848a6fe1b9d" mediaType="application/json" postQueryString="false">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
           </con:settings>
@@ -1117,7 +1118,7 @@
           <con:parameters>
   <con:entry key="auth_req_id" value="0512e36d-7462-4c00-ae83-9c77f783ecdc"/>
   <con:entry key="grant_type" value="urn:openid:params:grant-type:ciba"/>
-  <con:entry key="scope" value="openid ciba"/>
+  <con:entry key="scope" value="openid ciba email"/>
   <con:entry key="client_secret" value="CIBASECRET"/>
   <con:entry key="client_id" value="CIBAUID"/>
 </con:parameters>
@@ -1368,4 +1369,4 @@
   <con:wssContainer/>
   <con:oAuth2ProfileContainer/>
   <con:oAuth1ProfileContainer/>
-</con:soapui-project>
+<con:sensitiveInformation/></con:soapui-project>
