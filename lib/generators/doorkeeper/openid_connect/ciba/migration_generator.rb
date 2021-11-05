@@ -21,6 +21,11 @@ module Doorkeeper
 	          'db/migrate/add_ciba_reqauthid_to_oauth_token.rb',
 	          migration_version: migration_version
 	        )
+	        migration_template(
+	          'add_ciba_asyncendpoint_to_oauth_applications.rb2.erb',
+	          'db/migrate/add_ciba_asyncendpoint_to_oauth_applications.rb',
+	          migration_version: migration_version
+	        )
 	      end
 	
 	      def self.next_migration_number(dirname)

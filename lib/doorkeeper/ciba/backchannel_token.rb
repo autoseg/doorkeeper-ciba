@@ -165,7 +165,7 @@ module Doorkeeper
 							raise Doorkeeper::Errors::DoorkeeperError.new('access_denied')
 						when BackchannelAuthRequests::STATUS_EXPIRED
 							raise Doorkeeper::Errors::DoorkeeperError.new('expired_token')
-						else
+						else # sanity check
 							raise Doorkeeper::Errors::DoorkeeperError.new('invalid_ciba_request_status') 
 					end					
 				end

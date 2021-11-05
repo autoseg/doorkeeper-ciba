@@ -46,7 +46,7 @@ module Doorkeeper
 	          creator.call(
 	            client,
 	            scopes,
-	            use_refresh_token: false,
+	            use_refresh_token: Doorkeeper.config.refresh_token_enabled?,
 	            expires_in: ttl,
 				ciba_auth_req_id: params['auth_req_id']
 	          )

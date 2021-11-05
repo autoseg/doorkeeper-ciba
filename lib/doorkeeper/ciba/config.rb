@@ -109,6 +109,11 @@ module Doorkeeper
 	        raise Errors::InvalidConfiguration, 'mandatory parameter "resolve_user_identity" is not configured'
 	      }
 
+  		  # mandatory configuration with the logic to get the e-mail of the user based on auth req id  
+	      option :resolve_email_by_auth_req_id, default: lambda { |*_|
+	        raise Errors::InvalidConfiguration, 'mandatory parameter "resolve_email_by_auth_req_id" is not configured'
+	      }
+
 	    end
 	end
   end

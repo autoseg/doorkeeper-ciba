@@ -14,8 +14,14 @@ Doorkeeper::OpenidConnect::Ciba.configure do
   # mandatory configuration with the logic to validate the login_hint filled in both backchannel authentication and backchannel complete  
   # must return the id of the user as uuid
   #resolve_user_identity do |login_hint|
-  #  user = User.find_by(email: login_hint)
+  #  user = User.find_by(email: login_hint, email_verified: true)
   #	user.id unless user.nil?
+  #end
+
+  # mandatory configuration with the logic to get the e-mail of the user based on auth req id  
+  #resolve_email_by_auth_req_id do |auth_req_id|
+  #  user = User.select('users.email').joins("inner join backchannel_auth_requests authreq on users.id = authreq.identified_user_id").where("authreq.auth_req_id" => auth_req_id)
+  #  user.first.email if user.count > 0
   #end
 
   # mandatory config : add new permission to grant type ciba 

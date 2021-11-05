@@ -1,0 +1,6 @@
+class AddCibaAsyncendpointToOauthApplications < ActiveRecord::Migration<%= migration_version %>
+  def change
+		add_column :oauth_applications, :ciba_notify_type, :string, null: false, default: 'POOL'
+		add_column :oauth_applications, :ciba_async_endpoint, :string, null: true
+  end
+end

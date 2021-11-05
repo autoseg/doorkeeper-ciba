@@ -26,7 +26,7 @@ select * from oauth_access_grants;
 select * from oauth_access_tokens;
 select * from oauth_openid_requests;
 
-SELECT "users".* FROM "users" WHERE "users"."soft_deleted" = false AND "users"."email" = 'email1@email.com';
+SELECT "users".* FROM "users" WHERE "users".email_verified = false;
 
-sele
+
 

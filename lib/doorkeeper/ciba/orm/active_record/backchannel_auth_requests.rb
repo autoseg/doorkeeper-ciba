@@ -9,7 +9,6 @@ module Doorkeeper
 			STATUS_APPROVED = 'A'
 			STATUS_DISAPPROVED = 'D'
 			STATUS_EXPIRED = 'X'
-			STATUS_ERROR = 'E'
 		
 			# active record data
 			self.table_name = "backchannel_auth_requests".to_sym
@@ -17,7 +16,7 @@ module Doorkeeper
 			validates :identified_user_id, presence: true
 			validates :expires_in, presence: true
 			validates :interval, presence: true
-			validates :status, presence: true, acceptance: { accept: ['P', 'A', 'D', 'X', 'E'] }
+			validates :status, presence: true, acceptance: { accept: ['P', 'A', 'D', 'X'] }
 		
 			 #     t.uuid :auth_req_id, null: false
 			 #	   t.uuid :application_id, null: false
