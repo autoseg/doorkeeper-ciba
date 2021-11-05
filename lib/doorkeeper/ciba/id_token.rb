@@ -32,16 +32,17 @@ module Doorkeeper
 			if((@access_token.includes_scope? 'ciba') && (@access_token.ciba_auth_req_id.present?))
 				at_hash_token = at_hash_generate(@access_token.token);
 				at_hash_refresh_token = at_hash_generate(@access_token.refresh_token) unless @access_token.refresh_token.blank?;
+				# in ciba flow, the email of resource owner is got from the "backsession" authorize (saved in the model), not from access_token 
 				ciba_user_email = resolve_email_by_auth_req_id(@access_token.ciba_auth_req_id);
 				
 				ciba_token_clain = {
-				  "xemail": ciba_user_email, # TODO: check why email was been removed from jwt
+				  "email": ciba_user_email, 
 				  "at_hash": at_hash_token,
 				  "urn:openid:params:jwt:claim:rt_hash": at_hash_refresh_token,
 		          "urn:openid:params:jwt:claim:auth_req_id": @access_token.ciba_auth_req_id
-		        }.merge ClaimsBuilder.generate(@access_token, :id_token)
+		        }
 
-				# merge CIBA JWT
+				# merge CIBA JWT 
 				@id_token_result = @id_token_result.merge(ciba_token_clain)
 			end
 			

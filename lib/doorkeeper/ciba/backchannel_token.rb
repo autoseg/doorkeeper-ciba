@@ -117,7 +117,7 @@ module Doorkeeper
 				# validate auth request id
 				validate_auth_request_id
 				
-				# TODO: slow_down
+				# TODO: handle slow_down
 				
 		      end
 
