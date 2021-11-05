@@ -1,12 +1,22 @@
+
+-- CIBA
+select * from backchannel_auth_requests order by created_at desc ;
+select * from backchannel_auth_consent_history ;
+-- OAUTH2 (CIBA adds some columns in both tables)
+select * from oauth_applications oa;
+select * from oauth_access_tokens order by created_at desc;
+-- OPEN_ID Connect
+select * from users u ;
+select * from oauth_access_grants;
+
+
+#### DEV ####
+
 drop table backchannel_auth_requests;
 drop table backchannel_auth_consent_history;
 
 delete from backchannel_auth_requests;
 commit;
-
-select * from backchannel_auth_requests order by created_at desc ;
-select * from backchannel_auth_consent_history ;
-
 
 SELECT "backchannel_auth_requests".* FROM 
 "backchannel_auth_requests" WHERE 
