@@ -29,11 +29,6 @@ module Doorkeeper
 	module OpenidConnect
 	  module Ciba
 
-		# workaround - declare the class dependency found in doorkeeper gem
-	    #autoload :AccessGrantMixin, "doorkeeper/models/access_grant_mixin"
-	    #autoload :AccessTokenMixin, "doorkeeper/models/access_token_mixin"
-	    autoload :ApplicationMixin, "doorkeeper/models/application_mixin"
-
 	    GRANT_TYPE_CIBA = "urn:openid:params:grant-type:ciba"
 
 		# register type grant_type urn:openid:params:grant-type:ciba for oauth/token
