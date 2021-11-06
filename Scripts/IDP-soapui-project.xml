@@ -226,7 +226,7 @@
           <con:parameters>
   <con:entry key="password" value="123123"/>
   <con:entry key="grant_type" value="password"/>
-  <con:entry key="scope" value="openid email"/>
+  <con:entry key="scope" value="openid"/>
   <con:entry key="client_secret" value="CIBASECRET"/>
   <con:entry key="client_id" value="CIBAUID"/>
   <con:entry key="username" value="email2@email.com"/>
@@ -1097,7 +1097,7 @@
           <con:params/>
           <con:element>data</con:element>
         </con:representation>
-        <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="0d126494-10e5-48e3-8d7d-5848a6fe1b9d" mediaType="application/json" postQueryString="false">
+        <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="0d126494-10e5-48e3-8d7d-5848a6fe1b9d" mediaType="application/json" postQueryString="false">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
           </con:settings>
@@ -1110,9 +1110,9 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-  <con:entry key="auth_req_id" value="d462536e-7b24-40b3-83fc-a2e4c816434c"/>
+  <con:entry key="auth_req_id" value="88c2299c-9320-4cf2-b6de-87630b919e70"/>
   <con:entry key="grant_type" value="urn:openid:params:grant-type:ciba"/>
-  <con:entry key="scope" value="openid ciba email"/>
+  <con:entry key="scope" value="openid ciba"/>
   <con:entry key="client_secret" value="CIBASECRET"/>
   <con:entry key="client_id" value="CIBAUID"/>
 </con:parameters>
@@ -1239,7 +1239,7 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-  <con:entry key="auth_req_id" value="d462536e-7b24-40b3-83fc-a2e4c816434c"/>
+  <con:entry key="auth_req_id" value="88c2299c-9320-4cf2-b6de-87630b919e70"/>
   <con:entry key="login_hint" value="email2@email.com"/>
   <con:entry key="scope" value="openid ciba"/>
   <con:entry key="client_secret" value="CIBASECRET"/>
@@ -1342,7 +1342,7 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-  <con:entry key="auth_req_id" value="d462536e-7b24-40b3-83fc-a2e4c816434c"/>
+  <con:entry key="auth_req_id" value="88c2299c-9320-4cf2-b6de-87630b919e70"/>
   <con:entry key="login_hint" value="email2@email.com"/>
   <con:entry key="scope" value="openid ciba"/>
   <con:entry key="client_secret" value="CIBASECRET"/>
