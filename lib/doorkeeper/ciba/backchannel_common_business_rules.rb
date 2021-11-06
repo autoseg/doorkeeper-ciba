@@ -3,6 +3,7 @@
 module Doorkeeper
   module OpenidConnect
   	module Ciba
+
 	    class CommonBusinessRules
 			attr_writer :param
 

@@ -147,15 +147,15 @@ module Doorkeeper
 				validationResult = @busRules.check_req_expiry(current_auth_req)
 				return validationResult unless validationResult.blank?
 				
-				status = current_auth_req[:status];
-
-				if((! current_auth_req.present?) || (! status.present?)) 
+				if(! current_auth_req.present?)  
 					# If the auth_req_id is invalid or was issued to another Client, an invalid_grant error MUST be returned as described in Section 5.2 of [RFC6749].
 					 raise Doorkeeper::Errors::DoorkeeperError, :invalid_grant 	 
 				else
 					::Rails.logger.info("##validate_auth_request_id RETURNING auth_req_id:" +  @auth_req_id + " status: " + current_auth_req[:status])
-					# VALIDATE the request id status
 					
+					# VALIDATE the request id status
+					status = current_auth_req[:status];
+									
 					case status
 						when BackchannelAuthRequests::STATUS_APPROVED
 							return
