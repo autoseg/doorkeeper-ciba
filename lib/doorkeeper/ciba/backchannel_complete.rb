@@ -95,6 +95,17 @@ module Doorkeeper
 							}
 				end
 				
+				#CHECK NOTIFY PARAMETERS IN PING and PUSH - 
+				notifyTypes = [ 'PING', 'PUSH' ]
+				application = @client.application
+				if(notifyTypes.include?(application.ciba_notify_type) && !application.ciba_async_endpoint.present?)
+						return { json: { 
+								error: "invalid_request",
+		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.app_error_missing_ciba_async_endpoint')
+		                    	}, status: 400 
+							}
+				end
+				
 				return
 			end
 	
@@ -120,22 +131,32 @@ module Doorkeeper
 			                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_grant')
 			                    	}, status: 400 
 								}
-				else
-					::Rails.logger.info("## UPDATING BackchannelAuthRequests WITH auth_req_id:" +  @auth_req_id + " TO status: " + @status)
-					current_auth_req.update(status: @status);
-					current_auth_req.save
 				end
 				
-				# TODO: handle Error AND save entries with consent_type = E, with some details in consent_desc.
-				BackchannelAuthConsentHistory.create(
-					auth_req_id: @auth_req_id, 
-					application_id: @application_id,
-					login_hint_token: @login_hint_token,
-					id_token_hint: @id_token_hint,
-					login_hint: @login_hint,
-				 	identified_user_id: @identified_user_id,
-					consent_type: @status
-				) 
+				BackchannelAuthRequests.transaction do
+					::Rails.logger.info("## UPDATING BackchannelAuthRequests WITH auth_req_id:" +  @auth_req_id + " TO status: " + @status)
+					current_auth_req.update(status: @status);
+					current_auth_req.save!
+					
+					# TODO: handle Error AND save entries with consent_type = E, with some details in consent_desc.
+					BackchannelAuthConsentHistory.create(
+						auth_req_id: @auth_req_id, 
+						application_id: @application_id,
+						login_hint_token: @login_hint_token,
+						id_token_hint: @id_token_hint,
+						login_hint: @login_hint,
+					 	identified_user_id: @identified_user_id,
+						consent_type: @status
+					) 
+					
+					#TODO NOTIFY IN PING and PUSH - 
+					notifyTypes = [ 'PING', 'PUSH' ]
+					application = @client.application
+					if(notifyTypes.include?(application.ciba_notify_type))
+						::Rails.logger.info("## update_auth_request_id_with_history: NOTIFY  => " +  application.ciba_notify_type + ' to endpoint: ' +  application.ciba_async_endpoint)
+						#application.update(ciba_notify_type: @params[:ciba_notify_type], ciba_async_endpoint: @params[:ciba_async_endpoint]);
+					end
+				end
 				
 				return
 			end 

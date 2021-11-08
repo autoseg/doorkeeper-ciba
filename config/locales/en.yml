@@ -37,6 +37,9 @@ en:
             missing_or_invalid_ciba_notify_type: 'Missing or invalid ciba_notify_type (valid values are POLL, PING or PUSH)'
             missing_ciba_async_endpoint:  'Missing ciba_async_endpoint (notification endpoint for PING and PUSH)'
 
+            # notify 
+            app_error_missing_ciba_async_endpoint:  'Missing ciba_async_endpoint (notification endpoint for PING and PUSH) in application registry'
+
 
 
 
