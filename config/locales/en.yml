@@ -32,3 +32,11 @@ en:
             # Complete flow
             invalid_status: 'Missing or invalid status, valid values are A (Approved) or D (Disapproved)'
             missing_req_id: 'Missing request id'
+
+            # set clientconfig
+            missing_or_invalid_ciba_notify_type: 'Missing or invalid ciba_notify_type (valid values are POLL, PING or PUSH)'
+            missing_ciba_async_endpoint:  'Missing ciba_async_endpoint (notification endpoint for PING and PUSH)'
+
+
+
+

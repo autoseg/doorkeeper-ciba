@@ -30,7 +30,12 @@ module Doorkeeper
 	          routes.scope options[:scope] || 'backchannel', as: 'backchannel' do
 	            map_route(:authorize, :authorize_routes)
 	            map_route(:complete, :complete_routes)
-				map_route(:getauthinfo, :getauthinfo_routes)
+				map_route(:authinfo, :authinfo_routes)
+				map_route(:clientconfig, :clientconfig_routes)
+	          end
+
+	          routes.scope options[:scope] || 'backchannel_client', as: 'backchannel_client-client' do
+	            map_route(:userconsent, :userconsent_routes)
 	          end
 	        end
 	
@@ -54,8 +59,15 @@ module Doorkeeper
 		      routes.post :complete, path: 'complete', as: nil
 	        end
 
-	        def getauthinfo_routes
-		      routes.get :getauthinfo, path: 'getauthinfo', as: nil
+	        def authinfo_routes
+		      routes.get :authinfo, path: 'authinfo', as: nil
+	        end
+
+	        def userconsent_routes
+		      routes.post :userconsent, path: 'userconsent', as: nil
+	        end
+	        def clientconfig_routes
+		      routes.post :clientconfig, path: 'clientconfig', as: nil
 	        end
 	      end
 	    end

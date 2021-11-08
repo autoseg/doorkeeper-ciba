@@ -3,7 +3,7 @@
 module Doorkeeper
   module OpenidConnect
   	module Ciba
-	    class GetAuthInfo < CommonBusinessRules
+	    class ClientConfig < CommonBusinessRules
 		      def initialize(params, server)
 		        @params = params
 				@scope = server.client.scopes
@@ -12,7 +12,7 @@ module Doorkeeper
 		      end
 		
 			  # getauthinfo public method
-			  def getauthinfo
+			  def setClientConfig
 				# All the parameters are described in https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request
 				
 				# auth_req_id				
@@ -39,66 +39,58 @@ module Doorkeeper
 				return validationResult unless validationResult.blank?
 				#
 				# validate parameters
-				validationResult = getauthinfo_validate_parameters
+				validationResult = setClientConfig_validate_parameters
 				return validationResult unless validationResult.blank?
 				#
 				# update auth request id
-				getDataResult = getauthinfo_data
-				return getDataResult unless getDataResult.blank?
+				validationResult = changeClientConfig
+				return validationResult unless validationResult.blank?
 		      end
 
 			  private
 
 			  # All the error rules are described in https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#auth_error_response
-			  def getauthinfo_validate_parameters
+			  def setClientConfig_validate_parameters
 	
-				::Rails.logger.info("complete_validate_parameters call")
-	
-				validationResult = validate_and_resolve_user_identity(@application_id, @login_hint, @id_token_hint, @login_hint_token)
-				return validationResult unless validationResult.blank?
+				::Rails.logger.info("setClientConfig_validate_parameters call")
 				
-				# validate if request_id is filled
-				if(!@params[:auth_req_id].present?) 
+				validTypes = [ 'POLL', 'PING', 'PUSH' ]
+				
+				# validate mandatory parameters
+				if(!@params[:ciba_notify_type].present? || !validTypes.include?(@params[:ciba_notify_type])) 
 					 return { json: { 
 								error: "invalid_request",
-		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_req_id')
+		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_or_invalid_ciba_notify_type')
 		                    	}, status: 400 
 							}
 				end
+				# validate mandatory parameters
+				if(!@params[:ciba_async_endpoint].present?) 
+					 return { json: { 
+								error: "invalid_request",
+		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_ciba_async_endpoint')
+		                    	}, status: 400 
+							}
+				end				
 				
 				return
 			end
 	
 			# get the auth request record
-			def getauthinfo_data
+			def changeClientConfig
 
-				 ::Rails.logger.info("## getauthinfo_data: auth_req_id => " + @auth_req_id.to_s + ", identified_user_id => " +  @identified_user_id.to_s)
+				 ::Rails.logger.info("## changeClientConfig: client id  => " + @client.id.to_s + " application:" + @client.application.id.to_s)
+
+				application = @client.application 
+				application.update(ciba_notify_type: @params[:ciba_notify_type], ciba_async_endpoint: @params[:ciba_async_endpoint]);
+				application.save
 			
-				# Search backchannel request
-				current_auth_req = BackchannelAuthRequests.find_by(auth_req_id: @auth_req_id, identified_user_id: @identified_user_id, application_id: @application_id);
-				
-				# check expires 
-				validationResult = check_req_expiry(current_auth_req)
-				return validationResult unless validationResult.blank?
-				
-				# check if the auth_req_id is found for the user
-				if(! current_auth_req.present?) 
-				# If the auth_req_id is invalid or was issued to another Client, an invalid_grant error MUST be returned as described in Section 5.2 of [RFC6749].
-						 return { json: { 
-									error: "invalid_grant",
-			                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_grant')
-			                    	}, status: 400 
-								}
-				end
-				
 				# SUCCESS 
 		        return { 
 					     json: { 
-							#auth_req_id: @auth_req_id,
-	                        status: current_auth_req['status'],
-							binding_message: current_auth_req['binding_message']
 		                 }, status: 200
 					   }
+
 			end 
 	   end
     end

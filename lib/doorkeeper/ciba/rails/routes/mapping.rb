@@ -12,13 +12,18 @@ module Doorkeeper
 	            @controllers = {
 	              authorize: 'doorkeeper/openid_connect/ciba/authorize',
 	              complete: 'doorkeeper/openid_connect/ciba/complete',
-				  getauthinfo: 'doorkeeper/openid_connect/ciba/getauthinfo' 
+				  authinfo: 'doorkeeper/openid_connect/ciba/authinfo',
+				  clientconfig: 'doorkeeper/openid_connect/ciba/clientconfig', 
+				  userconsent: 'doorkeeper/openid_connect/ciba/userconsent'
+
 	            }
 	
 	            @as = {
 	              authorize: :authorize,
 	              complete: :complete,
-				  getauthinfo: :getauthinfo
+				  authinfo: :authinfo,
+				  clientconfig: :clientconfig,
+				  userconsent: :userconsent
 	            }
 	
 	            @skips = []
