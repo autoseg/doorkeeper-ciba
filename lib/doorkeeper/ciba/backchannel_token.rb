@@ -146,6 +146,7 @@ module Doorkeeper
 					
 					::Rails.logger.info("##validate_auth_request_id next_allowed_refresh:" + next_allowed_refresh.to_s);
 					
+					# allow execution just after configured interval
 					if(next_allowed_refresh > Time.now)
 						raise Doorkeeper::Errors::DoorkeeperError.new('slow_down')
 					else 
