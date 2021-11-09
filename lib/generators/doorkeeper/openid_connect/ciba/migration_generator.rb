@@ -22,8 +22,8 @@ module Doorkeeper
 	          migration_version: migration_version
 	        )
 	        migration_template(
-	          'add_ciba_asyncendpoint_to_oauth_applications.rb2.erb',
-	          'db/migrate/add_ciba_asyncendpoint_to_oauth_applications.rb',
+	          'add_ciba_notify_columns_to_oauth_applications.rb2.erb',
+	          'db/migrate/add_ciba_notify_columns_to_oauth_applications.rb',
 	          migration_version: migration_version
 	        )
 	      end

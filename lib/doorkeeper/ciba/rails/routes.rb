@@ -32,6 +32,7 @@ module Doorkeeper
 	            map_route(:complete, :complete_routes)
 				map_route(:authinfo, :authinfo_routes)
 				map_route(:clientconfig, :clientconfig_routes)
+				map_route(:testcibacallback, :testcibacallback_routes)
 	          end
 
 	          routes.scope options[:scope] || 'backchannel_client', as: 'backchannel_client-client' do
@@ -68,6 +69,9 @@ module Doorkeeper
 	        end
 	        def clientconfig_routes
 		      routes.post :clientconfig, path: 'clientconfig', as: nil
+	        end
+	        def testcibacallback_routes
+		      routes.post :testcibacallback, path: 'testcibacallback', as: nil
 	        end
 	      end
 	    end

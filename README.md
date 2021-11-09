@@ -93,7 +93,30 @@ POLL FLOW:
 
 ### Example Applications
 
-- N/A
+- seeds entry sample for test:
+
+<pre>
+appciba = Doorkeeper::Application.create!(
+  name: 'CIBA',
+  redirect_uri: 'https://localhost:3000/someapp',
+  uid: 'CIBAUID',
+  secret: 'CIBASECRET',
+  scopes: 'openid ciba',
+  ciba_notify_type: 'POLL', # PING OR PUSH
+  # ASYNC NOTIFY ENDPOINT IS MANDATORY FOR PING OR PUSH
+  ciba_notify_endpoint: 'https://localhost:3000/backchannel/testcibacallback'
+)
+
+
+puts "
+  Client:        #{appciba.name}
+  Client ID:     #{appciba.uid}
+  Client Secret: #{appciba.secret}
+  Redirect URI:  #{appciba.redirect_uri}
+  Scopes:        #{appciba.scopes}
+  ciba_notify_type:        #{appciba.ciba_notify_type}
+  ciba_notify_endpoint:        #{appciba.ciba_notify_endpoint}"
+</pre>
 
 ## Installation
 

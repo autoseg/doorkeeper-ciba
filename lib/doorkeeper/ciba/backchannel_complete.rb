@@ -98,10 +98,10 @@ module Doorkeeper
 				#CHECK NOTIFY PARAMETERS IN PING and PUSH - 
 				notifyTypes = [ 'PING', 'PUSH' ]
 				application = @client.application
-				if(notifyTypes.include?(application.ciba_notify_type) && !application.ciba_async_endpoint.present?)
+				if(notifyTypes.include?(application.ciba_notify_type) && !application.ciba_notify_endpoint.present?)
 						return { json: { 
 								error: "invalid_request",
-		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.app_error_missing_ciba_async_endpoint')
+		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.app_error_missing_ciba_notify_endpoint')
 		                    	}, status: 400 
 							}
 				end
@@ -153,8 +153,8 @@ module Doorkeeper
 					notifyTypes = [ 'PING', 'PUSH' ]
 					application = @client.application
 					if(notifyTypes.include?(application.ciba_notify_type))
-						::Rails.logger.info("## update_auth_request_id_with_history: NOTIFY  => " +  application.ciba_notify_type + ' to endpoint: ' +  application.ciba_async_endpoint)
-						#application.update(ciba_notify_type: @params[:ciba_notify_type], ciba_async_endpoint: @params[:ciba_async_endpoint]);
+						::Rails.logger.info("## update_auth_request_id_with_history: NOTIFY  => " +  application.ciba_notify_type + ' to endpoint: ' +  application.ciba_notify_endpoint)
+						#application.update(ciba_notify_type: @params[:ciba_notify_type], ciba_notify_endpoint: @params[:ciba_notify_endpoint]);
 					end
 				end
 				

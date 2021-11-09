@@ -14,8 +14,8 @@ module Doorkeeper
 	              complete: 'doorkeeper/openid_connect/ciba/complete',
 				  authinfo: 'doorkeeper/openid_connect/ciba/authinfo',
 				  clientconfig: 'doorkeeper/openid_connect/ciba/clientconfig', 
-				  userconsent: 'doorkeeper/openid_connect/ciba/userconsent'
-
+				  userconsent: 'doorkeeper/openid_connect/ciba/userconsent',
+				  testcibacallback: 'doorkeeper/openid_connect/ciba/testcibacallback'
 	            }
 	
 	            @as = {
@@ -23,7 +23,8 @@ module Doorkeeper
 	              complete: :complete,
 				  authinfo: :authinfo,
 				  clientconfig: :clientconfig,
-				  userconsent: :userconsent
+				  userconsent: :userconsent,
+				  testcibacallback: :testcibacallback
 	            }
 	
 	            @skips = []

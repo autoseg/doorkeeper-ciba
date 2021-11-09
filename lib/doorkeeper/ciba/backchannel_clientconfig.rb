@@ -65,10 +65,10 @@ module Doorkeeper
 							}
 				end
 				# validate mandatory parameters
-				if(!@params[:ciba_async_endpoint].present?) 
+				if(!@params[:ciba_notify_endpoint].present?) 
 					 return { json: { 
 								error: "invalid_request",
-		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_ciba_async_endpoint')
+		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_ciba_notify_endpoint')
 		                    	}, status: 400 
 							}
 				end				
@@ -82,7 +82,7 @@ module Doorkeeper
 				 ::Rails.logger.info("## changeClientConfig: client id  => " + @client.id.to_s + " application:" + @client.application.id.to_s)
 
 				application = @client.application 
-				application.update(ciba_notify_type: @params[:ciba_notify_type], ciba_async_endpoint: @params[:ciba_async_endpoint]);
+				application.update(ciba_notify_type: @params[:ciba_notify_type], ciba_notify_endpoint: @params[:ciba_notify_endpoint]);
 				application.save
 			
 				# SUCCESS 
