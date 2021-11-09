@@ -12,7 +12,7 @@ module Doorkeeper
 		# Output spec: https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#token_response
 		# Error spec: https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#token_error_response
 		#
-		# INPUT SAMPLE - TODO validate
+		# INPUT SAMPLE 
 		#
 		#    POST /oauth/token HTTP/1.1
 		#    Host: server.example.com
@@ -30,7 +30,7 @@ module Doorkeeper
 		#    Va344WchTQVpaSSShLbvha4yziA
 		#
 		#		
-		# OUTPUT SAMPLE - TODO validate
+		# OUTPUT SAMPLE 
 		#
 		#    HTTP/1.1 200 OK
 		#    Content-Type: application/json
@@ -53,18 +53,7 @@ module Doorkeeper
 		#       DQrVlg"
 		#    }
 		# SUCCESS - https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_response
-		#
-		# TODO - access_token, refresh_token, expires_in, id_token
-        #return { 
-		#	     json: { 
-		#			auth_req_id: @auth_req_id, # TODO: remove, not part of spec
-        #           access_token: @access_token,
-	    #			token_type: "Bearer",
-		#			expires_in: @expires_in, 
-		#			id_token: @id_token
-        #         }, status: 200
-		#	   }
-		
+	
 	    class Token < Doorkeeper::OAuth::BaseRequest
    			  attr_reader :client, :original_scopes, :response
 
@@ -107,7 +96,7 @@ module Doorkeeper
 	
 				::Rails.logger.info("#### INSIDE CIBA TOKEN #################:" + @params.to_s);
 
-				# validate scope TODO - test
+				# validate scope 
 				validationResult = @busRules.validate_scope(@original_scopes)
 				raise Doorkeeper::Errors::DoorkeeperError, :invalid_request unless validationResult.blank?
 				#
@@ -116,9 +105,6 @@ module Doorkeeper
 				#
 				# validate auth request id
 				validate_auth_request_id
-				
-				# TODO: handle slow_down
-				
 		      end
 
 			  private
@@ -155,6 +141,18 @@ module Doorkeeper
 					
 					# VALIDATE the request id status
 					status = current_auth_req[:status];
+							
+					next_allowed_refresh = current_auth_req['updated_at'] + Doorkeeper::OpenidConnect::Ciba.configuration.default_poll_interval
+					
+					::Rails.logger.info("##validate_auth_request_id next_allowed_refresh:" + next_allowed_refresh.to_s);
+					
+					if(next_allowed_refresh > Time.now)
+						raise Doorkeeper::Errors::DoorkeeperError.new('slow_down')
+					else 
+						# update updated_at field
+						current_auth_req.touch(:updated_at)				
+						current_auth_req.save
+					end	
 									
 					case status
 						when BackchannelAuthRequests::STATUS_APPROVED
@@ -167,8 +165,8 @@ module Doorkeeper
 							raise Doorkeeper::Errors::DoorkeeperError.new('expired_token')
 						else # sanity check
 							raise Doorkeeper::Errors::DoorkeeperError.new('invalid_ciba_request_status') 
-					end					
-				end
+					end	
+				end				
 				return
 			end 
 	   end
