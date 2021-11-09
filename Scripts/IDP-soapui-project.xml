@@ -480,7 +480,7 @@
           <con:default/>
           <con:description xsi:nil="true"/>
         </con:parameter>
-      </con:parameters>
+      <con:parameter><con:name>client_notification_token</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter></con:parameters>
       <con:method name="POST" id="8e2fe670-551e-4284-bbbe-9b0cd496d914" method="POST">
         <con:settings/>
         <con:parameters/>
@@ -727,7 +727,7 @@
           <con:params/>
           <con:element>data</con:element>
         </con:representation>
-        <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="0ab0182d-209c-4980-9bfd-c170da094ae6" mediaType="application/json" postQueryString="false">
+        <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="0ab0182d-209c-4980-9bfd-c170da094ae6" mediaType="application/json" postQueryString="false">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
           </con:settings>
@@ -740,6 +740,7 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
+  <con:entry key="client_notification_token" value="XXXX"/>
   <con:entry key="requested_expiry" value="22222"/>
   <con:entry key="login_hint" value="email2@email.com"/>
   <con:entry key="scope" value="openid ciba"/>
@@ -747,14 +748,7 @@
   <con:entry key="client_secret" value="CIBASECRET"/>
   <con:entry key="client_id" value="CIBAUID"/>
 </con:parameters>
-          <con:parameterOrder>
-            <con:entry>client_id</con:entry>
-            <con:entry>client_secret</con:entry>
-            <con:entry>scope</con:entry>
-            <con:entry>requested_expiry</con:entry>
-            <con:entry>login_hint</con:entry>
-            <con:entry>binding_message</con:entry>
-          </con:parameterOrder>
+          <con:parameterOrder><con:entry>client_id</con:entry><con:entry>client_secret</con:entry><con:entry>scope</con:entry><con:entry>requested_expiry</con:entry><con:entry>login_hint</con:entry><con:entry>binding_message</con:entry><con:entry>client_notification_token</con:entry></con:parameterOrder>
         </con:request>
       </con:method>
     </con:resource>
@@ -1111,7 +1105,7 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-  <con:entry key="auth_req_id" value="3bdf0a76-d3af-419e-88b1-8657ceeb9f9f"/>
+  <con:entry key="auth_req_id" value="e4210fdb-b1bf-4e72-981d-e67eccae82f2"/>
   <con:entry key="grant_type" value="urn:openid:params:grant-type:ciba"/>
   <con:entry key="scope" value="openid ciba"/>
   <con:entry key="client_secret" value="CIBASECRET"/>
@@ -1240,21 +1234,14 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-  <con:entry key="auth_req_id" value="85f73bd2-043f-4fc4-9986-84532078d26c"/>
+  <con:entry key="auth_req_id" value="e4210fdb-b1bf-4e72-981d-e67eccae82f2"/>
   <con:entry key="login_hint" value="email2@email.com"/>
   <con:entry key="scope" value="openid ciba"/>
   <con:entry key="client_secret" value="CIBASECRET"/>
   <con:entry key="client_id" value="CIBAUID"/>
   <con:entry key="status" value="A"/>
 </con:parameters>
-          <con:parameterOrder>
-            <con:entry>client_id</con:entry>
-            <con:entry>client_secret</con:entry>
-            <con:entry>auth_req_id</con:entry>
-            <con:entry>login_hint</con:entry>
-            <con:entry>status</con:entry>
-            <con:entry>scope</con:entry>
-          </con:parameterOrder>
+          <con:parameterOrder><con:entry>client_id</con:entry><con:entry>client_secret</con:entry><con:entry>auth_req_id</con:entry><con:entry>login_hint</con:entry><con:entry>status</con:entry><con:entry>scope</con:entry></con:parameterOrder>
         </con:request>
       </con:method>
     </con:resource>
@@ -1343,7 +1330,7 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-  <con:entry key="auth_req_id" value="3bdf0a76-d3af-419e-88b1-8657ceeb9f9f"/>
+  <con:entry key="auth_req_id" value="87eef4dd-b255-4b81-ac2e-c010caaf9ecb"/>
   <con:entry key="login_hint" value="email2@email.com"/>
   <con:entry key="scope" value="openid ciba"/>
   <con:entry key="client_secret" value="CIBASECRET"/>
@@ -1361,11 +1348,16 @@
     </con:resource>
   <con:resource name="CIBA clientConfig" path="/backchannel/clientconfig" id="b87606d1-2540-4506-bcd4-dae4570b1ccf"><con:settings/><con:parameters><con:parameter><con:name>client_id</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>client_secret</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>scope</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>ciba_notify_type</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>ciba_notify_endpoint</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter></con:parameters><con:method name="POST" id="45eff5e6-6615-4d53-ac40-f619e0ce9a0e" method="POST"><con:settings/><con:parameters/><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="FAULT"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>403 400</con:status><con:params/><con:element xmlns:cli="http://localhost/backchannel/clientconfig">cli:Fault</con:element></con:representation><con:representation type="FAULT"><con:mediaType>text/html; charset=UTF-8</con:mediaType><con:status>500</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>200</con:status><con:params/><con:element>Response</con:element></con:representation><con:request name="Request 1" id="fa67268a-dc95-4639-84fd-97c885aea359" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:3000</con:endpoint><con:request/><con:originalUri>http://localhost/backchannel/clientconfig</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
   <con:entry key="ciba_notify_type" value="PING"/>
-  <con:entry key="ciba_notify_endpoint" value="http://localhost:3000/backsession/testcibacallback"/>
   <con:entry key="scope" value="openid ciba"/>
   <con:entry key="client_secret" value="CIBASECRET"/>
   <con:entry key="client_id" value="CIBAUID"/>
-</con:parameters><con:parameterOrder><con:entry>client_id</con:entry><con:entry>client_secret</con:entry><con:entry>scope</con:entry><con:entry>ciba_notify_type</con:entry><con:entry>ciba_notify_endpoint</con:entry></con:parameterOrder></con:request></con:method></con:resource><con:resource name="userconsent" path="/backchannel_client/userconsent" id="cfec0594-27e7-4f4b-ab74-4036cb3a413f"><con:settings/><con:parameters/><con:method name="Method 1" id="7a58b457-d08d-46aa-8ce9-5a18efa0a561" method="POST"><con:settings/><con:parameters/><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType>text/html; charset=UTF-8</con:mediaType><con:status>404 500</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:user="http://localhost/backchannel_client/userconsent">user:Response</con:element></con:representation><con:representation type="FAULT"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>403</con:status><con:params/><con:element xmlns:user="http://localhost/backchannel_client/userconsent">user:Fault</con:element></con:representation><con:request name="Request 1" id="6434c43d-51a3-4fcf-9c33-6731093fdf06" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:3000</con:endpoint><con:request/><con:originalUri>http://localhost/backchannel_client/userconsent</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource></con:interface>
+  <con:entry key="ciba_notify_endpoint" value="https://localhost:3000/backchannel/testcibacallback"/>
+</con:parameters><con:parameterOrder><con:entry>client_id</con:entry><con:entry>client_secret</con:entry><con:entry>scope</con:entry><con:entry>ciba_notify_type</con:entry><con:entry>ciba_notify_endpoint</con:entry></con:parameterOrder></con:request></con:method></con:resource><con:resource name="userconsent" path="/backchannel_client/userconsent" id="cfec0594-27e7-4f4b-ab74-4036cb3a413f"><con:settings/><con:parameters/><con:method name="Method 1" id="7a58b457-d08d-46aa-8ce9-5a18efa0a561" method="POST"><con:settings/><con:parameters/><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="FAULT"><con:mediaType>text/html; charset=UTF-8</con:mediaType><con:status>404 500</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:user="http://localhost/backchannel_client/userconsent">user:Response</con:element></con:representation><con:representation type="FAULT"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>403</con:status><con:params/><con:element xmlns:user="http://localhost/backchannel_client/userconsent">user:Fault</con:element></con:representation><con:request name="Request 1" id="6434c43d-51a3-4fcf-9c33-6731093fdf06" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:3000</con:endpoint><con:request/><con:originalUri>http://localhost/backchannel_client/userconsent</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request></con:method></con:resource><con:resource name="testcibacallback" path="/backchannel/testcibacallback" id="e7e19857-48b1-45eb-bc63-f387c3ee3f32"><con:settings/><con:parameters><con:parameter><con:name>ANYTHING</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>Authorization</con:name><con:value/><con:style>HEADER</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>Host</con:name><con:value/><con:style>HEADER</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>Content-Type</con:name><con:value/><con:style>HEADER</con:style><con:default/><con:description xsi:nil="true"/></con:parameter></con:parameters><con:method name="Method 1" id="17ac2550-752b-460a-b55c-25d2b073998a" method="POST"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType>text/html; charset=UTF-8</con:mediaType><con:status>404 500 422</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType>application/json; charset=utf-8</con:mediaType><con:status>200</con:status><con:params/><con:element xmlns:tes="http://localhost/backsession/testcibacallback">tes:Response</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="REQUEST"><con:mediaType>application/x-www-form-urlencoded</con:mediaType><con:params/></con:representation><con:representation type="REQUEST"><con:mediaType>application/xml</con:mediaType><con:params/></con:representation><con:representation type="REQUEST"><con:mediaType>text/xml</con:mediaType><con:params/></con:representation><con:representation type="REQUEST"><con:mediaType>multipart/form-data</con:mediaType><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="f0423486-ed71-48f6-84fe-2a314032acb2" mediaType="text/xml" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:3000</con:endpoint><con:request>teasteste</con:request><con:originalUri>http://localhost/backsession/testcibacallback</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="Authorization" value="XXXXXX"/>
+  <con:entry key="ANYTHING" value="TEST TEST TEST"/>
+  <con:entry key="Host" value="1.2.3.4"/>
+  <con:entry key="Content-Type" value="application/txt"/>
+</con:parameters><con:parameterOrder><con:entry>ANYTHING</con:entry><con:entry>Authorization</con:entry><con:entry>Host</con:entry><con:entry>Content-Type</con:entry></con:parameterOrder></con:request></con:method></con:resource></con:interface>
   <con:properties/>
   <con:wssContainer/>
   <con:oAuth2ProfileContainer/>

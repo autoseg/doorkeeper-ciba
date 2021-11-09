@@ -24,8 +24,9 @@ en:
             #missing_user_code: 'User code is required but was missing from the request.'
             #invalid_user_code: 'User code was invalid.'
             invalid_binding_message: 'The binding message is invalid or unacceptable for use in the context of the given request' 
-            missing_client_notification_token: 'Missing client_notification_token for the ciba notify type' used by this client'
+            missing_client_notification_token: 'Missing mandatory client_notification_token for this notification type'
             invalid_client_notification_token: 'Invalid client_notification_token'
+            invalid_client_notification_token_in_database: 'Invalid client_notification_token in authorization server registry, please notify your administrator'
             just_login_hint_is_supported: 'Currently just login_hint is supported'
 
             # Token Error messages

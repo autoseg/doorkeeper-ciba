@@ -25,10 +25,6 @@ module Doorkeeper
 				@scope = @params[:scope].to_s
 				#
 				# TODO: UNSUPPORTED for v1.0 #
-				# required for ping and push mode (used to notify the callback in these modes) 
-				#@client_notification_token = @params[:client_notification_token].to_s
-				#
-				# TODO: UNSUPPORTED for v1.0 #
 				# optional parameter - authentication context classes 
 	 			#@acr_values = @params[:acr_values].to_s
 				#
@@ -123,6 +119,15 @@ module Doorkeeper
 				validationResult = check_req_expiry(current_auth_req)
 				return validationResult unless validationResult.blank?
 				
+				## CHECK presense of client_notification_token when the type are PING or PUSH
+				if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
+						return { json: { 
+								   error: "invalid_request",
+		                           error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_client_notification_token_in_database')
+		                    	  }, status: 400 
+								} if (!current_auth_req.client_notification_token.present?)
+				end
+				
 				# check if the auth_req_id is found for the user and in the pending status
 				if(! current_auth_req.present?) 
 				# If the auth_req_id is invalid or was issued to another Client, an invalid_grant error MUST be returned as described in Section 5.2 of [RFC6749].
@@ -149,12 +154,10 @@ module Doorkeeper
 						consent_type: @status
 					) 
 					
-					#TODO NOTIFY IN PING and PUSH - 
-					notifyTypes = [ 'PING', 'PUSH' ]
-					application = @client.application
-					if(notifyTypes.include?(application.ciba_notify_type))
-						::Rails.logger.info("## update_auth_request_id_with_history: NOTIFY  => " +  application.ciba_notify_type + ' to endpoint: ' +  application.ciba_notify_endpoint)
-						#application.update(ciba_notify_type: @params[:ciba_notify_type], ciba_notify_endpoint: @params[:ciba_notify_endpoint]);
+					# NOTIFY IN PING and PUSH - 
+					if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
+						consentNotify = ConsentNotify.new(@params, @client, current_auth_req)
+						consentNotify.notifyTheConsumptionApplication						
 					end
 				end
 				

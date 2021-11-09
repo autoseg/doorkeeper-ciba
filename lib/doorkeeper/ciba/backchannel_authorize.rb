@@ -18,7 +18,7 @@ module Doorkeeper
 				# scope must include openid
 				@scope = @params[:scope].to_s
 				#
-				# TODO: UNSUPPORTED for v1.0 #
+				# Bearer token to me used in ciba callback
 				# required for ping and push mode (used to notify the callback in these modes) 
 				@client_notification_token = @params[:client_notification_token].to_s
 				#
@@ -51,6 +51,10 @@ module Doorkeeper
 				#
 				# validate parameters
 				validationResult = authorization_validate_parameters
+				return validationResult unless validationResult.blank?
+				#
+				# validate client notification token to PING or PUSH				
+				validationResult = validate_client_notification_token_parameter
 				return validationResult unless validationResult.blank?
 				#
 				# create auth request id
@@ -102,25 +106,29 @@ module Doorkeeper
 				# client_notification_token is mandatory if the client uses PING or PUSH
 				notifyTypes = [ 'PING', 'PUSH' ]
 				ciba_notify_type = @client.application.ciba_notify_type
-				if(notifyTypes.include?(ciba_notify_type) && !client_notification_token.present?)
+				if(notifyTypes.include?(ciba_notify_type) && !@client_notification_token.present?)
   				    return { json: { 
 							error: "invalid_request",
 	                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_client_notification_token')
 		                      }, status: 400 
 						    }
-				
-						# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.5
-						# The length of the token MUST NOT exceed 1024 characters and it MUST conform to the syntax for Bearer 
-						# credentials as defined in Section 2.1 of [RFC6750]. 
-						# TODO: VALIDATE FORMAT AS DESCRIBED ABOVE (RFC6750)
-						if(client_notification_token.length > 1024)	
-							return { json: { 
-									   error: "invalid_request",
-			                           error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_client_notification_token')
-			                    	  }, status: 400 
-									}
-						end
 				end
+				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.5
+				# The length of the token MUST NOT exceed 1024 characters and it MUST conform to the syntax for Bearer 
+				# credentials as defined in Section 2.1 of [RFC6750]. 
+				#
+				# TODO: VALIDATE FORMAT AS DESCRIBED ABOVE (RFC6750)
+				#
+				# VALIDATE client_notification_token format even NOT configured as PING OR PUSH Due 
+				# the possibility of admin change the type of notification after the creation of auth req ids
+				if(@client_notification_token.present? && @client_notification_token.length > 1024)	
+					return { json: { 
+							   error: "invalid_request",
+	                           error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_client_notification_token')
+	                    	  }, status: 400 
+							}
+				end
+
 
 				return
 			 end
@@ -134,7 +142,7 @@ module Doorkeeper
 			 	 ::Rails.logger.info("## create_auth_request_id: auth_req_id => " + @auth_req_id.to_s + ", identified_user_id => " +  @identified_user_id.to_s + ", application id:" + @application_id)
 			
 				# Save backchannel request
-				BackchannelAuthRequests.create(
+				authReq = BackchannelAuthRequests.create(
 											auth_req_id: @auth_req_id, 
 											application_id: @application_id,
 											binding_message: @binding_message, 
@@ -151,7 +159,10 @@ module Doorkeeper
 											interval: @interval
 											)
 											
-				# TODO: notify the user - redis	?					
+					if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
+						consentNotify = ConsentNotify.new(@params, @client, authReq)
+						consentNotify.notifyTheAuthorizationApplication;			
+					end
 				return
 			end 
 	   end

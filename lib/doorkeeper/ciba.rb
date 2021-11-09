@@ -13,6 +13,7 @@ require 'doorkeeper/ciba/backchannel_authorize'
 require 'doorkeeper/ciba/backchannel_complete'
 require 'doorkeeper/ciba/backchannel_authinfo'
 require 'doorkeeper/ciba/backchannel_clientconfig'
+require 'doorkeeper/ciba/backchannel_consent_notify'
 require 'doorkeeper/ciba/backchannel_token'
 require 'doorkeeper/ciba/backchannel_token/creator.rb'
 require 'doorkeeper/ciba/backchannel_token/issuer.rb'
@@ -30,6 +31,7 @@ module Doorkeeper
 	module OpenidConnect
 	  module Ciba
 
+		CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP = [ 'PING', 'PUSH' ]
 	    GRANT_TYPE_CIBA = "urn:openid:params:grant-type:ciba"
 
 		# register type grant_type urn:openid:params:grant-type:ciba for oauth/token

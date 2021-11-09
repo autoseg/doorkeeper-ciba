@@ -88,6 +88,8 @@ module Doorkeeper
 				# SUCCESS 
 		        return { 
 					     json: { 
+							ciba_notify_type: @params[:ciba_notify_type],
+							ciba_notify_endpoint: @params[:ciba_notify_endpoint]
 		                 }, status: 200
 					   }
 

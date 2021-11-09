@@ -104,6 +104,35 @@ module Doorkeeper
 			 return
 			end
 
+			def validate_client_notification_token_parameter
+			
+				# client_notification_token is mandatory if the client uses PING or PUSH
+				notifyTypes = Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP
+				ciba_notify_type = @client.application.ciba_notify_type
+				if(notifyTypes.include?(ciba_notify_type) && !@client_notification_token.present?)
+  				    return { json: { 
+							error: "invalid_request",
+	                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_client_notification_token')
+		                      }, status: 400 
+						    }
+				end
+				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.5
+				# The length of the token MUST NOT exceed 1024 characters and it MUST conform to the syntax for Bearer 
+				# credentials as defined in Section 2.1 of [RFC6750]. 
+				#
+				# TODO: VALIDATE FORMAT AS DESCRIBED (RFC6750)
+				#
+				# VALIDATE client_notification_token format even NOT configured as PING OR PUSH Due 
+				# the possibility of admin change the type of notification after the creation of auth req ids
+				if(@client_notification_token.present? && @client_notification_token.length > 1024)	
+					return { json: { 
+							   error: "invalid_request",
+	                           error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_client_notification_token')
+	                    	  }, status: 400 
+							}
+				end
+			
+			end
 
 
 	   end
