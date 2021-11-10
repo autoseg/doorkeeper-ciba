@@ -8,6 +8,10 @@ select * from oauth_applications oa;
 select * from oauth_access_tokens order by created_at desc;
 -- OPEN_ID Connect
 select * from users u ;
+
+ROLES X CLIENT
+users X 
+
 select * from oauth_access_grants;
 select * from oauth_openid_requests;
 

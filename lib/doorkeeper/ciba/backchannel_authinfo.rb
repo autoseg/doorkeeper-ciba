@@ -18,7 +18,7 @@ module Doorkeeper
 				# auth_req_id				
 				@auth_req_id = @params[:auth_req_id].to_s;
 				
-				# TODO: scope must include openid
+				# scope must include openid
 				@scope = @params[:scope].to_s
 				#
 				# mutual required (user identity group)- some identification of the user (implementation specific)
@@ -77,10 +77,6 @@ module Doorkeeper
 				# Search backchannel request
 				current_auth_req = BackchannelAuthRequests.find_by(auth_req_id: @auth_req_id, identified_user_id: @identified_user_id, application_id: @application_id);
 				
-				# check expires 
-				validationResult = check_req_expiry(current_auth_req)
-				return validationResult unless validationResult.blank?
-				
 				# check if the auth_req_id is found for the user
 				if(! current_auth_req.present?) 
 				# If the auth_req_id is invalid or was issued to another Client, an invalid_grant error MUST be returned as described in Section 5.2 of [RFC6749].
@@ -90,6 +86,10 @@ module Doorkeeper
 			                    	}, status: 400 
 								}
 				end
+				
+				# check expires 
+				validationResult = check_req_expiry(current_auth_req)
+				return validationResult unless validationResult.blank?
 				
 				# SUCCESS 
 		        return { 

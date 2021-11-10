@@ -7,9 +7,35 @@ module Doorkeeper
 	    class CommonBusinessRules
 			attr_writer :param
 
-			# TODO : expire requests
+			# check if the registry was expired, change the status and return json
 			def check_req_expiry(request_record)
+				::Rails.logger.info("CommonBusinessRules: check_req_expiry: " + request_record.auth_req_id.to_s + 
+						" created:"+ request_record.created_at.to_s + " expired_in:" + request_record.expires_in.to_s)
+				expired = false
+				if(request_record.status == BackchannelAuthRequests::STATUS_EXPIRED)
+					::Rails.logger.info("CommonBusinessRules: ALREADY EXPIRED: check_req_expiry: " + request_record.auth_req_id.to_s)
+					expired = true
+				else
+					expire_date = request_record.created_at + request_record.expires_in
+					# compare db dates with current db date to avoid timezone issues
+					current_db_time = ActiveRecord::Base.connection.execute("Select CURRENT_TIMESTAMP").first['current_timestamp']
+					if(expire_date < current_db_time)
+						::Rails.logger.info("CommonBusinessRules: SET TO EXPIRED: check_req_expiry: " + request_record.auth_req_id.to_s)
+						request_record.update(status: BackchannelAuthRequests::STATUS_EXPIRED)
+						request_record.save
+						expired = true
+					end	
+				end
+
+				if(expired)
+					return { json: { 
+									error: "expired_token",
+			                        error_description: I18n.translate('doorkeeper.errors.messages.expired_token')
+			                    	}, status: 400 
+								}
+				else
 					return
+				end
 			end
 			
 			# validate if the user was provided and search for the user identity

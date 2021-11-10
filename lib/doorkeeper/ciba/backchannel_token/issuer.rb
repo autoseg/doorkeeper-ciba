@@ -37,7 +37,7 @@ module Doorkeeper
 	            scopes,
 	            nil,
 	          )
-			  # TODO: pegar do backstate request id 
+			  # TODO: check - time to life pegar do backchannel request id 
 	          ttl = Doorkeeper::OAuth::Authorization::Token.access_token_expires_in(@server, context)
 	
 			  creator = Doorkeeper::OpenidConnect::Ciba::ClientCredentials::Creator.new

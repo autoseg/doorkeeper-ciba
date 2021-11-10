@@ -22,10 +22,18 @@ module Doorkeeper
 	          migration_version: migration_version
 	        )
 	        migration_template(
-	          'add_ciba_notify_columns_to_oauth_applications.rb2.erb',
+	          'add_ciba_notify_columns_to_oauth_applications.rb.erb',
 	          'db/migrate/add_ciba_notify_columns_to_oauth_applications.rb',
 	          migration_version: migration_version
 	        )
+	        migration_template(
+	          'add_ciba_backchannel_auth_requests_last_token_get.rb.erb',
+	          'db/migrate/add_ciba_backchannel_auth_requests_last_token_get.rb',
+	          migration_version: migration_version
+	        )
+
+
+
 	      end
 	
 	      def self.next_migration_number(dirname)

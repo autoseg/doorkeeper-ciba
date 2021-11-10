@@ -129,29 +129,30 @@ module Doorkeeper
 				# Search backchannel request
 				current_auth_req = BackchannelAuthRequests.find_by(auth_req_id: @auth_req_id, application_id: @application_id);
 				
-				# check expires 
-				validationResult = @busRules.check_req_expiry(current_auth_req)
-				return validationResult unless validationResult.blank?
-				
 				if(! current_auth_req.present?)  
 					# If the auth_req_id is invalid or was issued to another Client, an invalid_grant error MUST be returned as described in Section 5.2 of [RFC6749].
 					 raise Doorkeeper::Errors::DoorkeeperError, :invalid_grant 	 
 				else
 					::Rails.logger.info("##validate_auth_request_id RETURNING auth_req_id:" +  @auth_req_id + " status: " + current_auth_req[:status])
+
+					# check expires 
+					validationResult = @busRules.check_req_expiry(current_auth_req)
+					::Rails.logger.info("## validate_auth_request_id: auth_req_id => " + @auth_req_id.to_s + ' status was changed to expired !') unless validationResult.blank?
 					
 					# VALIDATE the request id status
 					status = current_auth_req[:status];
 							
-					next_allowed_refresh = current_auth_req['updated_at'] + Doorkeeper::OpenidConnect::Ciba.configuration.default_poll_interval
-					
-					::Rails.logger.info("##validate_auth_request_id next_allowed_refresh:" + next_allowed_refresh.to_s);
-					
+					next_allowed_refresh = ((!current_auth_req['last_token_get'].nil?) ? current_auth_req['last_token_get'] + Doorkeeper::OpenidConnect::Ciba.configuration.default_poll_interval : nil)
+					# compare db dates with current db date to avoid timezone issues
+					current_db_time = ActiveRecord::Base.connection.execute("Select CURRENT_TIMESTAMP").first['current_timestamp']
+
+					::Rails.logger.info("## SLOW_DOWN check: validate_auth_request_id next_allowed_refresh:" + next_allowed_refresh.to_s + " current_db_time:" + current_db_time.to_s);
 					# allow execution just after configured interval
-					if(next_allowed_refresh > Time.now)
+					if(!next_allowed_refresh.nil? && next_allowed_refresh > current_db_time)
 						raise Doorkeeper::Errors::DoorkeeperError.new('slow_down')
 					else 
 						# update updated_at field
-						current_auth_req.touch(:updated_at)				
+						current_auth_req.update(last_token_get: current_db_time)				
 						current_auth_req.save
 					end	
 									

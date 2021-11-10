@@ -111,22 +111,8 @@ module Doorkeeper
 				 ::Rails.logger.info("## update_auth_request_id_with_history: auth_req_id => " + @auth_req_id.to_s + ", identified_user_id => " +  @identified_user_id.to_s)
 			
 				# Search and update backchannel request, creating history
-				# TODO: check expires_in 
 				current_auth_req = BackchannelAuthRequests.find_by(auth_req_id: @auth_req_id, identified_user_id: @identified_user_id, 
-													application_id: @application_id, status: BackchannelAuthRequests::STATUS_PENDING);
-				
-				# check expires 
-				validationResult = check_req_expiry(current_auth_req)
-				return validationResult unless validationResult.blank?
-				
-				## CHECK presense of client_notification_token when the type are PING or PUSH
-				if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
-						return { json: { 
-								   error: "invalid_request",
-		                           error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_client_notification_token_in_database')
-		                    	  }, status: 400 
-								} if (!current_auth_req.client_notification_token.present?)
-				end
+													application_id: @application_id);
 				
 				# check if the auth_req_id is found for the user and in the pending status
 				if(! current_auth_req.present?) 
@@ -138,6 +124,28 @@ module Doorkeeper
 								}
 				end
 				
+				# check expires 
+				validationResult = check_req_expiry(current_auth_req)
+				return validationResult unless validationResult.blank?
+
+				# check if the auth_req_id is in correct status to complete
+			    if(current_auth_req.status != BackchannelAuthRequests::STATUS_PENDING)
+						 return { json: { 
+									error: "invalid_grant",
+			                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_grant')
+			                    	}, status: 400 
+								}
+				end
+				
+				## CHECK presense of client_notification_token when the type are PING or PUSH
+				if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
+						return { json: { 
+								   error: "invalid_request",
+		                           error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_client_notification_token_in_database')
+		                    	  }, status: 400 
+								} if (!current_auth_req.client_notification_token.present?)
+				end				
+								
 				BackchannelAuthRequests.transaction do
 					::Rails.logger.info("## UPDATING BackchannelAuthRequests WITH auth_req_id:" +  @auth_req_id + " TO status: " + @status)
 					current_auth_req.update(status: @status);

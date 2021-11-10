@@ -1,0 +1,5 @@
+class AddCibaBackchannelAuthRequestsLastTokenGet < ActiveRecord::Migration<%= migration_version %>
+  def change
+		add_column :backchannel_auth_requests, :last_token_get, :timestamp, null: true
+  end
+end
