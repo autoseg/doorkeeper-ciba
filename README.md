@@ -93,7 +93,7 @@ POLL FLOW:
 
 ### Example Applications
 
-- seeds entry sample for test:
+- Seeds entry sample for test:
 
 <pre>
 appciba = Doorkeeper::Application.create!(
@@ -117,6 +117,8 @@ puts "
   ciba_notify_type:        #{appciba.ciba_notify_type}
   ciba_notify_endpoint:        #{appciba.ciba_notify_endpoint}"
 </pre>
+
+- Sample SOAPUI project can be found in Scripts/IDP-soapui-project.xml
 
 ## Installation
 
@@ -199,6 +201,7 @@ This will mount the following routes:
 POST  /backchannel/authorize
 GET /backchannel/authinfo
 POST  /backchannel/complete
+POST /backchannel/clientconfig 
 ```
 
 
