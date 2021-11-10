@@ -9,22 +9,28 @@ module Doorkeeper
 
 			# check if the registry was expired, change the status and return json
 			def check_req_expiry(request_record)
-				::Rails.logger.info("CommonBusinessRules: check_req_expiry: " + request_record.auth_req_id.to_s + 
-						" created:"+ request_record.created_at.to_s + " expired_in:" + request_record.expires_in.to_s)
-				expired = false
-				if(request_record.status == BackchannelAuthRequests::STATUS_EXPIRED)
-					::Rails.logger.info("CommonBusinessRules: ALREADY EXPIRED: check_req_expiry: " + request_record.auth_req_id.to_s)
-					expired = true
-				else
-					expire_date = request_record.created_at + request_record.expires_in
-					# compare db dates with current db date to avoid timezone issues
-					current_db_time = ActiveRecord::Base.connection.execute("Select CURRENT_TIMESTAMP").first['current_timestamp']
-					if(expire_date < current_db_time)
-						::Rails.logger.info("CommonBusinessRules: SET TO EXPIRED: check_req_expiry: " + request_record.auth_req_id.to_s)
-						request_record.update(status: BackchannelAuthRequests::STATUS_EXPIRED)
-						request_record.save
+				status = request_record[:status]
+				
+				# just expire in pending status
+				if(status == BackchannelAuthRequests::STATUS_PENDING)
+					::Rails.logger.info("CommonBusinessRules: check_req_expiry: " + request_record.auth_req_id.to_s + 
+							" created:"+ request_record.created_at.to_s + " expired_in:" + request_record.expires_in.to_s)
+					expired = false
+					if(status == BackchannelAuthRequests::STATUS_EXPIRED)
+						::Rails.logger.info("CommonBusinessRules: ALREADY EXPIRED: check_req_expiry: " + request_record.auth_req_id.to_s)
 						expired = true
-					end	
+					else
+						expire_date = request_record.created_at + request_record.expires_in
+						# compare db dates with current db date to avoid timezone issues
+						current_db_time = ActiveRecord::Base.connection.execute("Select CURRENT_TIMESTAMP").first['current_timestamp']
+						if(expire_date < current_db_time)
+							# expire registry
+							::Rails.logger.info("CommonBusinessRules: SET TO EXPIRED: check_req_expiry: " + request_record.auth_req_id.to_s)
+							request_record.update(status: BackchannelAuthRequests::STATUS_EXPIRED)
+							request_record.save
+							expired = true
+						end	
+					end
 				end
 
 				if(expired)
@@ -146,7 +152,7 @@ module Doorkeeper
 				# The length of the token MUST NOT exceed 1024 characters and it MUST conform to the syntax for Bearer 
 				# credentials as defined in Section 2.1 of [RFC6750]. 
 				#
-				# TODO: VALIDATE FORMAT AS DESCRIBED (RFC6750)
+				# TODO: VALIDATE FORMAT AS DESCRIBED ABOVE (RFC6750)
 				#
 				# VALIDATE client_notification_token format even NOT configured as PING OR PUSH Due 
 				# the possibility of admin change the type of notification after the creation of auth req ids

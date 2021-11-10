@@ -5,6 +5,9 @@ Doorkeeper::OpenidConnect::Ciba.configure do
   # Expiration time for the req_id_token.
   # default_req_id_expiration 600
 
+  # Max Expiration time for the req_id_token (default 1 day).
+  # max_req_id_expiration 86400
+
   # Default minimum wait interval for token execution in poll mode
   #default_poll_interval 5
 

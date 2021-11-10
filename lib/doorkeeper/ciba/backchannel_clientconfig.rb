@@ -18,7 +18,7 @@ module Doorkeeper
 				# auth_req_id				
 				@auth_req_id = @params[:auth_req_id].to_s;
 				
-				# TODO: scope must include openid
+				# scope must include openid
 				@scope = @params[:scope].to_s
 				#
 				# mutual required (user identity group)- some identification of the user (implementation specific)

@@ -89,7 +89,7 @@ module Doorkeeper
 								error: "invalid_request",
 		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_requested_expiry')
 		                    	}, status: 400 
-							} if requested_expiry_validation.nil?
+							} if (requested_expiry_validation.nil? || requested_expiry_validation > Doorkeeper::OpenidConnect::Ciba.configuration.max_req_id_expiration)
 				end
 				
 				# sample bind message validation (limit the size)
@@ -113,22 +113,6 @@ module Doorkeeper
 		                      }, status: 400 
 						    }
 				end
-				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.5
-				# The length of the token MUST NOT exceed 1024 characters and it MUST conform to the syntax for Bearer 
-				# credentials as defined in Section 2.1 of [RFC6750]. 
-				#
-				# TODO: VALIDATE FORMAT AS DESCRIBED ABOVE (RFC6750)
-				#
-				# VALIDATE client_notification_token format even NOT configured as PING OR PUSH Due 
-				# the possibility of admin change the type of notification after the creation of auth req ids
-				if(@client_notification_token.present? && @client_notification_token.length > 1024)	
-					return { json: { 
-							   error: "invalid_request",
-	                           error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_client_notification_token')
-	                    	  }, status: 400 
-							}
-				end
-
 
 				return
 			 end

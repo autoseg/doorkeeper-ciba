@@ -19,25 +19,26 @@ This library, in early development status, aims to implements the [OpenID Connec
 ## Status
 
 The following parts of [OpenID Connect Client-Initiated Backchannel Authentication Flow - Core 1.0](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html) are planned to be supported for v1.0:
-- [Inside CIBA: BackChannel Endpoint and APIs for POLL mode, parameters in request](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.5)
+- [Inside CIBA: BackChannel Endpoint and APIs for POLL, PING and PUSH mode](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.5), [Notification Endpoint](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#backchannel_client_notification_endpoint)
 - [Inside CIBA: Authentication using "urn:openid:params:grant-type:ciba" grant_type for POLL mode](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#registration)
-- [Outside CIBA: Sample Web consent channel]: The CIBA specification doesn´t define how the consent channel should be implemented. The idea is to develop a sample web application, protected by Open Id/Oauth2, for the user give the consent. The application will be accessed through a link found in a e-mail notification, an email that will be sent by the backchannel authorization endpoint (asking for consent).  After the user fills in their credentials and confirms/refute consent, the approval status of the pending CIBA flow will be changed to approved/disapproved. The notes found in spec follow bellow:
-  - [Consent flow CIBA description](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.8)
-  - [OpenID Consent Guide](https://openid.net/specs/openid-connect-core-1_0.html#Consent)
 
 Affected endpoints:
 
 - New endpoints:
   - POST /backchannel/authorize --> authentication requests w/ possible [parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request), returning [parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#successful_authentication_request_acknowdlegment) auth_req_id, expires_in and interval, or [error response](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response)
-  - GET /backchannel/authinfo --> get auth info to show in authorization device (eg. binding message) 
+  - GET /backchannel/authinfo --> get auth info to show in authorization device (eg. binding message, auth req id status) 
   - POST /backchannel/complete --> completes the flow updating the consent status of request id. 
+  - POST /backchannel/clientconfig --> change the client (application) configuration to CIBA: notification type (POLL, PING or PUSH) and set the notification endpoint for PING or PUSH. 
 
 - Changed endpoints:
   - POST /oauth/token --> [token requests](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_request) w/ grant_type urn:openid:params:grant-type:ciba and auth_req_id, [returning](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_response) access_token, token_type, refresh_token, expires_in and id_token, or [error response](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_error_response)
 
-- Active Record tables:
+- New Active Record tables:
   - backchannel_auth_requests - current status of an authorization request id
   - backchannel_auth_consent_history - history of consent (approve / disapprove).
+- Changed Active Record tables:
+  - oauth_applications - new columns ciba_notify_type and ciba_notify_endpoint (configuration for notify type)
+  - oauth_access_tokens - new column ciba_auth_req_id (relation with ciba request id <-> oauth2/OID token/JWT).
 
 ps. auth_req_id --> "authentication request ID" (transaction identifier) issued from the backchannel authentication endpoint.
 
@@ -80,8 +81,13 @@ POLL FLOW:
 
 - Features that will be planned in near future:
   - Plugable consent notification logic in backchannel authorization flow.
+  - [Outside CIBA: Sample Web consent channel]: The CIBA specification doesn´t define how the consent channel should be implemented. The idea is to develop a sample web application, protected by Open Id/Oauth2, for the user give the consent. The application will be accessed through a link found in a e-mail notification, an email that will be sent by the backchannel authorization endpoint (asking for consent).  After the user fills in their credentials and confirms/refute consent, the approval status of the pending CIBA flow will be changed to approved/disapproved. The notes found in spec follow bellow:
+	  - [Consent flow CIBA description](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.8)
+	  - [OpenID Consent Guide](https://openid.net/specs/openid-connect-core-1_0.html#Consent)
+  
+  
   - PUSH and PING mode:
-    - [Notification Endpoint](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#backchannel_client_notification_endpoint)
+
     - Support for client_notification_token parameter in backchannel and token endpoint
   - Suport for [signed request parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#signed_auth_request)
   - Support for [user codes](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#user_code).
@@ -152,6 +158,9 @@ Doorkeeper::OpenidConnect::Ciba.configure do
   # Expiration time for the req_id_token.
   # default_req_id_expiration 600
 
+  # Max Expiration time for the req_id_token (default 1 day).
+  # max_req_id_expiration 86400
+
   # Default minimum wait interval for token execution in poll mode
   #default_poll_interval 5
 
@@ -161,12 +170,19 @@ Doorkeeper::OpenidConnect::Ciba.configure do
   # mandatory configuration with the logic to validate the login_hint filled in both backchannel authentication and backchannel complete  
   # must return the id of the user as uuid
   #resolve_user_identity do |login_hint|
-  #  user = User.find_by(email: login_hint)
+  #  user = User.find_by(email: login_hint, email_verified: true)
   #	user.id unless user.nil?
   #end
-  
+
+  # mandatory configuration with the logic to get the e-mail of the user based on auth req id  
+  #resolve_email_by_auth_req_id do |auth_req_id|
+  #  user = User.select('users.email').joins("inner join backchannel_auth_requests authreq on users.id = authreq.identified_user_id").where("authreq.auth_req_id" => auth_req_id)
+  #  user.first.email if user.count > 0
+  #end
+
   # mandatory config : add new permission to grant type ciba 
   Doorkeeper.configuration.grant_flows.append("urn:openid:params:grant-type:ciba")
+  
 end
 
 </pre>

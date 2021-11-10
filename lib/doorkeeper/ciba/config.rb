@@ -98,6 +98,9 @@ module Doorkeeper
 	
 	  	  # Expiration time for the req_id_token (default 600 seconds).
 	      option :default_req_id_expiration, default: 600
+	  	  # Max Expiration time for the req_id_token (default 1 day).
+	      option :max_req_id_expiration, default: 86400
+
 		  # Default minimum wait interval for token execution in poll mode
 	      option :default_poll_interval, default: 5
 		  # Max bind message size
