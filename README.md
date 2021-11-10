@@ -81,8 +81,8 @@ POLL FLOW:
 
 - Features that will be planned in near future:
    - [Outside CIBA: Sample Web consent channel]: The CIBA specification doesn´t define how the consent channel should be implemented. The idea is to develop a sample web application, protected by Open Id/Oauth2, for the user give the consent. The application will be accessed through a link found in a e-mail notification, an email that will be sent by the backchannel authorization endpoint (asking for consent).  After the user fills in their credentials and confirms/refute consent, the approval status of the pending CIBA flow will be changed to approved/disapproved. The notes found in spec follow bellow:
-   - [Consent flow CIBA description](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.8)
-   - [OpenID Consent Guide](https://openid.net/specs/openid-connect-core-1_0.html#Consent)
+     - [Consent flow CIBA description](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.8)
+     - [OpenID Consent Guide](https://openid.net/specs/openid-connect-core-1_0.html#Consent)
    - Suport for [signed request parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#signed_auth_request)
    - Support for [user codes](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#user_code).
    - "Mutual TLS" support - ref. [mtls](https://tools.ietf.org/html/draft-ietf-oauth-mtls#section-2.2),[ciba auth req](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request) and [ciba signed auth req](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#signed_auth_request) - validation / adaptations (client_id)
