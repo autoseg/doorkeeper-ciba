@@ -1,7 +1,7 @@
 module Doorkeeper
   module OpenidConnect
   	module Ciba
-		# controller for /backchannel/authorize
+		# commom controller methods
 	    class CommonController < Doorkeeper::ApplicationMetalController
 			 # code based on tokens_controller.rb
 			 def validate_auth_client

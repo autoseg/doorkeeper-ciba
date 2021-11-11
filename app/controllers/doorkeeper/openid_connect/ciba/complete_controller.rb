@@ -3,7 +3,7 @@
 module Doorkeeper
   module OpenidConnect
   	module Ciba
-		# controller for /backchannel/authorize
+		# controller for /backchannel/complete
 	    class CompleteController < CommonController
 			before_action :validate_auth_client, only: [:auth]
 	    #

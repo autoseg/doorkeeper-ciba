@@ -22,10 +22,10 @@ module Doorkeeper
 				# status (Approved or Disapproved)
 				@status = @params[:status].to_s;
 				
-				# TODO: scope must include openid
+				# scope must include openid
 				@scope = @params[:scope].to_s
 				#
-				# TODO: UNSUPPORTED for v1.0 #
+				# TODO: FUTURE FEATURE
 				# optional parameter - authentication context classes 
 	 			#@acr_values = @params[:acr_values].to_s
 				#
@@ -38,7 +38,7 @@ module Doorkeeper
 				# mutual required (user identity group) - the value may contain an email address, phone number, account number, subject identifier, username, etc.
 				@login_hint = @params[:login_hint].to_s
 				#
-				# TODO: UNSUPPORTED for v1.0 #
+				# TODO: FUTURE FEATURE
 				# optional - secret client code known only by the user - used to prevent unsolicited authentication requests - 
 				#@user_code = @params[:user_code].to_s
 				#
@@ -152,7 +152,6 @@ module Doorkeeper
 						current_auth_req.update(status: @status);
 						current_auth_req.save!
 						
-						# TODO: handle Error AND save entries with consent_type = E, with some details in consent_desc.
 						BackchannelAuthConsentHistory.create(
 							auth_req_id: @auth_req_id, 
 							application_id: @application_id,

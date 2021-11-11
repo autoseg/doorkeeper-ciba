@@ -3,7 +3,7 @@
 module Doorkeeper
   module OpenidConnect
   	module Ciba
-		# controller for /backchannel/authorize
+		# controller for /backchannel/testcibacallback
 	    class TestcibacallbackController < ::ApplicationController
 
 		# JUST TO TEST / DEBUG THE CIBA CALLBACK

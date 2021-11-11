@@ -61,7 +61,7 @@ module Doorkeeper
 	
 	          Builder.instance_eval do
 	            define_method name do |*args, &block|
-	              # TODO: is builder_class option being used?
+	              # is builder_class option being used?
 	              value = if attribute_builder
 	                        attribute_builder.new(&block).build
 	                      else
@@ -89,12 +89,6 @@ module Doorkeeper
 	      end
 	
 	      extend Option
-	
-		# TODO: GORGES .well-known ENDPOINT WITH https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#registration
-		#backchannel_token_delivery_modes_supported: REQUIRED. JSON array containing one or more of the following values: poll, ping, and push.
-		#backchannel_authentication_endpoint: REQUIRED. URL of the OP's Backchannel Authentication Endpoint as defined in Section 7.
-		#backchannel_authentication_request_signing_alg_values_supported: OPTIONAL. JSON array containing a list of the JWS signing algorithms (alg values) supported by the OP for signed authentication requests, which are described in Section 7.1.1. If omitted, signed authentication requests are not supported by the OP.
-		#backchannel_user_code_parameter_supported: OPTIONAL. Boolean value specifying whether the OP supports the use of the user_code parameter, with true indicating support. If omitted, the default value is false.
 	
 	  	  # Expiration time for the req_id_token (default 600 seconds).
 	      option :default_req_id_expiration, default: 600

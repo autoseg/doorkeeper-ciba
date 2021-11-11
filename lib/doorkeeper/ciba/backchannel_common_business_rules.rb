@@ -46,8 +46,6 @@ module Doorkeeper
 			
 			# validate if the user was provided and search for the user identity
 			def validate_and_resolve_user_identity(application_id, login_hint, id_token_hint, login_hint_token)
-				# TODO: validate application_id (oauth_access_grants) ?
-				
 				::Rails.logger.info("validate_and_resolve_user_identity: " + application_id + "," + login_hint + "," + id_token_hint + "," + login_hint_token)
 				
 				#
@@ -87,7 +85,7 @@ module Doorkeeper
 							}
 				end
 
-				# TODO: UNSUPPORTED for v.1.0				
+				# TODO: FUTURE FEATURE (remove the following check after develop the support for id_token_hint or login_hint_token)
 				if(id_token_hint.present? || login_hint_token.present?)
 					    # https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
 						return { json: { 
@@ -151,8 +149,6 @@ module Doorkeeper
 				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#rfc.section.5
 				# The length of the token MUST NOT exceed 1024 characters and it MUST conform to the syntax for Bearer 
 				# credentials as defined in Section 2.1 of [RFC6750]. 
-				#
-				# TODO: VALIDATE FORMAT AS DESCRIBED ABOVE (RFC6750)
 				#
 				# VALIDATE client_notification_token format even NOT configured as PING OR PUSH Due 
 				# the possibility of admin change the type of notification after the creation of auth req ids

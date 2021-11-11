@@ -3,7 +3,7 @@
 module Doorkeeper
   module OpenidConnect
   	module Ciba
-		# controller for /backchannel/authorize
+		# controller for /backchannel/authinfo
 	    class AuthinfoController < CommonController
 			before_action :validate_auth_client, only: [:authinfo]
 	    #

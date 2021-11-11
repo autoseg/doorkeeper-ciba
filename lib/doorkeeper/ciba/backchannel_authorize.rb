@@ -23,7 +23,7 @@ module Doorkeeper
 				# required for ping and push mode (used to notify the callback in these modes) 
 				@client_notification_token = @params[:client_notification_token].to_s
 				#
-				# TODO: UNSUPPORTED for v1.0 #
+				# TODO: FUTURE FEATURE
 				# optional parameter - authentication context classes 
 	 			#@acr_values = @params[:acr_values].to_s
 				#
@@ -39,7 +39,7 @@ module Doorkeeper
 				# optional - human readable message to be displayed to the users on both consumption and authorization device
 				@binding_message = @params[:binding_message].to_s
 				#
-				# TODO: UNSUPPORTED for v1.0 #
+				# TODO: FUTURE FEATURE
 				# optional - secret client code known only by the user - used to prevent unsolicited authentication requests - 
 				#@user_code = @params[:user_code].to_s
 				#

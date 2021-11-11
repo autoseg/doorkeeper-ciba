@@ -3,7 +3,7 @@
 module Doorkeeper
   module OpenidConnect
   	module Ciba
-		# controller for /backchannel/authorize
+		# controller for /backchannel_client/userconsent
 	    class UserconsentController < CommonController
 			before_action :validate_auth_client, only: [:userconsent]
 	    #
@@ -18,6 +18,7 @@ module Doorkeeper
 		# self_signed_tls_client_auth - mutual tls - request params client_id and clientCertificate - https://datatracker.ietf.org/doc/html/rfc8705
 		
 	    def userconsent
+			# TODO develop Web App
 			render json: {'test': 'ok'}, status:200
 	    end
 	  end
