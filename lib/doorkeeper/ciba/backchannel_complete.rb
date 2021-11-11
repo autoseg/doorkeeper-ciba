@@ -9,6 +9,7 @@ module Doorkeeper
 				@scope = server.client.scopes
 				@client= server.client
 				@application_id = server.client.id
+				@server = server
 		      end
 		
 			  # complete public method
@@ -164,7 +165,7 @@ module Doorkeeper
 						
 						# NOTIFY IN PING and PUSH - 
 						if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
-							consentNotify = ConsentNotify.new(@params, @client, current_auth_req)
+							consentNotify = ConsentNotify.new(@params, @server, current_auth_req)
 							consentNotify.notifyTheConsumptionApplication						
 						end
 					end

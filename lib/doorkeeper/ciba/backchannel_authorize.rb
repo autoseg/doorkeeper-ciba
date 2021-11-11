@@ -9,6 +9,7 @@ module Doorkeeper
 				@scope = server.client.scopes
 				@client= server.client
 				@application_id = server.client.id
+				@server = server
 		      end
 		
 			  # authorize public method
@@ -144,7 +145,7 @@ module Doorkeeper
 											)
 											
 					if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
-						consentNotify = ConsentNotify.new(@params, @client, authReq)
+						consentNotify = ConsentNotify.new(@params, @server, authReq)
 						consentNotify.notifyTheAuthorizationApplication;			
 					end
 				return

@@ -6,15 +6,15 @@ module Doorkeeper
   	module Ciba
 	    class ConsentNotify < CommonBusinessRules
 			
-		      def initialize(params, client, authreq)
+		      def initialize(params, server, authreq)
 		        @params = params
-				@scope = client.scopes
-				@client= client
-				@application_id = client.id
-				@application = @client.application
+				@scope = server.client.scopes
+				@client= server.client
+				@application_id = server.client.id
+				@application = server.client.application
 				@authreq = authreq
-				@auth_req_id = @authreq.auth_req_id;
-				
+				@auth_req_id = authreq.auth_req_id;
+				@server = server
 		      end
 
 
@@ -96,10 +96,21 @@ module Doorkeeper
 					#       dg"
 					#    }
 					
+					# get Doorkeeper::OpenidConnect::Ciba::Token (backchannel_token.rb) instance
+					# code from tokens_controller.rb / create
+					strategy = @server.token_request(Doorkeeper::OpenidConnect::Ciba::GRANT_TYPE_CIBA)
+					auth = strategy.authorize
+
+					# check if the token was generated without errors
+					if(auth.status != :ok)
+						raise StandardError, "Auth token error " + auth.status.to_s
+					end
+					
 					message = { 
-							auth_req_id: @auth_req_id,
-							access_token: 'TODO'
+							auth_req_id: @auth_req_id
 					   	     }
+
+					message = message.merge(auth.body)
 				 end
 
 				# call endpoint			
