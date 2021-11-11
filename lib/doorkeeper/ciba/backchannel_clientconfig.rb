@@ -54,7 +54,7 @@ module Doorkeeper
 	
 				::Rails.logger.info("setClientConfig_validate_parameters call")
 				
-				validTypes = [ 'POLL', 'PING', 'PUSH' ]
+				validTypes = Doorkeeper::OpenidConnect::Ciba::CIBA_VALID_TYPES
 				
 				# validate mandatory parameters
 				if(!@params[:ciba_notify_type].present? || !validTypes.include?(@params[:ciba_notify_type])) 

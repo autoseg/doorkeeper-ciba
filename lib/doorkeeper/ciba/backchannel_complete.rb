@@ -92,7 +92,7 @@ module Doorkeeper
 				end
 				
 				#CHECK NOTIFY PARAMETERS IN PING and PUSH - 
-				notifyTypes = [ 'PING', 'PUSH' ]
+				notifyTypes = Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP
 				application = @client.application
 				if(notifyTypes.include?(application.ciba_notify_type) && !application.ciba_notify_endpoint.present?)
 						return { json: { 
@@ -145,30 +145,37 @@ module Doorkeeper
 		                    	  }, status: 400 
 								} if (!current_auth_req.client_notification_token.present?)
 				end				
-								
-				BackchannelAuthRequests.transaction do
-					::Rails.logger.info("## UPDATING BackchannelAuthRequests WITH auth_req_id:" +  @auth_req_id + " TO status: " + @status)
-					current_auth_req.update(status: @status);
-					current_auth_req.save!
-					
-					# TODO: handle Error AND save entries with consent_type = E, with some details in consent_desc.
-					BackchannelAuthConsentHistory.create(
-						auth_req_id: @auth_req_id, 
-						application_id: @application_id,
-						login_hint_token: @login_hint_token,
-						id_token_hint: @id_token_hint,
-						login_hint: @login_hint,
-					 	identified_user_id: @identified_user_id,
-						consent_type: @status
-					) 
-					
-					# NOTIFY IN PING and PUSH - 
-					if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
-						consentNotify = ConsentNotify.new(@params, @client, current_auth_req)
-						consentNotify.notifyTheConsumptionApplication						
+				begin				
+					BackchannelAuthRequests.transaction do
+						::Rails.logger.info("## UPDATING BackchannelAuthRequests WITH auth_req_id:" +  @auth_req_id + " TO status: " + @status)
+						current_auth_req.update(status: @status);
+						current_auth_req.save!
+						
+						# TODO: handle Error AND save entries with consent_type = E, with some details in consent_desc.
+						BackchannelAuthConsentHistory.create(
+							auth_req_id: @auth_req_id, 
+							application_id: @application_id,
+							login_hint_token: @login_hint_token,
+							id_token_hint: @id_token_hint,
+							login_hint: @login_hint,
+						 	identified_user_id: @identified_user_id,
+							consent_type: @status
+						) 
+						
+						# NOTIFY IN PING and PUSH - 
+						if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
+							consentNotify = ConsentNotify.new(@params, @client, current_auth_req)
+							consentNotify.notifyTheConsumptionApplication						
+						end
 					end
+				rescue Exception => e
+					::Rails.logger.error("Exception trying to complete reqid:" + @auth_req_id + " => '" + e.to_s + "' backtrace: " + e.backtrace.join("\n"))
+					return { json: { 
+						   error: "invalid_request",
+		                   error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.infrastructure_error') + ": '" + e.message + "'",
+		            	  }, status: 400 
+					  	}
 				end
-				
 				return
 			end 
 	   end

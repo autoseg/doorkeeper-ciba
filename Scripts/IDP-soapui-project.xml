@@ -242,7 +242,7 @@
     <con:endpoints>
       <con:endpoint>http://localhost:3000</con:endpoint>
     </con:endpoints>
-    <con:resource name="Authorize Code" path="/oauth/authorize" id="9de09cc4-97aa-4b53-b22a-87b7df4cd4a9">
+    <con:resource name="Authorize Code 1" path="/oauth/authorize" id="9de09cc4-97aa-4b53-b22a-87b7df4cd4a9">
       <con:settings/>
       <con:parameters>
         <con:parameter>
@@ -261,7 +261,7 @@
         </con:parameter>
         
         <con:parameter>
-          <con:name>scope </con:name>
+          <con:name>scope</con:name>
           <con:value/>
           <con:style>QUERY</con:style>
           <con:default/>
@@ -270,20 +270,20 @@
         
         
         
-      <con:parameter><con:name>redirect_uri</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter></con:parameters>
+      <con:parameter><con:name>redirect_uri</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>state</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter></con:parameters>
       <con:method name="POST" id="42043eef-759d-41e8-b29b-2addf1cefedf" method="GET">
         <con:settings/>
         <con:parameters/>
         <con:representation type="FAULT">
           <con:mediaType>text/html; charset=UTF-8</con:mediaType>
-          <con:status>500 422</con:status>
+          <con:status>500 422 404</con:status>
           <con:params/>
           <con:element>html</con:element>
         </con:representation>
-        <con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>text/html; charset=utf-8</con:mediaType><con:status>200</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="b5e33024-0f8b-4e0a-8148-ca1aad68d818" mediaType="application/json" postQueryString="false">
+        <con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>text/html; charset=utf-8</con:mediaType><con:status>200 302</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="b5e33024-0f8b-4e0a-8148-ca1aad68d818" mediaType="application/json" postQueryString="false">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
-          </con:settings>
+          <con:setting id="RecordRequestRepresentations">false</con:setting><con:setting id="com.eviware.soapui.impl.support.AbstractHttpRequest@follow-redirects">false</con:setting></con:settings>
           <con:endpoint>http://localhost:3000</con:endpoint>
           <con:request/>
           <con:originalUri>http://localhost/sessions/new</con:originalUri>
@@ -293,12 +293,13 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-  <con:entry key="scope " value="openid"/>
-  <con:entry key="response_type" value="code"/>
-  <con:entry key="redirect_uri" value="http://localhost:3000/callback"/>
+  <con:entry key="scope" value="openid"/>
+  <con:entry key="response_type" value="codex"/>
+  <con:entry key="redirect_uri" value="https://localhost:3000/someapp"/>
+  <con:entry key="state" value="myteststate123"/>
   <con:entry key="client_id" value="CIBAUID"/>
 </con:parameters>
-          <con:parameterOrder><con:entry>response_type</con:entry><con:entry>scope </con:entry><con:entry>client_id</con:entry><con:entry>redirect_uri</con:entry></con:parameterOrder>
+          <con:parameterOrder><con:entry>client_id</con:entry><con:entry>redirect_uri</con:entry><con:entry>response_type</con:entry><con:entry>scope</con:entry><con:entry>state</con:entry></con:parameterOrder>
         </con:request>
       </con:method>
     </con:resource>
@@ -428,7 +429,77 @@
         </con:request>
       </con:method>
     </con:resource>
-<con:resource name="code Session" path="/sessions" id="25222d73-b280-4019-a72f-938b67cec445"><con:settings/><con:parameters><con:parameter><con:name>client_id</con:name><con:value>CIBAUID</con:value><con:style>QUERY</con:style><con:default>CIBAUID</con:default></con:parameter><con:parameter><con:name>redirect_uri</con:name><con:value>http://localhost:3000/callback</con:value><con:style>QUERY</con:style><con:default>http://localhost:3000/callback</con:default></con:parameter><con:parameter><con:name>response_type</con:name><con:value>code</con:value><con:style>QUERY</con:style><con:default>code</con:default></con:parameter></con:parameters><con:method name="Method 1" id="9959fee3-81d5-4331-8692-1d3b29b36199" method="GET"><con:settings/><con:parameters/><con:request name="Request 1" id="88d994c9-7636-40ef-9c15-5306f2624528" mediaType="application/json"><con:settings/><con:endpoint>http://localhost:3000</con:endpoint><con:request/><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/><con:parameterOrder><con:entry>client_id</con:entry><con:entry>redirect_uri</con:entry><con:entry>response_type</con:entry></con:parameterOrder></con:request></con:method></con:resource></con:interface>  
+<con:resource name="Sessions" path="/sessions" id="9de09cc4-97aa-4b53-b22a-87b7df4cd4a9">
+      <con:settings/>
+      <con:parameters>
+        <con:parameter>
+          <con:name>response_type</con:name>
+          <con:value/>
+          <con:style>QUERY</con:style>
+          <con:default/>
+          <con:description xsi:nil="true"/>
+        </con:parameter>
+        <con:parameter>
+          <con:name>client_id</con:name>
+          <con:value/>
+          <con:style>QUERY</con:style>
+          <con:default/>
+          <con:description xsi:nil="true"/>
+        </con:parameter>
+        
+        <con:parameter>
+          <con:name>scope </con:name>
+          <con:value/>
+          <con:style>QUERY</con:style>
+          <con:default/>
+          <con:description xsi:nil="true"/>
+        </con:parameter>
+        
+        
+        
+      <con:parameter><con:name>redirect_uri</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>state</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>authenticity_token</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter></con:parameters>
+      <con:method name="POST" id="42043eef-759d-41e8-b29b-2addf1cefedf" method="POST">
+        <con:settings/>
+        <con:parameters/>
+        <con:representation type="FAULT">
+          <con:mediaType>text/html; charset=UTF-8</con:mediaType>
+          <con:status>500 422 404</con:status>
+          <con:params/>
+          <con:element>html</con:element>
+        </con:representation>
+        <con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType>text/html; charset=utf-8</con:mediaType><con:status>200</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="b5e33024-0f8b-4e0a-8148-ca1aad68d818" mediaType="application/json" postQueryString="false">
+          <con:settings>
+            <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
+          </con:settings>
+          <con:endpoint>http://localhost:3000</con:endpoint>
+          <con:request/>
+          <con:originalUri>http://localhost/sessions/new</con:originalUri>
+          <con:credentials>
+            <con:authType>No Authorization</con:authType>
+          </con:credentials>
+          <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
+          <con:jmsPropertyConfig/>
+          <con:parameters>
+  <con:entry key="scope " value="openid"/>
+  <con:entry key="response_type" value="code"/>
+  <con:entry key="redirect_uri" value="http://localhost:3000/callback"/>
+  <con:entry key="state" value="myteststate123"/>
+  <con:entry key="client_id" value="CIBAUID"/>
+  <con:entry key="authenticity_token" value="ZNu-h9AcO2GPWaqujBEQO7uN9wODYME928zioqjYEH4z0zinyPdRBXLW8vsy8_3e5pBoP6pP8Zn_bZRYIFgwUQ"/>
+</con:parameters>
+          <con:parameterOrder><con:entry>client_id</con:entry><con:entry>redirect_uri</con:entry><con:entry>response_type</con:entry><con:entry>scope </con:entry><con:entry>state</con:entry><con:entry>authenticity_token</con:entry></con:parameterOrder>
+        </con:request>
+      </con:method>
+    </con:resource><con:resource name="new Session" path="/sessions/new" id="20c31093-946c-4d67-af24-041e0f062bc1"><con:settings/><con:parameters><con:parameter><con:name>client_id</con:name><con:value>CIBAUIDx</con:value><con:style>QUERY</con:style><con:default>CIBAUIDx</con:default></con:parameter><con:parameter><con:name>redirect_uri</con:name><con:value>https://localhost:3000/someapp</con:value><con:style>QUERY</con:style><con:default>https://localhost:3000/someapp</con:default></con:parameter><con:parameter><con:name>response_type</con:name><con:value>codex</con:value><con:style>QUERY</con:style><con:default>codex</con:default></con:parameter><con:parameter><con:name>scope</con:name><con:value>openid</con:value><con:style>QUERY</con:style><con:default>openid</con:default></con:parameter><con:parameter><con:name>state</con:name><con:value>myteststate123</con:value><con:style>QUERY</con:style><con:default>myteststate123</con:default></con:parameter></con:parameters><con:method name="Method 1" id="a50f78ce-aab1-4e1f-8c75-6a3ef86910d0" method="GET"><con:settings/><con:parameters/><con:representation type="RESPONSE"><con:mediaType>text/html; charset=utf-8</con:mediaType><con:status>200</con:status><con:params/><con:element>html</con:element></con:representation><con:request name="Request 1" id="d04c08fd-be9b-486c-92cf-08b487fcdc50" mediaType="application/json"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;entry key="Location" value="http://localhost:3000/oauth/authorize?client_id=CIBAUID&amp;amp;redirect_uri=https%3A%2F%2Flocalhost%3A3000%2Fsomeapp&amp;amp;response_type=code&amp;amp;scope=openid&amp;amp;state=myteststate123" xmlns="http://eviware.com/soapui/config"/></con:setting><con:setting id="com.eviware.soapui.impl.support.AbstractHttpRequest@follow-redirects">false</con:setting></con:settings><con:endpoint>http://localhost:3000</con:endpoint><con:request/><con:originalUri>http://localhost/sessions/new</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="response_type" value="code"/>
+  <con:entry key="client_id" value="CIBAUID"/>
+</con:parameters><con:parameterOrder><con:entry>client_id</con:entry><con:entry>redirect_uri</con:entry><con:entry>response_type</con:entry><con:entry>state</con:entry><con:entry>scope</con:entry></con:parameterOrder></con:request></con:method></con:resource><con:resource name="submit Session" path="/sessions/new" id="caab7d95-fd10-4044-be9c-8ab3cb1a9f99"><con:settings/><con:parameters><con:parameter><con:name>client_id</con:name><con:value>CIBAUIDx</con:value><con:style>QUERY</con:style><con:default>CIBAUIDx</con:default></con:parameter><con:parameter><con:name>redirect_uri</con:name><con:value>https://localhost:3000/someapp</con:value><con:style>QUERY</con:style><con:default>https://localhost:3000/someapp</con:default></con:parameter><con:parameter><con:name>response_type</con:name><con:value>codex</con:value><con:style>QUERY</con:style><con:default>codex</con:default></con:parameter><con:parameter><con:name>scope</con:name><con:value>openid</con:value><con:style>QUERY</con:style><con:default>openid</con:default></con:parameter><con:parameter><con:name>state</con:name><con:value>myteststate123</con:value><con:style>QUERY</con:style><con:default>myteststate123</con:default></con:parameter><con:parameter><con:name>email</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>password</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter></con:parameters><con:method name="Method 1" id="7537209b-7c5b-4f8e-b137-c59cebb8d4a6" method="POST"><con:settings/><con:parameters/><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:representation type="FAULT"><con:mediaType>text/html; charset=UTF-8</con:mediaType><con:status>404</con:status><con:params/><con:element>html</con:element></con:representation><con:request name="Request 1" id="8ec1a2a7-958d-48b1-8e91-0c50332d706e" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.support.AbstractHttpRequest@follow-redirects">false</con:setting><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:3000</con:endpoint><con:request/><con:originalUri>http://localhost/sessions/new</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters><entry key="client_id" value="CIBAUID" xmlns="http://eviware.com/soapui/config"/></con:parameters><con:parameterOrder><con:entry>client_id</con:entry><con:entry>redirect_uri</con:entry><con:entry>response_type</con:entry><con:entry>state</con:entry><con:entry>scope</con:entry><con:entry>email</con:entry><con:entry>password</con:entry></con:parameterOrder></con:request></con:method></con:resource><con:resource name="sessions" path="/sessions" id="89b99e5d-e0dd-4186-a3cd-822a0de459a9"><con:settings/><con:parameters><con:parameter><con:name>client_id</con:name><con:value>CIBAUID</con:value><con:style>QUERY</con:style><con:default>CIBAUID</con:default></con:parameter><con:parameter><con:name>redirect_uri</con:name><con:value>https://localhost:3000/someapp</con:value><con:style>QUERY</con:style><con:default>https://localhost:3000/someapp</con:default></con:parameter><con:parameter><con:name>response_type</con:name><con:value>codex</con:value><con:style>QUERY</con:style><con:default>codex</con:default></con:parameter><con:parameter><con:name>state</con:name><con:value>myteststate123</con:value><con:style>QUERY</con:style><con:default>myteststate123</con:default></con:parameter><con:parameter><con:name>authenticity_token</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>email</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>password</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter><con:parameter><con:name>scope</con:name><con:value/><con:style>QUERY</con:style><con:default/><con:description xsi:nil="true"/></con:parameter></con:parameters><con:method name="Method 1" id="430b9fed-7633-4bfc-916c-317895f0dcf7" method="POST"><con:settings/><con:parameters/><con:representation type="FAULT"><con:mediaType>text/html; charset=UTF-8</con:mediaType><con:status>404 422</con:status><con:params/><con:element>html</con:element></con:representation><con:representation type="REQUEST"><con:mediaType>application/json</con:mediaType><con:params/></con:representation><con:request name="Request 1" id="5946235d-d955-4358-b07d-b56dbad8af62" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:3000</con:endpoint><con:request/><con:originalUri>http://localhost/sessions</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters>
+  <con:entry key="password" value="123123"/>
+  <con:entry key="scope" value="openid"/>
+  <con:entry key="response_type" value="code"/>
+  <con:entry key="email" value="email2@email.com"/>
+  <con:entry key="authenticity_token" value="hEKWw-oxDhmFWwL5ZRsjxb-og26fi4MNun3PvSucCEyMZ1yvvbJOhOYU1HGDzgblTd4ms_hwr4bFfC3xGBB6Ag"/>
+</con:parameters><con:parameterOrder><con:entry>client_id</con:entry><con:entry>redirect_uri</con:entry><con:entry>response_type</con:entry><con:entry>scope</con:entry><con:entry>state</con:entry><con:entry>authenticity_token</con:entry><con:entry>email</con:entry><con:entry>password</con:entry></con:parameterOrder></con:request></con:method></con:resource></con:interface>  
   <con:interface xsi:type="con:RestService" id="906675ac-f0f8-490e-a466-1ec58bc6b24e" wadlVersion="http://wadl.dev.java.net/2009/02" name="CIBA FLOW" type="rest" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
     <con:settings/>
     
@@ -727,7 +798,7 @@
           <con:params/>
           <con:element>data</con:element>
         </con:representation>
-        <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="0ab0182d-209c-4980-9bfd-c170da094ae6" mediaType="application/json" postQueryString="false">
+        <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="0ab0182d-209c-4980-9bfd-c170da094ae6" mediaType="application/json" postQueryString="false">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
           </con:settings>
@@ -741,7 +812,7 @@
           <con:jmsPropertyConfig/>
           <con:parameters>
   <con:entry key="client_notification_token" value="XXXX"/>
-  <con:entry key="requested_expiry" value="22222"/>
+  <con:entry key="requested_expiry" value="84600"/>
   <con:entry key="login_hint" value="email2@email.com"/>
   <con:entry key="scope" value="openid ciba"/>
   <con:entry key="binding_message" value="Dear user, please approve this"/>
@@ -1092,7 +1163,7 @@
           <con:params/>
           <con:element>data</con:element>
         </con:representation>
-        <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="0d126494-10e5-48e3-8d7d-5848a6fe1b9d" mediaType="application/json" postQueryString="false">
+        <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="0d126494-10e5-48e3-8d7d-5848a6fe1b9d" mediaType="application/json" postQueryString="false">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
           </con:settings>
@@ -1105,7 +1176,7 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-  <con:entry key="auth_req_id" value="e4210fdb-b1bf-4e72-981d-e67eccae82f2"/>
+  <con:entry key="auth_req_id" value="6509febb-5b4a-4d6e-99db-9631c4bf9a0e"/>
   <con:entry key="grant_type" value="urn:openid:params:grant-type:ciba"/>
   <con:entry key="scope" value="openid ciba"/>
   <con:entry key="client_secret" value="CIBASECRET"/>
@@ -1234,7 +1305,7 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-  <con:entry key="auth_req_id" value="e4210fdb-b1bf-4e72-981d-e67eccae82f2"/>
+  <con:entry key="auth_req_id" value="6509febb-5b4a-4d6e-99db-9631c4bf9a0e"/>
   <con:entry key="login_hint" value="email2@email.com"/>
   <con:entry key="scope" value="openid ciba"/>
   <con:entry key="client_secret" value="CIBASECRET"/>
@@ -1317,7 +1388,7 @@
           <con:params/>
           <con:element>data</con:element>
         </con:representation>
-        <con:request name="Request 1" id="116b7fb0-bbac-4b85-a835-93368c6013fd" mediaType="application/json">
+        <con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:representation type="RESPONSE"><con:mediaType xsi:nil="true"/><con:status>0</con:status><con:params/><con:element>data</con:element></con:representation><con:request name="Request 1" id="116b7fb0-bbac-4b85-a835-93368c6013fd" mediaType="application/json">
           <con:settings>
             <con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting>
           </con:settings>
@@ -1330,7 +1401,7 @@
           <con:jmsConfig JMSDeliveryMode="PERSISTENT"/>
           <con:jmsPropertyConfig/>
           <con:parameters>
-  <con:entry key="auth_req_id" value="87eef4dd-b255-4b81-ac2e-c010caaf9ecb"/>
+  <con:entry key="auth_req_id" value="d9xdba289-550f-414f-be70-88cd84912983"/>
   <con:entry key="login_hint" value="email2@email.com"/>
   <con:entry key="scope" value="openid ciba"/>
   <con:entry key="client_secret" value="CIBASECRET"/>
