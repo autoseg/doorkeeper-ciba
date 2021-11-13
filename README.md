@@ -241,6 +241,13 @@ rails=4.2.0 bundle update
 
 Doorkeeper::OpenidConnect::Ciba is released under the [MIT License](http://www.opensource.org/licenses/MIT).
 
+
+## Author
+
+
+<a href="https://github.com/carlosgorges">Carlos Eduardo Gorges</a>
+
+
 ## Sponsors
 
 Initial development of this project was sponsored by [TODO](TODO).

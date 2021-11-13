@@ -12,7 +12,7 @@ module Doorkeeper
 		# excute Token inside backchannel_token.rb and return to controller
 		@request ||= Doorkeeper::OpenidConnect::Ciba::Token.new(
 		  Doorkeeper.config,
-          server.client,
+          client,
           parameters,
 		)
       end

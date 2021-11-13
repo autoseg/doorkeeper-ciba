@@ -33,6 +33,7 @@ module Doorkeeper
 
 		CIBA_VALID_TYPES = [ 'POLL', 'PING', 'PUSH' ]
 		CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP = [ 'PING', 'PUSH' ]
+		CIBA_TYPES_ALLOW_DIRECT_CIBA_TOKEN_REQUEST = [ 'PING', 'POOL' ]
 	    GRANT_TYPE_CIBA = "urn:openid:params:grant-type:ciba"
 
 		# register type grant_type urn:openid:params:grant-type:ciba for oauth/token

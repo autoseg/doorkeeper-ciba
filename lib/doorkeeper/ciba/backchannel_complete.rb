@@ -126,7 +126,7 @@ module Doorkeeper
 				end
 				
 				# check expires 
-				validationResult = check_req_expiry(current_auth_req)
+				validationResult = check_req_expiry(@params, @server, current_auth_req)
 				return validationResult unless validationResult.blank?
 
 				# check if the auth_req_id is in correct status to complete
@@ -162,7 +162,8 @@ module Doorkeeper
 							consent_type: @status
 						) 
 						
-						# NOTIFY IN PING and PUSH - 
+						# NOTIFY IN PING and PUSH - FOR V1 THE NOTIFICATION is syncronous inside complete API call
+						# TODO: FUTURE FEATURE - Move the notification to a asynchronous, be carefully with the aync error handling in this case (https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#push_error_payload) 
 						if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
 							consentNotify = ConsentNotify.new(@params, @server, current_auth_req)
 							consentNotify.notifyTheConsumptionApplication						

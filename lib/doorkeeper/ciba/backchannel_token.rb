@@ -123,6 +123,20 @@ module Doorkeeper
 	
 			# get the auth request record
 			def validate_auth_request_id
+			
+			
+				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#getting_transaction_result
+				# "A Client can only register a single token delivery method and the OP MUST only deliver the Authentication Result to the Client through the registered mode."
+				#
+				# The token request is valid just for POLL mode
+				if(
+						# allow from /oauth/token with POOL or PING
+						!Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_ALLOW_DIRECT_CIBA_TOKEN_REQUEST.include?(@client.application.ciba_notify_type) && 
+						# allow from /oauth/complete (PUSH notify logic)
+				 		(@client.application.ciba_notify_type.eql?("PUSH") && @params['CONSENT_NOTITY_LOGIC'] != true)
+				  )
+					raise Doorkeeper::Errors::DoorkeeperError.new('invalid_ciba_request_for_grant_type')
+				end
 
 				 ::Rails.logger.info("## validate_auth_request_id: auth_req_id => " + @auth_req_id.to_s + " application_id=>" + @application_id.to_s)
 			
@@ -136,7 +150,7 @@ module Doorkeeper
 					::Rails.logger.info("##validate_auth_request_id RETURNING auth_req_id:" +  @auth_req_id + " status: " + current_auth_req[:status])
 
 					# check expires 
-					validationResult = @busRules.check_req_expiry(current_auth_req)
+					validationResult = @busRules.check_req_expiry(@params, @server, current_auth_req)
 					::Rails.logger.info("## validate_auth_request_id: auth_req_id => " + @auth_req_id.to_s + ' status was changed to expired !') unless validationResult.blank?
 					
 					# VALIDATE the request id status

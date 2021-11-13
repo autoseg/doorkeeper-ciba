@@ -9,6 +9,7 @@ module Doorkeeper
 				@scope = server.client.scopes
 				@client= server.client
 				@application_id = server.client.id
+				@server = server
 		      end
 		
 			  # getauthinfo public method
@@ -88,7 +89,7 @@ module Doorkeeper
 				end
 				
 				# check expires 
-				validationResult = check_req_expiry(current_auth_req)
+				validationResult = check_req_expiry(@params, @server, current_auth_req)
 				return validationResult unless validationResult.blank?
 				
 				# SUCCESS 

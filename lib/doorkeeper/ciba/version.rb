@@ -3,7 +3,7 @@
 module Doorkeeper
 	module OpenidConnect
 	  module Ciba
-	    VERSION = "0.9.1"
+	    VERSION = "0.9.5"
 	  end
 	end
 end

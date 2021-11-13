@@ -8,32 +8,44 @@ module Doorkeeper
 			attr_writer :param
 
 			# check if the registry was expired, change the status and return json
-			def check_req_expiry(request_record)
-				status = request_record[:status]
+			def check_req_expiry(params, server, current_auth_req)
+				status = current_auth_req[:status]
+				expired = false
 				
 				# just expire in pending status
 				if(status == BackchannelAuthRequests::STATUS_PENDING)
-					::Rails.logger.info("CommonBusinessRules: check_req_expiry: " + request_record.auth_req_id.to_s + 
-							" created:"+ request_record.created_at.to_s + " expired_in:" + request_record.expires_in.to_s)
+					::Rails.logger.info("CommonBusinessRules: check_req_expiry: " + current_auth_req.auth_req_id.to_s + 
+							" created:"+ current_auth_req.created_at.to_s + " expired_in:" + current_auth_req.expires_in.to_s)
 					expired = false
-					if(status == BackchannelAuthRequests::STATUS_EXPIRED)
-						::Rails.logger.info("CommonBusinessRules: ALREADY EXPIRED: check_req_expiry: " + request_record.auth_req_id.to_s)
-						expired = true
-					else
-						expire_date = request_record.created_at + request_record.expires_in
-						# compare db dates with current db date to avoid timezone issues
-						current_db_time = ActiveRecord::Base.connection.execute("Select CURRENT_TIMESTAMP").first['current_timestamp']
-						if(expire_date < current_db_time)
+					expire_date = current_auth_req.created_at + current_auth_req.expires_in
+					# compare db dates with current db date to avoid timezone issues
+					current_db_time = ActiveRecord::Base.connection.execute("Select CURRENT_TIMESTAMP").first['current_timestamp']
+					if(expire_date < current_db_time)
+						BackchannelAuthRequests.transaction do
 							# expire registry
-							::Rails.logger.info("CommonBusinessRules: SET TO EXPIRED: check_req_expiry: " + request_record.auth_req_id.to_s)
-							request_record.update(status: BackchannelAuthRequests::STATUS_EXPIRED)
-							request_record.save
+							::Rails.logger.info("CommonBusinessRules: SET TO EXPIRED: check_req_expiry: " + current_auth_req.auth_req_id.to_s)
+							current_auth_req.update(status: BackchannelAuthRequests::STATUS_EXPIRED)
+							current_auth_req.save
 							expired = true
-						end	
+							#							
+							# NOTIFY EXPIRATION IN PUSH
+							# 
+							if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
+								consentNotify = ConsentNotify.new(@params, @server, current_auth_req)
+								consentNotify.notifyTheConsumptionApplication						
+							end
+							
+						end
+					end
+				else
+					if(status == BackchannelAuthRequests::STATUS_EXPIRED) 
+						::Rails.logger.info("CommonBusinessRules: ALREADY EXPIRED: check_req_expiry: " + current_auth_req.auth_req_id.to_s)
+						expired = true
 					end
 				end
 
-				if(expired)
+				# response for synchronous calls
+				if(expired)				
 					return { json: { 
 									error: "expired_token",
 			                        error_description: I18n.translate('doorkeeper.errors.messages.expired_token')

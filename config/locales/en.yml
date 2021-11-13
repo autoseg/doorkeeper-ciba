@@ -6,6 +6,7 @@ en:
              slow_down: 'The interval MUST be increased by at least 5 seconds for this and all subsequent requests'
              expired_token: 'The request id has expired'
              invalid_ciba_request_status: 'This CIBA request token is in an invalid state'
+             invalid_ciba_request_for_grant_type: 'The CIBA Token request is valid just for POLL and PING modes'
     openid_connect:
       ciba:
         errors:

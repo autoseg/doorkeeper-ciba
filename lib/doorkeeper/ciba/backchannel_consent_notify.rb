@@ -26,9 +26,7 @@ module Doorkeeper
 				ciba_notify_endpoint = @application.ciba_notify_endpoint
 				notification_token = @authreq.client_notification_token;
 				
-				
 				# sanity check
-				
 				if(!Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(ciba_notify_type))
 					raise StandardError, "unsupported type"					
 				end
@@ -55,6 +53,9 @@ module Doorkeeper
 					#    {
 					#     "auth_req_id": "1c266114-a1be-4252-8ad1-04986c5b9ac1"
 					#    }
+					#
+					# for PING payload the user decision (Approval or Disapproval) doesn't makes difference 
+					# due the client must call CIBA Token after PING callback to get the token 
 		
 					message = {
 								auth_req_id: @auth_req_id
@@ -65,7 +66,7 @@ module Doorkeeper
 	
 					# PUSH MODE
 					# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#successful_token_push
-					# f the Client is registered in Push mode and the user is well authenticated and has authorized the request, the OpenID Provider delivers a payload that includes an ID Token, 
+					# if the Client is registered in Push mode and the user is well authenticated and has authorized the request, the OpenID Provider delivers a payload that includes an ID Token, 
 					# an Access Token and, optionally, a Refresh Token to the Client Notification Endpoint.
 					          
 					#	PUSH MODE SAMPLE CALL
@@ -95,29 +96,54 @@ module Doorkeeper
 					#       W1A22Sf6rmjhMHGbQW4A9Z822yiZZveuT_AFZ2hi7yNp8iFPZ8fgPQJ5pPpjA7u
 					#       dg"
 					#    }
+					#
+					#
+					# for PUSH payload the user decision (Approval or Disapproval) makes difference, 
+					# if approved - https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#successful_token_push
+					# if not aproved - https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#push_error_payload
 					
-					# get Doorkeeper::OpenidConnect::Ciba::Token (backchannel_token.rb) instance
-					# code from tokens_controller.rb / create
-					strategy = @server.token_request(Doorkeeper::OpenidConnect::Ciba::GRANT_TYPE_CIBA)
-					auth = strategy.authorize
+						case @authreq.status
+							when BackchannelAuthRequests::STATUS_APPROVED
+								# get Doorkeeper::OpenidConnect::Ciba::Token (backchannel_token.rb) instance
+								# code from tokens_controller.rb / create
+								#
+								# inform Token logic that this call is from consent notify logic - necessary to use the same logic than tokens_controller.rb
+								tokenParams = @params.merge({ 'CONSENT_NOTITY_LOGIC' => true })
 
-					# check if the token was generated without errors
-					if(auth.status != :ok)
-						raise StandardError, "Auth token error " + auth.status.to_s
-					end
-					
-					message = { 
-							auth_req_id: @auth_req_id
-					   	     }
-
-					message = message.merge(auth.body)
+								# generate access_token, id_token, etc
+								strategy = Doorkeeper::OpenidConnect::Ciba::Token.new(
+								  Doorkeeper.config,
+						          @client,
+						          tokenParams,
+								)
+							
+								auth = strategy.authorize
+			
+								# check if the token was generated without errors
+								if(auth.status != :ok)
+									raise StandardError, "Auth token error " + auth.status.to_s
+								end
+								
+								message = { 
+										auth_req_id: @auth_req_id
+								   	     }
+			
+								message = message.merge(auth.body)
+							when BackchannelAuthRequests::STATUS_DISAPPROVED
+								message = notifyTheConsumptionApplication_createErrorMessage('access_denied')
+							when BackchannelAuthRequests::STATUS_EXPIRED
+								message = notifyTheConsumptionApplication_createErrorMessage('expired_token')
+							else # sanity check
+								raise Doorkeeper::Errors::DoorkeeperError.new('invalid_ciba_request_status') 
+						end
 				 end
 
 				# call endpoint			
 				client = HTTPClient.new
-				headers = { #"Host": Socket.gethostname, 
-							"Authorization": "Bearer " + notification_token, 
+				# "Host" header is added by HTTPClient
+				headers = {  "Authorization": "Bearer " + notification_token, 
 							"Content-Type": "application/json" }
+							
 				res = client.post @application.ciba_notify_endpoint, message.to_json, headers
 				result_code = res.http_header.status_code
 
@@ -138,6 +164,19 @@ module Doorkeeper
 				::Rails.logger.info("## ConsentNotify: notifyTheAuthorizationApplication ## => " + @authreq.auth_req_id.to_s + ", identified_user_id => " +  @authreq.identified_user_id.to_s + ", application id:" + @application_id)
 			end
 			
+			private 
+			
+			def notifyTheConsumptionApplication_createErrorMessage(type)
+					# send error message to configured endpoint
+					# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#push_error_payload
+				    # use the exception handler of doorkeeper gem to generate the error
+					exception = Doorkeeper::Errors::DoorkeeperError.new(type)
+					error = Doorkeeper::OAuth::ErrorResponse.new(name: exception.type, state: @params[:state])
+					message = { 
+							auth_req_id: @auth_req_id
+					  	     }
+					message.merge(error.body)
+			end
 		end
 	end
   end
