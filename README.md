@@ -89,7 +89,7 @@ POLL FLOW:
    - Suport for [signed request parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#signed_auth_request)
    - Support for [user codes](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#user_code).
    - "Mutual TLS" support - ref. [mtls](https://tools.ietf.org/html/draft-ietf-oauth-mtls#section-2.2),[ciba auth req](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request) and [ciba signed auth req](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#signed_auth_request) - validation / adaptations (client_id)
-   - Maybe a queue for PING and PUSH notifications, with some resilience (RabbitMQ, Redis ou even in database, with retry, etc), instead synchronous remote calls inside APIs calls.
+   - Maybe a queue for PING and PUSH notifications, with some resilience (RabbitMQ, Redis or even in database, with retry, etc), instead synchronous remote calls inside APIs calls.
 
 ### Known Issues
 
