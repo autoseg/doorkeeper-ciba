@@ -43,7 +43,7 @@ Affected endpoints:
   - backchannel_auth_consent_history - history of consent (approve / disapprove).
 - Changed Active Record tables:
   - oauth_applications - new columns ciba_notify_type and ciba_notify_endpoint (configuration for notify type)
-  - oauth_access_tokens - new column ciba_auth_req_id (relation with ciba request id <-> oauth2/OID token/JWT).
+  - oauth_access_tokens - new column ciba_auth_req_id (relation with ciba request id <-> oauth2/OIDC token/JWT).
 
 ps. auth_req_id --> "authentication request ID" (transaction identifier) issued from the backchannel authentication endpoint.
 
