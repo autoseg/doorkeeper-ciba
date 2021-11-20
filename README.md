@@ -77,9 +77,9 @@ POLL FLOW:
 --> Get Auth Info /backchannel/authinfo
 --> Consent Aproval (or disaproval) - /backchannel/complete
 --> CIBA Token Request/Reply - /oauth/token w/ grant_type = urn:openid:params:grant-type:ciba
---> Notify pending consent approval - Via e-mail to v 1.0, plugable in the future
+--> Notify pending consent approval - Consuption device solution dependent (eg. via e-mail, SMS, etc)
 --> 6 and 7 repeat until it expires or receive the consent response, limited by a minimum trial interval (parameters returned by backchannel-authorize).
---> Authorization Device will use a sample web application for v1.0
+--> Authorization Device will use a sample web application (currently in development)
 
 </pre>
 
