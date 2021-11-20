@@ -26,6 +26,7 @@ module Doorkeeper
 							::Rails.logger.info("CommonBusinessRules: SET TO EXPIRED: check_req_expiry: " + current_auth_req.auth_req_id.to_s)
 							current_auth_req.update(status: BackchannelAuthRequests::STATUS_EXPIRED)
 							current_auth_req.save
+							# TODO: create backchannel_auth_consent_history							
 							expired = true
 							#							
 							# NOTIFY EXPIRATION IN PUSH

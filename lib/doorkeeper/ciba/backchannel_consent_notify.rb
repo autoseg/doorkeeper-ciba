@@ -54,8 +54,8 @@ module Doorkeeper
 					#     "auth_req_id": "1c266114-a1be-4252-8ad1-04986c5b9ac1"
 					#    }
 					#
-					# for PING payload the user decision (Approval or Disapproval) doesn't makes difference 
-					# due the client must call CIBA Token after PING callback to get the token 
+					# for PING payload the user decision (Approval or Disapproval) doesn't makes difference, even expires,
+					# due the client must call CIBA Token after PING callback to get the result 
 		
 					message = {
 								auth_req_id: @auth_req_id

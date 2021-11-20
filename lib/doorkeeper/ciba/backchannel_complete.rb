@@ -163,7 +163,7 @@ module Doorkeeper
 						) 
 						
 						# NOTIFY IN PING and PUSH - FOR V1 THE NOTIFICATION is syncronous inside complete API call
-						# TODO: FUTURE FEATURE - Move the notification to a asynchronous, be carefully with the aync error handling in this case (https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#push_error_payload) 
+						# TODO: FUTURE FEATURE - Move the notification to a asynchronous, be carefully with the aync error handling (https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#push_error_payload) 
 						if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
 							consentNotify = ConsentNotify.new(@params, @server, current_auth_req)
 							consentNotify.notifyTheConsumptionApplication						

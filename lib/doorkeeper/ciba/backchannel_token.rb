@@ -165,7 +165,7 @@ module Doorkeeper
 					if(!next_allowed_refresh.nil? && next_allowed_refresh > current_db_time)
 						raise Doorkeeper::Errors::DoorkeeperError.new('slow_down')
 					else 
-						# update updated_at field
+						# update last_token_get field
 						current_auth_req.update(last_token_get: current_db_time)				
 						current_auth_req.save
 					end	
