@@ -128,7 +128,7 @@ module Doorkeeper
 				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#getting_transaction_result
 				# "A Client can only register a single token delivery method and the OP MUST only deliver the Authentication Result to the Client through the registered mode."
 				#
-				# The token request is valid just for POLL mode
+				# The token request is valid: * POLL and PING mode from /oauth/token * PUSH mode in /backchannel/complete logic
 				if(
 						# allow from /oauth/token with POOL or PING
 						!Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_ALLOW_DIRECT_CIBA_TOKEN_REQUEST.include?(@client.application.ciba_notify_type) && 
