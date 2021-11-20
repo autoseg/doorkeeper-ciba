@@ -1,7 +1,12 @@
+
+<meta name="google-site-verification" content="Dvf2jtiR2PmrfLG9cuViMs05EJCYqh77TMS999_Jm9s" />
+
 # Doorkeeper::OpenidConnect::Ciba
 Doorkeeper support for OpenID Connect Client Initiated Backchannel Authentication Flow
 
 This library implements the [OpenID Connect Client-Initiated Backchannel Authentication Flow - Core 1.0](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html) for Rails applications on top of the [Doorkeeper](https://github.com/doorkeeper-gem/doorkeeper) OAuth 2.0 framework and [Doorkeeper::OpenidConnect](https://github.com/doorkeeper-gem/doorkeeper-openid_connect) extention.
+
+This is a OpenSource implementation of CIBA specification.
 
 ## Table of Contents
 
@@ -38,7 +43,7 @@ Affected endpoints:
   - backchannel_auth_consent_history - history of consent (approve / disapprove).
 - Changed Active Record tables:
   - oauth_applications - new columns ciba_notify_type and ciba_notify_endpoint (configuration for notify type)
-  - oauth_access_tokens - new column ciba_auth_req_id (relation with ciba request id <-> oauth2/OID token/JWT).
+  - oauth_access_tokens - new column ciba_auth_req_id (relation with ciba request id <-> oauth2/OIDC token/JWT).
 
 ps. auth_req_id --> "authentication request ID" (transaction identifier) issued from the backchannel authentication endpoint.
 
@@ -72,9 +77,9 @@ POLL FLOW:
 --> Get Auth Info /backchannel/authinfo
 --> Consent Aproval (or disaproval) - /backchannel/complete
 --> CIBA Token Request/Reply - /oauth/token w/ grant_type = urn:openid:params:grant-type:ciba
---> Notify pending consent approval - Via e-mail to v 1.0, plugable in the future
+--> Notify pending consent approval - Consuption device solution dependent (eg. via e-mail, SMS, etc)
 --> 6 and 7 repeat until it expires or receive the consent response, limited by a minimum trial interval (parameters returned by backchannel-authorize).
---> Authorization Device will use a sample web application for v1.0
+--> Authorization Device will use a sample web application (currently in development)
 
 </pre>
 
@@ -86,6 +91,7 @@ POLL FLOW:
    - Suport for [signed request parameters](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#signed_auth_request)
    - Support for [user codes](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#user_code).
    - "Mutual TLS" support - ref. [mtls](https://tools.ietf.org/html/draft-ietf-oauth-mtls#section-2.2),[ciba auth req](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request) and [ciba signed auth req](https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#signed_auth_request) - validation / adaptations (client_id)
+   - Maybe a queue for PING and PUSH notifications, with some resilience (RabbitMQ, Redis or even in database, with retry, etc), instead synchronous remote calls inside APIs calls.
 
 ### Known Issues
 
