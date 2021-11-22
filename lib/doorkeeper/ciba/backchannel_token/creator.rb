@@ -15,9 +15,10 @@ module Doorkeeper
 	          end
 	
 	          with_revocation(existing_token: existing_token) do
+   			    owner_id = resolve_userid_by_auth_req_id(attributes[:ciba_auth_req_id]);
 	            server_config.access_token_model.find_or_create_for(
 	              application: client,
-	              resource_owner: nil,
+	              resource_owner: owner_id,
 	              scopes: scopes,
 	              **attributes,
 	            )
@@ -52,6 +53,13 @@ module Doorkeeper
 	        def server_config
 	          Doorkeeper.config
 	        end
+
+			# find the userid of end-user based in in auth req id
+   		    def resolve_userid_by_auth_req_id(auth_req_id)
+
+   				Doorkeeper::OpenidConnect::Ciba.configuration.resolve_userid_by_auth_req_id.call(auth_req_id)
+	
+      		end
 	      end
 	    end
 	  end

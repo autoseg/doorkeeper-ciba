@@ -27,6 +27,12 @@ Doorkeeper::OpenidConnect::Ciba.configure do
   #  user.first.email if user.count > 0
   #end
 
+  # mandatory configuration with the logic to get the userid of the user based on auth req id  
+  #resolve_userid_by_auth_req_id do |auth_req_id|
+  #  user = User.select('users.id').joins("inner join backchannel_auth_requests authreq on users.id = authreq.identified_user_id").where("authreq.auth_req_id" => auth_req_id)
+  #  user.first.id if user.count > 0
+  #end
+
   # mandatory config : add new permission to grant type ciba 
   Doorkeeper.configuration.grant_flows.append("urn:openid:params:grant-type:ciba")
 

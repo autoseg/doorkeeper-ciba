@@ -23,7 +23,7 @@ require 'doorkeeper/request/ciba'
 require 'doorkeeper/ciba/rails/routes'
 
 # overwrite
-require 'doorkeeper/ciba/token_response'
+#require 'doorkeeper/ciba/token_response'
 require 'doorkeeper/ciba/id_token'
 
 # gem main constructor
