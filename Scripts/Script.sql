@@ -37,9 +37,22 @@ update backchannel_auth_requests set STATUS = 'P' where auth_req_id = 'e942caed-
 select * from oauth_access_tokens 
 where ciba_auth_req_id = '7539963f-5065-4571-beb6-b4a783e4ba5a';
 
-
+update "users" set email_verified = true where email  = 'email2@email.com';
+select * from users where email  = 'email2@email.com';
+commit;
 SELECT "users".* FROM "users" WHERE "users".email_verified = true order by created_at ;
 select * from oauth_access_grants;
 
+delete from users where id in ('fe854d0d-a647-40b9-b6e4-9c605c2653e5',
+'7dd02cd1-7931-42cf-b552-db64bc7bc6da',
+'06a380a7-4fb2-4d2a-9c52-1c9accdb53b4',
+'0946969b-54bb-442e-81b6-148362c5fc15')
+
+
+select * from oauth_applications where "name" = 'CIBA';
+delete from oauth_access_grants where application_id = '6e1a6e3a-10c7-4aca-acf0-d6f309fb0be3';
+delete from oauth_access_tokens where application_id = '6e1a6e3a-10c7-4aca-acf0-d6f309fb0be3';
+delete from oauth_applications where "id" = '6e1a6e3a-10c7-4aca-acf0-d6f309fb0be3';
+commit;
 
 
