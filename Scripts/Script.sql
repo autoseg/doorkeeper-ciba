@@ -35,7 +35,7 @@ commit;
 update backchannel_auth_requests set STATUS = 'P' where auth_req_id = 'e942caed-e60a-4f7d-a603-094e484f17dc';
 
 select * from oauth_access_tokens 
-where token = 'eyJraWQiOiJDSUJBVUlEIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJhdXRvc2VnLW9wZW5pZF9jb25uZWN0IiwiaWF0IjoxNjM3NTk4NDU4LCJqdGkiOiIyNzk4NTIxNy0wYjFiLTRjNTAtYTIzMS04ZWM4ZDA3YmNlZDMiLCJzY29wZXMiOlsib3BlbmlkIiwiY2liYSJdLCJjbGllbnRfaWQiOiJDSUJBVUlEIiwiZXhwIjo3MjAwfQ.U85TyFtRQ97j5b-NqH3eigPcEh3OdlKdBM_2nkTr2Uf63whi3GQ6WfAeYRMswN3_PyQ13rz64l69nINZ1qXvWlBnJRT_t5I2GqVlQsIA1KQixDXiVOugA0gZoMbRAwXRfduFTtclQjlDHwvilaG9dCrd9ezr9CK6BgkQxcIjEzE';
+where ciba_auth_req_id = '7539963f-5065-4571-beb6-b4a783e4ba5a';
 
 
 SELECT "users".* FROM "users" WHERE "users".email_verified = true order by created_at ;
