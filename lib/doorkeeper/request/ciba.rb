@@ -9,6 +9,8 @@ module Doorkeeper
       def request
 		::Rails.logger.info("#### INSIDE Ciba oauth-token strategy #################")
 
+		# TODO: remove CONSENT_NOTITY_LOGIC if defined in params to avoid conflict with PUSH logic
+
 		# excute Token inside backchannel_token.rb and return to controller
 		@request ||= Doorkeeper::OpenidConnect::Ciba::Token.new(
 		  Doorkeeper.config,
