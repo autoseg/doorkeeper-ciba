@@ -28,7 +28,7 @@ en:
             missing_client_notification_token: 'Missing mandatory client_notification_token for this notification type'
             invalid_client_notification_token: 'Invalid client_notification_token'
             invalid_client_notification_token_in_database: 'Invalid client_notification_token in authorization server registry, please notify your administrator'
-            just_login_hint_is_supported: 'Currently just login_hint is supported'
+            unsupported_user_identifier: 'Unsupported user identified'
             infrastructure_error: 'Infrastructure Error'
 
             # Token Error messages
@@ -37,6 +37,9 @@ en:
             # Complete flow
             invalid_status: 'Missing or invalid status, valid values are A (Approved) or D (Disapproved)'
             missing_req_id: 'Missing request id'
+
+            #get auth info
+            getauthinfo_no_results: 'No results found' 
 
             # set clientconfig
             missing_or_invalid_ciba_notify_type: 'Missing or invalid ciba_notify_type (valid values are POLL, PING or PUSH)'

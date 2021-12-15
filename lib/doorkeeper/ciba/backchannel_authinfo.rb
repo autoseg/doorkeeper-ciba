@@ -18,9 +18,6 @@ module Doorkeeper
 				
 				# auth_req_id				
 				@auth_req_id = @params[:auth_req_id].to_s;
-				
-				# scope must include openid
-				@scope = @params[:scope].to_s
 				#
 				# mutual required (user identity group)- some identification of the user (implementation specific)
 				@login_hint_token = @params[:login_hint_token].to_s
@@ -35,15 +32,11 @@ module Doorkeeper
 				# optional - secret client code known only by the user - used to prevent unsolicited authentication requests - 
 				#@user_code = @params[:user_code].to_s
 				#
-				# validate scope
-				validationResult = validate_scope(@scope)
-				return validationResult unless validationResult.blank?
-				#
 				# validate parameters
 				validationResult = getauthinfo_validate_parameters
 				return validationResult unless validationResult.blank?
 				#
-				# update auth request id
+				# get request id data 
 				getDataResult = getauthinfo_data
 				return getDataResult unless getDataResult.blank?
 		      end
@@ -58,11 +51,11 @@ module Doorkeeper
 				validationResult = validate_and_resolve_user_identity(@application_id, @login_hint, @id_token_hint, @login_hint_token)
 				return validationResult unless validationResult.blank?
 				
-				# validate if request_id is filled
-				if(!@params[:auth_req_id].present?) 
+				# validate if user was found
+				if(!@identified_user_id.present?) 
 					 return { json: { 
 								error: "invalid_request",
-		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_req_id')
+		                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.missing_user_identification')
 		                    	}, status: 400 
 							}
 				end
@@ -76,30 +69,45 @@ module Doorkeeper
 				 ::Rails.logger.info("## getauthinfo_data: auth_req_id => " + @auth_req_id.to_s + ", identified_user_id => " +  @identified_user_id.to_s)
 			
 				# Search backchannel request
-				current_auth_req = BackchannelAuthRequests.find_by(auth_req_id: @auth_req_id, identified_user_id: @identified_user_id, application_id: @application_id);
+				if(@auth_req_id.present?);
+					current_auth_req = BackchannelAuthRequests.where(auth_req_id: @auth_req_id, identified_user_id: @identified_user_id, application_id: @application_id).order("created_at");
+				else 
+					current_auth_req = BackchannelAuthRequests.where(identified_user_id: @identified_user_id, application_id: @application_id).order("created_at");
+				end
 				
 				# check if the auth_req_id is found for the user
 				if(! current_auth_req.present?) 
-				# If the auth_req_id is invalid or was issued to another Client, an invalid_grant error MUST be returned as described in Section 5.2 of [RFC6749].
 						 return { json: { 
 									error: "invalid_grant",
-			                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_grant')
+			                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.getauthinfo_no_results')
 			                    	}, status: 400 
 								}
 				end
 				
-				# check expires 
-				validationResult = check_req_expiry(@params, @server, current_auth_req)
-				return validationResult unless validationResult.blank?
-				
 				# SUCCESS 
-		        return { 
-					     json: { 
-							#auth_req_id: @auth_req_id,
-	                        status: current_auth_req['status'],
-							binding_message: current_auth_req['binding_message']
-		                 }, status: 200
-					   }
+		        
+				resultJson = {requests: []}
+				resultJson["requests"] = []
+				
+			    current_auth_req.each do |t|
+					# check expires (force update before return data) 
+					check_req_expiry(@params, @server, t) if(t.status == "P")
+
+					item = { 
+								auth_req_id: t.auth_req_id,
+		                        status: t.status,
+								binding_message: t.binding_message,
+								created_at: t.created_at.strftime("%Y-%m-%d %H:%M:%S")
+						   }
+
+ 					::Rails.logger.info("## getauthinfo_data: sql loop auth_req_id => " + t.auth_req_id + " Item:" + item.to_json + " Array:" + resultJson.to_json)
+
+				    #do stuff 
+	 				resultJson["requests"].push(item)
+			     end
+		
+				return { json: resultJson, status: 200 };
+		
 			end 
 	   end
     end

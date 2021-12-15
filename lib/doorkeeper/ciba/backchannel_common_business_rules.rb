@@ -103,7 +103,7 @@ module Doorkeeper
 					    # https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
 						return { json: { 
 									error: "invalid_request",
-		                        	error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.just_login_hint_is_supported')
+		                        	error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.unsupported_user_identifier')
 		                    		}, status: 400
 							    }
 				end
