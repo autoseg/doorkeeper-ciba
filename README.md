@@ -1,5 +1,5 @@
 
-<meta name="google-site-verification" content="Dvf2jtiR2PmrfLG9cuViMs05EJCYqh77TMS999_Jm9s" />
+<meta name="author" content="Carlos Eduardo Gorges"/>
 
 # Doorkeeper::OpenidConnect::Ciba
 Doorkeeper support for OpenID Connect Client Initiated Backchannel Authentication Flow
