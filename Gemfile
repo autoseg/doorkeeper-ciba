@@ -11,7 +11,6 @@ gem "rake", "~> 13.0"
 #gem 'rubocop-performance', require: false
 #gem 'rubocop-rails', require: false
 #gem 'rubocop-rspec', require: false
-#gem 'redis', require:true
 gem 'httpclient', require: true
 
 gem 'doorkeeper-openid_connect', require:true
