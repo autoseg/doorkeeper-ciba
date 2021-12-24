@@ -3,7 +3,6 @@
 module Doorkeeper
   module OpenidConnect
   	module Ciba
-	    module ClientCredentials
 	      class Validator
 	        include Doorkeeper::Validations
 	        include Doorkeeper::OAuth::Helpers
@@ -51,7 +50,6 @@ module Doorkeeper
 	            grant_type: Doorkeeper::OpenidConnect::Ciba::GRANT_TYPE_CIBA,
 	          )
 	        end
-	      end
 	    end
 	  end
 	end

@@ -1,11 +1,10 @@
-# frozen_string_literal: true
 
 module Doorkeeper
   module OpenidConnect
   	module Ciba
 
 	    class CommonBusinessRules
-			attr_writer :param
+			attr_writer :param, :client
 
 			# check if the registry was expired, change the status and return json
 			def check_req_expiry(params, server, current_auth_req)
@@ -35,7 +34,6 @@ module Doorkeeper
 								consentNotify = ConsentNotify.new(@params, @server, current_auth_req)
 								consentNotify.notifyTheConsumptionApplication						
 							end
-							
 						end
 					end
 				else
@@ -131,22 +129,6 @@ module Doorkeeper
 	
       		end
 
-			#scope must be not empty and contains openid and ciba
-			def validate_scope(scope) 
-				 ::Rails.logger.info("###### SCOPE:" + scope.class.to_s + " - " + scope.to_s)
-			     scopes = scope.split(' ')
-				
-				if(!scope.present? || !scopes.include?("openid") || !scopes.include?("ciba")) 
-					# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
-					return { json: { 
-								error: "invalid_scope",
-	                        	error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_scope')
-	                    		}, status: 400
-						    }
-				end
-			 return
-			end
-
 			def validate_client_notification_token_parameter
 			
 				# client_notification_token is mandatory if the client uses PING or PUSH
@@ -175,6 +157,38 @@ module Doorkeeper
 			
 			end
 
+			#scope must be not empty and contains openid
+			def validate_scope(requestedScopes) 
+				 ::Rails.logger.info("###### SCOPES:" + requestedScopes.to_s)
+			    return false if requestedScopes.blank?
+
+				requestedScopesSplited = requestedScopes.split(' ')
+
+	            application_scopes = if @client.present?
+                         @client.application.scopes
+                else
+                         ""
+                end
+               
+                configScopes = Doorkeeper.configuration.scopes
+				
+				validation =  Doorkeeper::OAuth::Helpers::ScopeChecker.valid?(
+		            scope_str: requestedScopes,
+		            server_scopes: configScopes,
+		            app_scopes: application_scopes,
+		            grant_type: Doorkeeper::OpenidConnect::Ciba::GRANT_TYPE_CIBA,
+		          )
+
+				if(!validation || !requestedScopesSplited.include?("openid")) 
+				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
+					 return { json: { 
+							error: "invalid_request",
+	                        error_description: I18n.translate('doorkeeper.errors.messages.invalid_scope')
+	                    	}, status: 400 
+						}
+				end
+			 return 
+			end
 
 	   end
     end

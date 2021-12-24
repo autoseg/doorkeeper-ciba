@@ -21,9 +21,6 @@ module Doorkeeper
 				
 				# status (Approved or Disapproved)
 				@status = @params[:status].to_s;
-				
-				# scope must include openid
-				@scope = @params[:scope].to_s
 				#
 				# TODO: FUTURE FEATURE
 				# optional parameter - authentication context classes 
@@ -41,10 +38,6 @@ module Doorkeeper
 				# TODO: FUTURE FEATURE
 				# optional - secret client code known only by the user - used to prevent unsolicited authentication requests - 
 				#@user_code = @params[:user_code].to_s
-				#
-				# validate scope
-				validationResult = validate_scope(@scope)
-				return validationResult unless validationResult.blank?
 				#
 				# validate parameters
 				validationResult = complete_validate_parameters

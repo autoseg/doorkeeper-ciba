@@ -3,7 +3,6 @@
 module Doorkeeper
   module OpenidConnect
   	module Ciba
-	    module ClientCredentials
 	      class Issuer
 	        attr_reader :token, :validator, :error
 	
@@ -40,9 +39,8 @@ module Doorkeeper
 
 	          ttl = Doorkeeper::OAuth::Authorization::Token.access_token_expires_in(@server, context)
 	
-			  creator = Doorkeeper::OpenidConnect::Ciba::ClientCredentials::Creator.new
-	
-		      #create the token in database
+			  #create the token in database
+			  creator = Doorkeeper::OpenidConnect::Ciba::Creator.new
 	          creator.call(
 	            client,
 	            scopes,
@@ -51,7 +49,6 @@ module Doorkeeper
 				ciba_auth_req_id: params['auth_req_id']
 	          )
 	        end
-	      end
 	    end
 	end
   end

@@ -3,7 +3,6 @@
 module Doorkeeper
   module OpenidConnect
   	module Ciba
-	    module ClientCredentials
 	      class Creator
 	        def call(client, scopes, attributes = {})
 			 #byebug
@@ -61,7 +60,6 @@ module Doorkeeper
 	
       		end
 	      end
-	    end
 	  end
 	end
 end

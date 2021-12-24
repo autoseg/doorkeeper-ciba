@@ -25,7 +25,7 @@ commit;
 
 SELECT "backchannel_auth_requests".* FROM 
 "backchannel_auth_requests" WHERE 
-"backchannel_auth_requests"."auth_req_id" = 'd751da1b-262c-49eb-a853-7fd8bdadead2' 
+"backchannel_auth_requests"."auth_req_id" = '4c9f6a86-f04d-4467-a8cf-6bddbad07035' 
 AND "backchannel_auth_requests"."status" = 'P';
 
 update backchannel_auth_requests set status = 'X'

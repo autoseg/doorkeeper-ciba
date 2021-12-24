@@ -13,31 +13,7 @@ module Doorkeeper
 		
 			  # getauthinfo public method
 			  def setClientConfig
-				# All the parameters are described in https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request
-				
-				# auth_req_id				
-				@auth_req_id = @params[:auth_req_id].to_s;
-				
-				# scope must include openid
-				@scope = @params[:scope].to_s
-				#
-				# mutual required (user identity group)- some identification of the user (implementation specific)
-				@login_hint_token = @params[:login_hint_token].to_s
-				#
-				# mutual required (user identity group)- id of the user
-				@id_token_hint = @params[:id_token_hint].to_s
-				#
-				# mutual required (user identity group) - the value may contain an email address, phone number, account number, subject identifier, username, etc.
-				@login_hint = @params[:login_hint].to_s
-				#
-				# UNSUPPORTED for v1.0 #
-				# optional - secret client code known only by the user - used to prevent unsolicited authentication requests - 
-				#@user_code = @params[:user_code].to_s
-				#
-				# validate scope
-				validationResult = validate_scope(@scope)
-				return validationResult unless validationResult.blank?
-				#
+			
 				# validate parameters
 				validationResult = setClientConfig_validate_parameters
 				return validationResult unless validationResult.blank?

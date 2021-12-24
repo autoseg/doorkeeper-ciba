@@ -5,10 +5,12 @@
 # extend the /doorkeeper-openid_connect/lib/doorkeeper/openid_connect/id_token.rb capability,
 # adding the CIBA informations in JWT found in id_token parameter in oauth-token endpoint
 #
+
 module Doorkeeper
   module OpenidConnect
     module Ciba
 	    module IdToken
+
 	      def claims
 			# mount client_credentials JWT
 			@id_token_result = super
@@ -28,8 +30,7 @@ module Doorkeeper
 			#      "urn:openid:params:jwt:claim:auth_req_id":
 			#        "1c266114-a1be-4252-8ad1-04986c5b9ac1"
 			#    }
-			#byebug
-			if((@access_token.includes_scope? 'ciba') && (@access_token.ciba_auth_req_id.present?))
+			if((@access_token.includes_scope? 'openid') && (@access_token.ciba_auth_req_id.present?))
 				at_hash_token = at_hash_generate(@access_token.token);
 				at_hash_refresh_token = at_hash_generate(@access_token.refresh_token) unless @access_token.refresh_token.blank?;
 				# in ciba flow, the email of resource owner is got from the "backsession" authorize (saved in the model), not from access_token 

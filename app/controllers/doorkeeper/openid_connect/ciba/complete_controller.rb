@@ -5,7 +5,7 @@ module Doorkeeper
   	module Ciba
 		# controller for /backchannel/complete
 	    class CompleteController < CommonController
-			before_action :validate_auth_client, only: [:auth]
+			before_action :validate_auth_client, only: [:complete]
 	    #
 		# Authentication must accept the methods described in https://openid.net/specs/openid-connect-core-1_0.html#ClientAuthentication
 		# from https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_request

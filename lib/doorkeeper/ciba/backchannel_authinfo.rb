@@ -28,10 +28,6 @@ module Doorkeeper
 				# mutual required (user identity group) - the value may contain an email address, phone number, account number, subject identifier, username, etc.
 				@login_hint = @params[:login_hint].to_s
 				#
-				# UNSUPPORTED for v1.0 #
-				# optional - secret client code known only by the user - used to prevent unsolicited authentication requests - 
-				#@user_code = @params[:user_code].to_s
-				#
 				# validate parameters
 				validationResult = getauthinfo_validate_parameters
 				return validationResult unless validationResult.blank?
@@ -70,18 +66,9 @@ module Doorkeeper
 			
 				# Search backchannel request
 				if(@auth_req_id.present?);
-					current_auth_req = BackchannelAuthRequests.where(auth_req_id: @auth_req_id, identified_user_id: @identified_user_id, application_id: @application_id).order("created_at");
+					current_auth_req = BackchannelAuthRequests.where(auth_req_id: @auth_req_id, identified_user_id: @identified_user_id, application_id: @application_id).order("created_at desc");
 				else 
-					current_auth_req = BackchannelAuthRequests.where(identified_user_id: @identified_user_id, application_id: @application_id).order("created_at");
-				end
-				
-				# check if the auth_req_id is found for the user
-				if(! current_auth_req.present?) 
-						 return { json: { 
-									error: "invalid_grant",
-			                        error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.getauthinfo_no_results')
-			                    	}, status: 400 
-								}
+					current_auth_req = BackchannelAuthRequests.where(identified_user_id: @identified_user_id, application_id: @application_id).order("created_at desc");
 				end
 				
 				# SUCCESS 
@@ -97,6 +84,7 @@ module Doorkeeper
 								auth_req_id: t.auth_req_id,
 		                        status: t.status,
 								binding_message: t.binding_message,
+								scope: t.scope,
 								created_at: t.created_at.strftime("%Y-%m-%d %H:%M:%S")
 						   }
 

@@ -3,6 +3,8 @@
 module Doorkeeper
   module OpenidConnect
   	module Ciba
+  		# based on doorkeeper gem client_credentials_request.rb
+  		#us
 		# Implementation of ciba (urn:openid:params:grant-type:ciba) grant_type for oauth token
 		#
 		# This code is a request processor for grant_type ciba, called by tokens_controller.rb (Doorkeeper::TokensController)
@@ -65,10 +67,9 @@ module Doorkeeper
 		        @client = client
 		        @server = server
 		        @response = nil
-		        @original_scopes = parameters[:scope]
 				@auth_req_id = parameters[:auth_req_id];
+				#@original_scopes = parameters[:scope]
 				@params = parameters
-				@application_id = client.id
 		      end
 
 		      def access_token
@@ -77,28 +78,26 @@ module Doorkeeper
 		
 		      def issuer
 				# call a copy of openid_connect rules with CIBA_GRANT_TYPE (instead client_credentials) and create the access_token
-		        @issuer ||= Doorkeeper::OpenidConnect::Ciba::ClientCredentials::Issuer.new(server, 
-						Doorkeeper::OpenidConnect::Ciba::ClientCredentials::Validator.new(server, self))
+		        @issuer ||= Doorkeeper::OpenidConnect::Ciba::Issuer.new(server, 
+		        		Doorkeeper::OpenidConnect::Ciba::Validator.new(server, self))
 		      end
 		
 		      private
-		
 		      def valid?
-				cibaValidations
+		      	issuerValidated = issuer; 
 
-		        issuer.create(@client, @scopes, @params)
+		      	# skips ciba validations if the validator (from client_credentials) fail (error will be produced by create call bellow)
+		      	if(issuerValidated.validator.valid?)
+		      		cibaValidations
+		      	end
+		      
+		        # create the token and save to db
+	   	        issuerValidated.create(@client, @scopes, @params)
 		      end
 			
 				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#token_error_response
 			  def cibaValidations
-				@busRules = Doorkeeper::OpenidConnect::Ciba::CommonBusinessRules.new
-				@busRules.param = @params;
-	
 				::Rails.logger.info("#### INSIDE CIBA TOKEN #################:" + @params.to_s);
-
-				# validate scope 
-				validationResult = @busRules.validate_scope(@original_scopes)
-				raise Doorkeeper::Errors::DoorkeeperError, :invalid_request unless validationResult.blank?
 				#
 				# validate parameters
 				token_validate_parameters
@@ -113,9 +112,8 @@ module Doorkeeper
 			  def token_validate_parameters
 				::Rails.logger.info("### token_validate_parameters call: auth_req_id => " + @params[:auth_req_id].to_s)
 
-				# validate if request_id is filled
 				if(!@params[:auth_req_id].present?) 
-					 raise Doorkeeper::Errors::DoorkeeperError, :invalid_request 
+					 raise Doorkeeper::Errors::MissingRequiredParameter, 'auth_req_id'
 				end
 				
 				return
@@ -123,7 +121,12 @@ module Doorkeeper
 	
 			# get the auth request record
 			def validate_auth_request_id
-			
+				# reuse the logic found in common business
+				busRules = Doorkeeper::OpenidConnect::Ciba::CommonBusinessRules.new
+				busRules.param = @params
+				busRules.client = @client
+				
+				application_id = client.id
 			
 				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#getting_transaction_result
 				# "A Client can only register a single token delivery method and the OP MUST only deliver the Authentication Result to the Client through the registered mode."
@@ -138,10 +141,10 @@ module Doorkeeper
 					raise Doorkeeper::Errors::DoorkeeperError.new('invalid_ciba_request_for_grant_type')
 				end
 
-				 ::Rails.logger.info("## validate_auth_request_id: auth_req_id => " + @auth_req_id.to_s + " application_id=>" + @application_id.to_s)
+				 ::Rails.logger.info("## validate_auth_request_id: auth_req_id => " + @auth_req_id.to_s + " application_id=>" + application_id.to_s)
 			
 				# Search backchannel request
-				current_auth_req = BackchannelAuthRequests.find_by(auth_req_id: @auth_req_id, application_id: @application_id);
+				current_auth_req = BackchannelAuthRequests.find_by(auth_req_id: @auth_req_id, application_id: application_id);
 				
 				if(! current_auth_req.present?)  
 					# If the auth_req_id is invalid or was issued to another Client, an invalid_grant error MUST be returned as described in Section 5.2 of [RFC6749].
@@ -150,7 +153,7 @@ module Doorkeeper
 					::Rails.logger.info("##validate_auth_request_id RETURNING auth_req_id:" +  @auth_req_id + " status: " + current_auth_req[:status])
 
 					# check expires 
-					validationResult = @busRules.check_req_expiry(@params, @server, current_auth_req)
+					validationResult = busRules.check_req_expiry(@params, @server, current_auth_req)
 					::Rails.logger.info("## validate_auth_request_id: auth_req_id => " + @auth_req_id.to_s + ' status was changed to expired !') unless validationResult.blank?
 					
 					# VALIDATE the request id status
@@ -169,7 +172,14 @@ module Doorkeeper
 						current_auth_req.update(last_token_get: current_db_time)				
 						current_auth_req.save
 					end	
-									
+
+					# RE-VALIDATE SCOPE STORED IN BACKCHANNEL_AUTH CALL
+					requestedScopes = current_auth_req.scope;
+					@original_scopes = requestedScopes
+					@scopes.add(requestedScopes);
+					validationResult = busRules.validate_scope(@original_scopes)
+					raise Doorkeeper::Errors::DoorkeeperError, :invalid_scope unless validationResult.blank?
+				
 					case status
 						when BackchannelAuthRequests::STATUS_APPROVED
 							return
