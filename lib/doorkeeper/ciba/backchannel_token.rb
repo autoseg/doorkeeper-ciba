@@ -150,6 +150,15 @@ module Doorkeeper
 					# If the auth_req_id is invalid or was issued to another Client, an invalid_grant error MUST be returned as described in Section 5.2 of [RFC6749].
 					 raise Doorkeeper::Errors::DoorkeeperError, :invalid_grant 	 
 				else
+					# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#token_response
+					# nce redeemed for a successful token response, the auth_req_id value that was used is no longer valid
+					::Rails.logger.info("##validate if the auth req id was not used before:" +  @auth_req_id)
+					token_for_auth_req_id = Doorkeeper::AccessToken.find_by(ciba_auth_req_id: @auth_req_id, application_id: application_id);
+					
+					if(token_for_auth_req_id.present?)
+						raise Doorkeeper::Errors::DoorkeeperError.new('invalid_grant')
+					end
+					
 					::Rails.logger.info("##validate_auth_request_id RETURNING auth_req_id:" +  @auth_req_id + " status: " + current_auth_req[:status])
 
 					# check expires 
