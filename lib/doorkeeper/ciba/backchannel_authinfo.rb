@@ -28,6 +28,9 @@ module Doorkeeper
 				# mutual required (user identity group) - the value may contain an email address, phone number, account number, subject identifier, username, etc.
 				@login_hint = @params[:login_hint].to_s
 				#
+				# used to applications to aprove pooling, list just Pending auth req id
+				@poolingMode = @params[:poolingMode].to_s
+				#
 				# validate parameters
 				validationResult = getauthinfo_validate_parameters
 				return validationResult unless validationResult.blank?
@@ -62,13 +65,17 @@ module Doorkeeper
 			# get the auth request record
 			def getauthinfo_data
 
-				 ::Rails.logger.info("## getauthinfo_data: auth_req_id => " + @auth_req_id.to_s + ", identified_user_id => " +  @identified_user_id.to_s)
+  			    ::Rails.logger.info("## getauthinfo_data: auth_req_id => " + @auth_req_id.to_s + ", identified_user_id => " +  @identified_user_id.to_s)
 			
 				# Search backchannel request
 				if(@auth_req_id.present?);
 					current_auth_req = BackchannelAuthRequests.where(auth_req_id: @auth_req_id, identified_user_id: @identified_user_id, application_id: @application_id).order("created_at desc");
 				else 
-					current_auth_req = BackchannelAuthRequests.where(identified_user_id: @identified_user_id, application_id: @application_id).order("created_at desc");
+					if(@poolingMode == "true")
+						current_auth_req = BackchannelAuthRequests.where(identified_user_id: @identified_user_id, application_id: @application_id, status: 'P').order("created_at desc");
+					else 
+						current_auth_req = BackchannelAuthRequests.where(identified_user_id: @identified_user_id, application_id: @application_id).order("created_at desc");
+					end
 				end
 				
 				# SUCCESS 
