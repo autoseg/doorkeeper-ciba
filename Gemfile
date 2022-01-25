@@ -6,17 +6,19 @@ source "https://rubygems.org"
 gemspec
 
 gem "rake", "~> 13.0"
+gem 'httpclient', require: true
+gem 'doorkeeper-openid_connect', require: true
 
 #gem "rubocop", "~> 1.7"
 #gem 'rubocop-performance', require: false
 #gem 'rubocop-rails', require: false
 #gem 'rubocop-rspec', require: false
-gem 'httpclient', require: true
 
-gem 'doorkeeper-openid_connect', require:true
+group :development, :test do
+  gem "rspec-rails", "~> 5.0"
+end
 
-gem "rspec-rails", "~> 5.0", :groups => [:development, :test]
-
-gem "shoulda-matchers", "~> 5.1", :group => :test
-
-gem "simplecov", "~> 0.21.2", :group => :test, require: false
+group :test do
+  gem "shoulda-matchers", "~> 4.5"
+  gem "simplecov", "~> 0.21.2", require: false
+end
