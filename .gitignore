@@ -74,3 +74,5 @@ yarn-debug.log*
 !/storage/.keep
 
 /.dbeaver/
+
+.idea/
