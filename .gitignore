@@ -76,3 +76,5 @@ yarn-debug.log*
 /.dbeaver/
 
 .idea/
+
+/coverage
