@@ -15,3 +15,8 @@ gem 'httpclient', require: true
 
 gem 'doorkeeper-openid_connect', require:true
 
+gem "rspec-rails", "~> 5.0", :groups => [:development, :test]
+
+gem "shoulda-matchers", "~> 5.1", :group => :test
+
+gem "simplecov", "~> 0.21.2", :group => :test, require: false
