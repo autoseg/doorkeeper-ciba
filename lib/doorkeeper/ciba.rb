@@ -28,21 +28,21 @@ require 'doorkeeper/ciba/id_token'
 
 # gem main constructor
 module Doorkeeper
-	module OpenidConnect
-	  module Ciba
+  module OpenidConnect
+    module Ciba
 
-		CIBA_VALID_TYPES = [ 'POLL', 'PING', 'PUSH' ]
-		CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP = [ 'PING', 'PUSH' ]
-		CIBA_TYPES_ALLOW_DIRECT_CIBA_TOKEN_REQUEST = [ 'PING', 'POOL' ]
-	    GRANT_TYPE_CIBA = "urn:openid:params:grant-type:ciba"
+      CIBA_VALID_TYPES = ['POLL', 'PING', 'PUSH']
+      CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP = ['PING', 'PUSH']
+      CIBA_TYPES_ALLOW_DIRECT_CIBA_TOKEN_REQUEST = ['PING', 'POOL']
+      GRANT_TYPE_CIBA = "urn:openid:params:grant-type:ciba"
 
-		# register type grant_type urn:openid:params:grant-type:ciba for oauth/token
-		#puts("#### Doorkeeper::GrantFlow.register urn:openid:params:grant-type:ciba #################")
-	    Doorkeeper::GrantFlow.register(
-	      'urn:openid:params:grant-type:ciba',
-	      grant_type_matches: "urn:openid:params:grant-type:ciba",
-	      grant_type_strategy: Doorkeeper::Request::Ciba,
-	    )
-	  end
-	end
+      # register type grant_type urn:openid:params:grant-type:ciba for oauth/token
+      #puts("#### Doorkeeper::GrantFlow.register urn:openid:params:grant-type:ciba #################")
+      Doorkeeper::GrantFlow.register(
+        'urn:openid:params:grant-type:ciba',
+        grant_type_matches: "urn:openid:params:grant-type:ciba",
+        grant_type_strategy: Doorkeeper::Request::Ciba,
+      )
+    end
+  end
 end
