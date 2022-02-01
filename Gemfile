@@ -21,4 +21,5 @@ end
 group :test do
   gem "shoulda-matchers", "~> 4.5"
   gem "simplecov", "~> 0.21.2", require: false
+  gem 'httparty'
 end
