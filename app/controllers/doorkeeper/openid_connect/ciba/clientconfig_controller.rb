@@ -24,12 +24,3 @@ module Doorkeeper
     end
   end
 end
-
-
-
-
-
-
-
-
-
