@@ -75,7 +75,7 @@ POLL FLOW:
 --> BackChannel Authorize - /backchannel/authorize
 --> OID Auth - /oauth/authorize 
 --> Get Auth Info /backchannel/authinfo
---> Consent Aproval (or disaproval) - /backchannel/complete
+--> Consent Approval (or disApproval) - /backchannel/complete
 --> CIBA Token Request/Reply - /oauth/token w/ grant_type = urn:openid:params:grant-type:ciba
 --> Notify pending consent approval - Consuption device solution dependent (eg. via e-mail, SMS, etc)
 --> 6 and 7 repeat until it expires or receive the consent response, limited by a minimum trial interval (parameters returned by backchannel-authorize).

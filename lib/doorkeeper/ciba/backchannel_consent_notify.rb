@@ -158,7 +158,7 @@ module Doorkeeper
 		
 			end
 			
-			# notify asking for consent aproval
+			# notify asking for consent Approval
 			def notifyTheAuthorizationApplication
 				# TODO does it makes sense to implement in CIBA ? 
 				::Rails.logger.info("## ConsentNotify: notifyTheAuthorizationApplication ## => " + @authreq.auth_req_id.to_s + ", identified_user_id => " +  @authreq.identified_user_id.to_s + ", application id:" + @application_id)
