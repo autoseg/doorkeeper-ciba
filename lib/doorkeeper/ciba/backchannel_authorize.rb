@@ -103,7 +103,7 @@ module Doorkeeper
 				end
 				
 				# client_notification_token is mandatory if the client uses PING or PUSH
-				notifyTypes = Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP
+				notifyTypes = Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUMPTION_APP
 				ciba_notify_type = @client.application.ciba_notify_type
 				if(notifyTypes.include?(ciba_notify_type) && !@client_notification_token.present?)
   				    return { json: { 
@@ -142,7 +142,7 @@ module Doorkeeper
 											interval: @interval
 											)
 											
-					if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
+					if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUMPTION_APP.include?(@client.application.ciba_notify_type))
 						consentNotify = ConsentNotify.new(@params, @server, authReq)
 						consentNotify.notifyTheAuthorizationApplication;			
 					end

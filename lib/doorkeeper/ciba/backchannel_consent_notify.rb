@@ -27,7 +27,7 @@ module Doorkeeper
 				notification_token = @authreq.client_notification_token;
 				
 				# sanity check
-				if(!Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(ciba_notify_type))
+				if(!Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUMPTION_APP.include?(ciba_notify_type))
 					raise StandardError, "unsupported type"					
 				end
 				#if(notification_token.nil? || !notification_token.present?)

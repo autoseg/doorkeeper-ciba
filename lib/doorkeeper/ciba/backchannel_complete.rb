@@ -86,7 +86,7 @@ module Doorkeeper
 				end
 				
 				#CHECK NOTIFY PARAMETERS IN PING and PUSH - 
-				notifyTypes = Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP
+				notifyTypes = Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUMPTION_APP
 				application = @client.application
 				if(notifyTypes.include?(application.ciba_notify_type) && !application.ciba_notify_endpoint.present?)
 						return { json: { 
@@ -132,7 +132,7 @@ module Doorkeeper
 				end
 				
 				## CHECK presense of client_notification_token when the type are PING or PUSH
-				if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
+				if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUMPTION_APP.include?(@client.application.ciba_notify_type))
 						return { json: { 
 								   error: "invalid_request",
 		                           error_description: I18n.translate('doorkeeper.openid_connect.ciba.errors.invalid_client_notification_token_in_database')
@@ -157,7 +157,7 @@ module Doorkeeper
 						
 						# NOTIFY IN PING and PUSH - FOR V1 THE NOTIFICATION is syncronous inside complete API call
 						# TODO: FUTURE FEATURE - Move the notification to a asynchronous, be carefully with the aync error handling (https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#push_error_payload) 
-						if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
+						if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUMPTION_APP.include?(@client.application.ciba_notify_type))
 							consentNotify = ConsentNotify.new(@params, @server, current_auth_req)
 							consentNotify.notifyTheConsumptionApplication						
 						end

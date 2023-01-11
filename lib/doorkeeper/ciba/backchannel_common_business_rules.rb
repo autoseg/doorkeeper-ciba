@@ -30,7 +30,7 @@ module Doorkeeper
 							#							
 							# NOTIFY EXPIRATION IN PUSH
 							# 
-							if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP.include?(@client.application.ciba_notify_type))
+							if(Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUMPTION_APP.include?(@client.application.ciba_notify_type))
 								consentNotify = ConsentNotify.new(@params, @server, current_auth_req)
 								consentNotify.notifyTheConsumptionApplication						
 							end
@@ -132,7 +132,7 @@ module Doorkeeper
 			def validate_client_notification_token_parameter
 			
 				# client_notification_token is mandatory if the client uses PING or PUSH
-				notifyTypes = Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUPTION_APP
+				notifyTypes = Doorkeeper::OpenidConnect::Ciba::CIBA_TYPES_TO_NOTIFY_CONSUMPTION_APP
 				ciba_notify_type = @client.application.ciba_notify_type
 				if(notifyTypes.include?(ciba_notify_type) && !@client_notification_token.present?)
   				    return { json: { 
