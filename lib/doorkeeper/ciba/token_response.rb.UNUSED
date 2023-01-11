@@ -13,7 +13,7 @@ module Doorkeeper
         attr_accessor :id_token
 
         def body
-		  ::Rails.logger.info("#### CIBA TokenResponse - body extention #################");
+		  ::Rails.logger.info("#### CIBA TokenResponse - body extension #################");
 		  
 			# XXX Add here CIBA specific oauth-token response params - grant_type urn:openid:params:grant-type:ciba
             super
