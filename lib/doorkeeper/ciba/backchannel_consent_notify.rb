@@ -100,7 +100,7 @@ module Doorkeeper
 					#
 					# for PUSH payload the user decision (Approval or Disapproval) makes difference, 
 					# if approved - https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#successful_token_push
-					# if not aproved - https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#push_error_payload
+					# if not approved - https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0.html#push_error_payload
 					
 						case @authreq.status
 							when BackchannelAuthRequests::STATUS_APPROVED
@@ -149,7 +149,7 @@ module Doorkeeper
 
 				::Rails.logger.info("## ConsentNotify: notifyTheConsumptionApplication => reqid:" + @auth_req_id.to_s + " result_code:" + result_code.to_s)
 
-				# test sucess
+				# test success
 				if(result_code != 200)
 					::Rails.logger.info("## ConsentNotify: notifyTheConsumptionApplication => reqid:" + @auth_req_id.to_s + " GOT ERROR STATUS FROM ENDPOINT:" + result_code.to_s + " body:" + res.body.to_s)
 
