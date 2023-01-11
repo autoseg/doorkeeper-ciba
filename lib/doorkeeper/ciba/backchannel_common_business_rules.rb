@@ -162,7 +162,7 @@ module Doorkeeper
 				 ::Rails.logger.info("###### SCOPES:" + requestedScopes.to_s)
 			    return false if requestedScopes.blank?
 
-				requestedScopesSplited = requestedScopes.split(' ')
+				requestedScopesSplitted = requestedScopes.split(' ')
 
 	            application_scopes = if @client.present?
                          @client.application.scopes
@@ -179,7 +179,7 @@ module Doorkeeper
 		            grant_type: Doorkeeper::OpenidConnect::Ciba::GRANT_TYPE_CIBA,
 		          )
 
-				if(!validation || !requestedScopesSplited.include?("openid")) 
+				if(!validation || !requestedScopesSplitted.include?("openid")) 
 				# https://openid.net/specs/openid-client-initiated-backchannel-authentication-core-1_0-03.html#auth_error_response
 					 return { json: { 
 							error: "invalid_request",
